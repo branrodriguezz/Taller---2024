@@ -1,0 +1,38 @@
+Implementar un programa que procese información de propiedades que están a la venta
+en una inmobiliaria.
+Se pide:
+a) Implementar un módulo para almacenar en una estructura adecuada, las propiedades
+agrupadas por zona. Las propiedades de una misma zona deben quedar almacenadas
+ordenadas por tipo de propiedad. Para cada propiedad debe almacenarse el código, el tipo de
+propiedad y el precio total. De cada propiedad se lee: zona (1 a 5), código de propiedad, tipo
+de propiedad, cantidad de metros cuadrados y precio del metro cuadrado. La lectura finaliza
+cuando se ingresa el precio del metro cuadrado -1.
+b) Implementar un módulo que reciba la estructura generada en a), un número de zona y un tipo de
+propiedad y retorne los códigos de las propiedades de la zona recibida y del tipo recibido.
+
+Informacion:
+- De cada propiedad se lee, zona (1 a 5), cod, tipo de propiedad, cantidad de metros cuadrados y precio del metro
+cuadrado. Finaliza esa lectura? Si. Cuando se ingresa el precio de m^2 -1. No lo proceso. 
+- Cada propiedad almacena -> (cod,tipo de propiedad,precio total). NADA MAS.  
+- Esas propiedades tienen que estar agrupadas por zona -> (1,2,3,4,5).
+- Las propiedades de la misma zona -> se almacenan ordenadas por tipo de propiedad. 
+
+program e2p0;
+const
+type
+  zonas = 1..5;
+  propiedad = record;
+    zona: zonas;
+    cod: integer;
+    tipo: string;
+    cantm2: integer;
+    preciom2: real;
+  end;
+  prop = record;
+    cod: integer;
+    tipo: string;
+    preciototal: real;
+  end;
+var 
+begin
+end.
