@@ -1,1 +1,127 @@
+Implementar un programa que procese la información de los alumnos de la Facultad de
+Informática.
+a) Implementar un módulo que lea y retorne, en una estructura adecuada, la información de
+todos los alumnos. De cada alumno se lee su apellido, número de alumno, año de ingreso,
+cantidad de materias aprobadas (a lo sumo 36) y nota obtenida (sin contar los aplazos) en cada
+una de las materias aprobadas. La lectura finaliza cuando se ingresa el número de alumno
+11111, el cual debe procesarse.
+b) Implementar un módulo que reciba la estructura generada en el inciso a) y retorne número
+de alumno y promedio de cada alumno.
+c) Analizar: ¿qué cambios requieren los puntos a y b, si no se sabe de antemano la cantidad de
+materias aprobadas de cada alumno, y si además se desean registrar los aplazos? ¿cómo
+puede diseñarse una solución modularizada que requiera la menor cantidad de cambios?
+Rta: 
 
+program e1p0;
+const
+	dimF = 36;
+type
+	mat = 1..dimF;
+	materias = array [mat] of integer; 
+	alumno = record 
+		apellido: string;
+		numalu: integer;
+		anioingre: integer;
+		apro: mat; //a lo sumo son 36 - actua como dimL de cada alumno
+		nota: materias;
+	end;
+	lista = ^nodo;
+	nodo = record;
+		ele: alumno;
+		sig: lista;
+	end;
+
+	alumnuevo = record;
+		numalumno: integer;
+		prom: real;
+	end; 
+
+	listanueva = ^nodonuevo;
+	nodonuevo = record;
+		ele: alumnuevo;
+		sig: listanueva;
+	end;  
+
+procedure leeralumno (var a: alumno);
+begin
+	read (a.apellido);
+	read (a.numalu);
+	read (a.anioingre);
+	read (a.apro);
+	for i:= 1 to a.apro do begin
+		read (a.nota[i]);
+	end;
+end;
+
+procedure agregarAdelante (var l: lista; a: alumno); //inciso A
+var
+	nuevo: lista;
+begin
+	new (nuevo);
+	nuevo^.ele:= a;
+	nuevo^.sig:= nil;
+	if (l = nil) then
+		l:= nuevo;
+	else
+		nuevo^.sig:= l;
+		l:= nuevo;
+end;
+
+procedure cargaralumno (var l: lista);
+var
+	a: alumno;
+begin
+	repeat 
+		leeralumno (a);
+		agregarAdelante (l, a);
+	until (a.numalu = 11111);
+end;
+
+function calcularpromedio (m: materias; dimL: integer;): real;
+var
+	tot: real;
+begin
+	tot:= 0;
+	for i:= 1 to dimL do begin
+		tot:= tot + m[i];
+	end;
+	sumonotas:= tot/dimL;
+end; 
+
+procedure generarlistanueva (var ln: listanueva; e: alumnuevo);
+var
+	nue:listanueva;
+begin
+	new (nue);
+	nue^.ele:= e;
+	nue^sig:= nil;
+	if (ln = nil) then
+		ln = nue;
+	else 	
+		nue^.sig:= ln;
+		ln:= nue;
+end; 
+
+procedure numyprom (l: lista, var ln: listanueva); 
+var
+	promedio: real;
+	e: alumnuevo;
+begin
+	while (l <> nil) do begin 
+		promedio:= calcularpromedio (l^.ele.nota, l^.ele.apro);
+		a.numalumno:= l^.ele.numalu;
+		e.prom:= total;
+		generarlistanueva (ln,e);
+		l:= l^.sig;
+	end;
+end; 
+
+var
+	l: lista;
+	ln: listanueva;
+begin
+	l:= nil;
+	cargaralumno (l); // inciso A;
+	ln:= nil;
+	numyprom (l,ln); // inciso B; // ln (la lista nueva) retorna número de alumno y promedio de cada alumno.
+end.
