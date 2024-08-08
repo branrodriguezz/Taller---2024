@@ -10,7 +10,8 @@ de alumno y promedio de cada alumno.
 c) Analizar: ¿qué cambios requieren los puntos a y b, si no se sabe de antemano la cantidad de
 materias aprobadas de cada alumno, y si además se desean registrar los aplazos? ¿cómo
 puede diseñarse una solución modularizada que requiera la menor cantidad de cambios?
-Rta: 
+Rta: Si no se sabe la cantidad de materias aprobadas de cada alumno en lugar de usar un vector, se deberia usar una lista. 
+Si se desea registrar los aplazos se deberia sacar un comentario que el usuario ingrese notas numericas de 0 a 10. No de 4 a 10. 
 
 program e1p0;
 const
