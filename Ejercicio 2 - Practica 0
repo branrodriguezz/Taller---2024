@@ -20,6 +20,7 @@ cuadrado. Finaliza esa lectura? Si. Cuando se ingresa el precio de m^2 -1. No lo
 program e2p0;
 type
   zonas = 1..5;
+  vectorzonas = array [zonas] of lista;
   propiedad = record;
     zona: zonas;
     cod: integer;
@@ -40,16 +41,113 @@ type
     sig: lista;
   end;
 
+  listacodigos = ^nodocodigo;
+  nodocodigo = record;
+    ele: integer;
+    sig: listacodigos;
+  end;
+
 procedure leerpropiedad (var p: propiedad);
-var  
-  pr: prop;
 begin
   read (p.zona);
   read (p.cod);
   read (p.tipo);
-  read (p.cantm2
+  read (p.cantm2);
+  read (p.preciom2);
 end;
 
-var 
+procedure inicializarvectorzonas (var vz: vectorzonas);
+var
+  i: integer;
 begin
+  for i:= 1 to 5 do begin;
+    vz [i]:= nil;
+end;
+
+procedure insertarOrdenado (var l: lista; pr: prop);
+var
+  nuevo, act, ant: lista; 
+begin
+  new (nuevo); 
+  nuevo^.ele:= pr;
+  nuevo^.sig:= nil;
+  if (l = nil) then 
+    l:= nuevo;
+  else begin
+    ant:= l;
+    act:= l;
+    while (act <> nil) and (act^.ele.tipo <> nue^.ele.tipo) do begin  
+      ant:= act;
+      act:= act^.sig;
+    if (act = l) then
+      begin
+        nuevo^.sig= l;
+        l:= nuevo;
+      end;
+    else begin
+      ant^.sig:= nuevo;
+      nuevo^.sig:= act;
+    end;
+  end;
+end;    
+  
+procedure cargarLista (var vz: vectorzonas);
+var
+  p: propiedad;
+  pr: prop;
+begin
+  leerpropiedad (p);
+  while (p.preciom2 <> - 1) do begin
+    pr.cod := p.cod;
+    pr.tipo := p.tipo;
+    pr.preciototal:= p.cantm2 * p.preciom2;
+    insertarOrdenado (vz [p.zona], pr);
+    leerpropiedad (p);
+  end;
+end;
+
+procedure generarlistacodigos (cod: integer; var codigos: listacodigos);
+var
+  nue: listacodigos;
+begin
+  new (nue);
+  nue^.ele:= cod;
+  nue^.sig:= nil;
+  if (codigos = nil) then
+    codigos:= nue;
+  else begin
+    nue^.sig:= codigos;
+    codigos:= nue;
+  end;
+end;
+
+procedure recorrerzona (l: lista; tipop: string, var codigos: listacodigos);
+begin
+  while (l <> nil) do begin
+    if (tipop = l^.ele.tipo) then 
+      generarlistacodigos (l^.ele.cod, codigos);
+  end;
+end;
+
+procedure incisoB (vz: vectorzonas; numzona: zonas; tipop: string; var codigos: listacodigos);
+var
+  i: integer;
+begin
+  for i: 1 to 5 do begin
+    if (numzona = i) then 
+      recorrerzona (vz [i], tipop, codigos);
+  end;
+end; 
+
+var 
+  numzona: zonas;
+  tipop: string;
+  vz: vectorzonas;
+  codigos: listacodigos;
+begin
+  inicializarvectorzonas (vz);
+  cargarLista (vz); 
+  read (numzona);
+  read (tipop);
+  incisoB (vz,numzona,tipop,codigos);
 end.
