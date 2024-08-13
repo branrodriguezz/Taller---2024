@@ -1,1 +1,84 @@
+1.- Se desea procesar la información de las ventas de productos de un comercio (como máximo 50).
+Implementar un programa que invoque los siguientes módulos:
+a. Un módulo que retorne la información de las ventas en un vector. De cada venta se conoce el día de la venta, 
+código del producto (entre 1 y 15) y cantidad vendida (como máximo 99 unidades). 
+El código debe generarse automáticamente (random) y la cantidad se debe leer. El ingreso de las ventas finaliza 
+con el día de venta 0 (no se procesa).
+b. Un módulo que muestre el contenido del vector resultante del punto a).
+c. Un módulo que ordene el vector de ventas por código.
+d. Un módulo que muestre el contenido del vector resultante del punto c).
+e. Un módulo que elimine, del vector ordenado, las ventas con código de producto entre dos valores que se ingresan como parámetros.
+f. Un módulo que muestre el contenido del vector resultante del punto e).
+g. Un módulo que retorne la información (ordenada por código de producto de menor a mayor) de cada código par de producto junto a la cantidad total de productos vendidos.
+h. Un módulo que muestre la información obtenida en el punto g).
 
+program ej1p1;
+const
+  dimF = 50;
+type
+  comercio = 1..dimF;
+  dias = 1..31;
+  codigo = 1..15;
+  unidades = 1..99;
+  venta = record;
+    dia: dias;
+    cod: codigo;
+    cantv: unidades;
+  end;
+  superventas = array [comercio] of venta;
+
+function generarCodigo (x: codigo): codigo;
+var
+  num: codigo;
+begin
+  generarCodigo:= num;
+end;
+
+procedure leerventas (var v: ventas);
+var
+  codi: codigo;
+begin
+  read (v.dias);
+  if (v.dias <> 0) then
+    begin
+      codigo:= generarCodigo (v.cod);
+      read (v.cantv);
+    end;
+end;
+
+procedure cargarVenta (var sv: superventas; v: venta; var dimL: comercio);
+begin
+    while (dimL < dimF) do begin
+      dimL:= dimL + 1;
+      sv [dimL]:= v;
+    end; 
+end;
+
+procedure procesarventas (var sv: superventas; var dimL: comercio);
+var
+  v: ventas;
+begin  
+  leerventas (v);
+  while (v.dias <> 0) do begin
+    cargarVenta (sv,v, dimL);
+    leerventas (v);
+  end;
+end;
+
+procedure mostrarcontenido (sv: superventas; dimL: comercio);
+var
+  i: comercio;
+begin
+  for i:= 1 to dimL do begin
+    writeln (v[i]);
+end;
+
+var
+  sv: superventas;
+  dimL: comercio;
+begin
+  dimL:= 0;
+  procesarventas (sv,dimL); // inciso A.
+  mostrarcontenido (sv, dimL); //inciso B.
+  ordenarporcodigo (sv, dimL); inciso C; 'HACER'.
+end.
