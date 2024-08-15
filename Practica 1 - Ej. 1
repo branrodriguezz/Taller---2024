@@ -27,13 +27,6 @@ type
   end;
   superventas = array [comercio] of venta;
 
-function generarCodigo (x: codigo): codigo;
-var
-  num: codigo;
-begin
-  generarCodigo:= num;
-end;
-
 procedure leerventas (var v: ventas);
 var
   codi: codigo;
@@ -41,14 +34,14 @@ begin
   read (v.dias);
   if (v.dias <> 0) then
     begin
-      codigo:= generarCodigo (v.cod);
+      v.cod:= random (14) + 1;
       read (v.cantv);
     end;
 end;
 
 procedure cargarVenta (var sv: superventas; v: venta; var dimL: comercio);
 begin
-    while (dimL < dimF) do begin
+    if (dimL < dimF) do begin
       dimL:= dimL + 1;
       sv [dimL]:= v;
     end; 
@@ -70,15 +63,80 @@ var
   i: comercio;
 begin
   for i:= 1 to dimL do begin
-    writeln (v[i]);
+    writeln (sv[i].dia);
+    writeln (sv[i].cod);
+    writeln (sv[i].cant);
+  end;
 end;
+
+procedure ordenarporcodigo (var sv: superventas; dimL: comercio);
+var
+  i,j: comercio;
+  actual: codigo; 
+begin
+  for i:= 2 to dimL do begin //siempre 2?
+    actual:= sv[i].cod;
+    j:= i - 1;
+    while (j > 0) and (sv[j].cod > actual) do
+      begin
+        sv[j+1].cod:= sv[j].cod;
+        j:= j - 1;
+      end;
+    sv[j+1].cod:= actual;
+end;
+
+procedure mostrarcontenidovol2.0 (sv: superventas; dimL: comercio);
+var
+  i: comercio;
+begin
+  for i:= 1 to dimL do 
+    writeln (sv[i].dia);
+    writeln (sv[i].cod);
+    writeln (sv[i].cant);
+  end;
+end;
+
+
+function buscarcod (sv: superventas; dimL: comercio; valor1: codigo): comercio;
+var
+  aux: comercio;
+begin
+  aux:= 1;
+  while (aux <= dimL) do begin
+    if (sv[aux].cod = valor1) then
+        buscarcod:= aux;
+    else
+      aux:= aux + 1;
+  end;
+end;
+
+procedure eliminarporcodigo (var sv: superventas; var dimL: comercio; pos1, pos2: codigo);
+var
+  i,j: comercio;
+  pos: integer;
+  val1,val2: integer;
+begin
+  val1:= pos1;
+  val2:= pos2;
+  while (vs[pos1].cod < vs[pos2].cod) do begin
+      for j:= aux to (dimL - 1)do begin
+        sv[j]
+  
+        
+end; 
 
 var
   sv: superventas;
   dimL: comercio;
+  valor1,valor2: codigo;
 begin
+  Randomize; 
   dimL:= 0;
   procesarventas (sv,dimL); // inciso A.
   mostrarcontenido (sv, dimL); //inciso B.
-  ordenarporcodigo (sv, dimL); inciso C; 'HACER'.
+  ordenarporcodigo (sv, dimL); inciso C;
+  mostrarcontenidovol.2 (sv, dimL); inciso D;
+  readln (valor1);
+  readln (valor2);
+  eliminarporcodigo (sv,dimL, buscarcod(sv,dimL,valor1),buscarcod(sv,dimL,valor2)); inciso E;
 end.
