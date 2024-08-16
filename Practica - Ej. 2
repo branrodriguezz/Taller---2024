@@ -1,0 +1,55 @@
+El administrador de un edificio de oficinas cuenta, en papel, con la información del pago de las expensas de dichas oficinas.
+Implementar un programa que invoque a módulos para cada uno de los siguientes puntos:
+a. Genere un vector, sin orden, con a lo sumo las 300 oficinas que administra. 
+De cada oficina se ingresa el código de identificación, DNI del propietario y valor de la expensa. 
+La lectura finaliza cuando se ingresa el código de identificación -1, el cual no se procesa.
+b. Ordene el vector, aplicando el método de inserción, por código de identificación de la oficina.
+c. Ordene el vector aplicando el método de selección, por código de identificación de la oficina.
+
+program ej2p1;
+const
+  dimF = 300;
+type
+  ofi = 1..dimF;
+  oficina = record;
+    cod: integer;
+    dni: integer;
+    valor: real;
+  end;
+  vectoroficinas = array [ofi] of oficina;
+
+procedure leeroficina (var o: oficina);
+begin
+  read (v.cod);
+  if (v.cod <> -1) then begin
+    read (v.dni);
+    read (v.valor);
+  end;
+end;
+
+procedure agregarvector (var v:vectoroficinas; o: oficina var dimL: integer);
+begin
+  if (dimL < dimF) do begin
+    v [dimL]:= o;
+    dimL:= dimL + 1;
+  end;
+end;
+
+procedure generarvector (var v: vectoroficinas; var dimL: integer);
+var
+  o: oficina;
+begin
+  leeroficina (o);
+  while (v.cod <> -1) do begin
+    agregarvector (v,o, dimL);
+    leeroficina (o);
+  end;
+end;
+
+var
+  v: vectoroficinas;
+  dimL: integer;
+begin
+  dimL:= 0;
+  generarvector (v,dimL);
+end.
