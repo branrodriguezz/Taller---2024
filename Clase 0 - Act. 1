@@ -11,3 +11,36 @@ begin
   writeln ('El número aleatorio generado es: ', ale); 
   readln;
 end.
+
+c) Modifique el programa para que imprima 20 números aleatorios.
+  program NumAleatorio; 
+  var 
+    ale,i: integer;
+  begin
+    randomize;
+    for i: 1 to 20 do begin
+      ale := random (100);
+      writeln ('El número aleatorio generado es: ', ale); 
+    end;
+    readln;
+end.
+d) Modifique el programa para que imprima N números aleatorios en el rango (A,B), donde N, A y B son números enteros que se leen por teclado.
+  
+  program NumAleatorio; 
+  var 
+    ale,i,N,A,B: integer;
+  begin
+    randomize;
+    readln (A);//limite inferior del rango
+    readln (B); //limite superior del rango
+    readln (N);// cantidad de numeros aleatorios a generar
+    if (A <= B) then begin
+      for i:= 1 to N do begin
+        ale := random (B - A) + 1;
+        writeln ('El número aleatorio generado es: ', ale); 
+      end;
+    end;
+  end.
+
+e) Modifique el programa para que imprima números aleatorios en el rango (A,B) hasta que se genere un valor igual a F, el cual no debe imprimirse. 
+F, A y B son números enteros que se leen por teclado.
