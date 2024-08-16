@@ -1,0 +1,60 @@
+ACTIVIDAD 2: Crear un nuevo archivo ProgramaVectores.pas
+a) Implemente un módulo CargarVector que cree un vector de enteros con a lo sumo 50 valores aleatorios.
+Los valores, generados aleatoriamente (entre un mínimo y máximo recibidos por parámetro), deben ser almacenados en el vector en el mismo orden que se generaron, 
+hasta que se genere el cero.
+b) Implemente un módulo ImprimirVector que reciba el vector generago en a) e imprima todos los valores del vector en el mismo orden que están almacenados. 
+Qué cambiaría para imprimir en orden inverso?
+Deberia usar un downto desde el el ultimo hasta el primero.
+c) Escriba el cuerpo principal que invoque a los módulos ya implementados.
+
+program ej2p0;
+const
+  dimF = 50;
+type
+  rangoVector = 1..dimF;
+  vector = array [rangoVector] of integer;
+
+procedure agregarVector (var v: vector; var dimL: integer; ale: integer);
+begin
+  if (dimL <= dimF) then begin
+    dimL:= dimL + 1;
+    v[dimL]:= ale;
+  end;
+end;
+
+procedure cargarVector(var v: vector; var dimL: integer; min, max: integer);
+var
+  ale: integer;
+begin
+  ale:= random (max - min) + 1;
+  writeln ('El numero aleatorio es ' , ale);
+  while (ale >= min) and (ale <= max) do begin
+    if (ale <> 0) then begin  
+      agregarVector (v, dimL, ale);
+    ale:= random (max - min) + 1;
+    writeln ('El numero aleatorio es ' , ale);
+  end;
+end;
+
+procedure imprimirVector(v: vector; dimL: integer);
+var
+  i: integer;
+begin
+    for i:= 1 to dimL do begin
+        writeln ('Esta posicion numero' , i, ' del vector tiene el numero aleatorio ' , v[i]);
+    end;
+end;
+
+var
+  v: vector;
+  dimL,min,max: integer;
+begin
+  dimL:= 0;
+  randomize;
+  writeln ('Ingrese el valor minimo');
+  readln (min);
+  writeln ('Ingrese el valor maximo');
+  readln (max);
+  cargarVector (v,dimL,min,max);
+  imprimirvector (v,dimL);
+end.
