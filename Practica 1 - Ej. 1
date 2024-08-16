@@ -34,7 +34,7 @@ begin
   read (v.dias);
   if (v.dias <> 0) then
     begin
-      v.cod:= random (14) + 1;
+      v.cod:= Random (15) + 1;
       read (v.cantv);
     end;
 end;
@@ -58,14 +58,19 @@ begin
   end;
 end;
 
+procedure imprimirVenta (v: venta);
+begin
+  writeln (v.dia);
+  writeln (v.cod);
+  writeln (v.cantv);
+end;
+
 procedure mostrarcontenido (sv: superventas; dimL: comercio);
 var
   i: comercio;
 begin
   for i:= 1 to dimL do begin
-    writeln (sv[i].dia);
-    writeln (sv[i].cod);
-    writeln (sv[i].cant);
+    imprimirVenta (sv[i]);
   end;
 end;
 
@@ -84,18 +89,6 @@ begin
       end;
     sv[j+1].cod:= actual;
 end;
-
-procedure mostrarcontenidovol2.0 (sv: superventas; dimL: comercio);
-var
-  i: comercio;
-begin
-  for i:= 1 to dimL do 
-    writeln (sv[i].dia);
-    writeln (sv[i].cod);
-    writeln (sv[i].cant);
-  end;
-end;
-
 
 function buscarcod (sv: superventas; dimL: comercio; valor1: codigo): comercio;
 var
@@ -130,13 +123,14 @@ var
   dimL: comercio;
   valor1,valor2: codigo;
 begin
-  Randomize; 
+  Randomize;
   dimL:= 0;
   procesarventas (sv,dimL); // inciso A.
   mostrarcontenido (sv, dimL); //inciso B.
   ordenarporcodigo (sv, dimL); inciso C;
-  mostrarcontenidovol.2 (sv, dimL); inciso D;
+  mostrarcontenido (sv, dimL); inciso D;
   readln (valor1);
   readln (valor2);
   eliminarporcodigo (sv,dimL, buscarcod(sv,dimL,valor1),buscarcod(sv,dimL,valor2)); inciso E;
+  mostrarcontenido (sv, dimL); inciso F;
 end.
