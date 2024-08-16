@@ -1,0 +1,13 @@
+ACTIVIDAD 1
+a) Compile y ejecute el programa descargado b) Responda ¿Qué hace el programa?
+- El programa brinda un numero aleatorio entre 0 y 99 (random) y lo muestra en pantalla. 
+La linea readln lee algun comentario que agreguemos al final del programa.
+program NumAleatorio; 
+var 
+  ale: integer;
+begin
+  randomize;
+  ale := random (100);
+  writeln ('El número aleatorio generado es: ', ale); 
+  readln;
+end.
