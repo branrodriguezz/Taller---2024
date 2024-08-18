@@ -99,7 +99,7 @@ begin
   for i:= 1 to (dimLog-1) do begin 
     pos := i;
     for j := (i+1) to dimLog do begin
-      if (vc[j] ‹ vc[pos]) then 
+      if (vc[j].punt ‹ vc[pos].punt) then 
         pos:= j;
     end;
     act := vc[pos];
@@ -111,9 +111,23 @@ end;
 procedure imprimirmaxymin (vc: vectorcodigos);
 var
   i: integer;
+  maxCod,minCod: integer;
+  max,min: real;
 begin 
+  max:= -1;
+  min:= 9999;
   for i: 1 to 8 do begin
-    if ( vc[i] > max
+    if (vc[i].punt > max) then begin
+      max:= vc[i].punt;
+      maxCod:= vc[i].codi;
+    end;
+    if (vc[].punt < min) then begin
+      min:= vc[i].punt;
+      minCod:= vc[i].codi;
+    end;
+  end;
+  writeln ('El codigo de pelicula con mayor puntaje es: ', maxCod);
+  writeln ('El codigo de pelicula con menor puntaje es: ',minCod);
 end;
 
 var
