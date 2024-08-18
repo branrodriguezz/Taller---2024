@@ -50,7 +50,7 @@ procedure ordenarVectorinsercion (var v: vector; dimL: integer);
 var
   i,j, act: integer; 
 begin
-  for i:= 2 to dimlog do begin
+  for i:= 2 to dimL do begin
     act:= v[i].cod;
     j:= i-1;
     while (j > 0) and (v[j].cod › actual) do
@@ -66,9 +66,9 @@ procedure ordenarVectorseleccion (var v: vector; dimL: integer);
 var
   i,j,pos,act: integer;
 begin
-  for i:= 1 to (dimLog-1) do begin 
+  for i:= 1 to (dimL-1) do begin 
     pos := i;
-    for j := (i+1) to dimLog do begin
+    for j := (i+1) to dimL do begin
       if (v[j].cod ‹ v[pos].cod) then 
         pos:= j;
     end;
