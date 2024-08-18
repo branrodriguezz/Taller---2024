@@ -1,0 +1,137 @@
+3.- Netflix ha publicado la lista de películas que estarán disponibles durante el mes de diciembre de 2022. 
+De cada película se conoce: código de película, código de género (1: acción, 2: aventura, 3: drama, 4: suspenso, 5: comedia, 6: bélico, 7: documental y 8: terror) 
+y puntaje promedio otorgado por las críticas.
+Implementar un programa que invoque a módulos para cada uno de los siguientes puntos:
+a. Lea los datos de películas, los almacene por orden de llegada y agrupados por código de género, y retorne en una estructura de datos adecuada. 
+La lectura finaliza cuando se lee el código de la película -1.
+b. Genere y retorne en un vector, para cada género, el código de película con mayor puntaje obtenido entre todas las críticas, 
+a partir de la estructura generada en a)..
+c. Ordene los elementos del vector generado en b) por puntaje utilizando alguno de los dos métodos vistos en la teoría.
+d. Muestre el código de película con mayor puntaje y el código de película con menor puntaje, del vector obtenido en el punto c).
+
+program p1ej3;
+type
+  rangogenero = 1..8;
+  vector = array [rangogenero] of lista;
+  puntycod = record
+    punt: real;
+    codi: integer;
+  end;
+  vectorcodigos = array [rangogenero] of puntycod;
+  pelicula = record
+    cod: integer;
+    codgenero: rangogenero;
+    puntprom: real;
+  end;
+  lista = ^nodo
+  nodo = record
+    ele: pelicula;
+    sig: lista;
+  end;
+
+procedure leerpelicula (var p: pelicula);
+begin
+  readln (p.cod);
+  if (p.cod <> -1) then begin
+    readln (p.codgenero);
+    readln (p.puntprom);
+  end;
+end;
+
+procedure inicializarVector (var v: vector);
+var
+  i: integer;
+begin
+  for i: 1 to 8 do begin
+    v[i]:= nil;
+end;
+
+procedure agregarAtras (var l, ult: lista; p: pelicula);
+var
+  nuevo: lista;
+begin
+  new (nuevo);
+  nuevo^.ele:= p;
+  nuevo^.sig:= nil;
+  if (l = nil) then
+    l:= nuevo;
+  else begin
+    ult^.sig:= nuevo;
+    ult:= nuevo;
+  end;
+end;
+
+procedure cargarVector (var v: vector);
+var
+  p: pelicula;
+  ult: lista;
+begin
+  leerpelicula (p);
+  while (p.cod <> -1) do begin
+    agregarAtras (v[codgenero], ult, p);
+    leerpelicula (p);
+  end;
+end;
+
+procedure inicializarVectorcodigos (var vc: vectorcodigos);
+var
+  i: integer;
+begin
+  for i:= 1 to 8 do begin
+    vc[i]:= -1;
+end;
+
+procedure calcularmayorpuntaje (l: lista; var codmax: integer; var punmax: real);
+begin
+  while (l <> nil) do begin
+    if (l^.ele.puntprom > max) then begin
+      punmax:= l^.ele.puntprom;
+      codmax:= l^.ele.cod;
+    end;
+    l:= l^.sig;
+  end;
+end;
+
+procedure ordenarVector (vc: vectorcodigos); //seleccion
+var
+  i,j,pos,act: integer;
+begin
+  for i:= 1 to (dimLog-1) do begin 
+    pos := i;
+    for j := (i+1) to dimLog do begin
+      if (vc[j] ‹ vc[pos]) then 
+        pos:= j;
+    end;
+    act := vc[pos];
+    vc[pos]:= vc[i];
+    vc[i] := act;
+  end;
+end;
+
+procedure imprimirmaxymin (vc: vectorcodigos);
+var
+  i: integer;
+begin 
+  for i: 1 to 8 do begin
+    if ( vc[i] > max
+end;
+
+var
+  v: vector;
+  i: integer;
+  codmax: integer;
+  punmax: real;
+begin
+  inicializarVector (v);
+  cargarVector (v); //inciso A
+  inicizalizarVectorcodigos (vc);
+  for i: 1 to 8 do begin //inciso B
+    codmax:= 0;
+    punmax:= 0;
+    calcularmayorpuntaje (v[i], codmax, punmax);
+    vc[i].punt:= punmax;
+    vc[i].codi:= codmax;
+  end;
+  ordenarVector (vc); //inciso C
+  imprimirmaxymin (vc); //inciso D
+end.
