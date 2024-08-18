@@ -12,12 +12,12 @@ const
   v2 = 150;
 type
   lista = ^nodo;
-  nodo = record;
+  nodo = record
     ele: integer;
     sig: lista;
   end;
 
-procedure agregarAtras (var l,ult: lista; ale: integer);
+procedure insertarOrdenado (var l: lista; ale: integer);
 var
   nuevo: lista;
 begin
@@ -26,12 +26,18 @@ begin
   nuevo^.sig:= nil;
   if (l = nil) then begin 
     l:= nuevo;
-    ult:= nuevo;
-  end;
   else begin
-    ult^.sig:= nuevo;
-    ult:= nuevo;
-  end;
+    act:=l; ant:=l;
+		while ((act<>nil) and (n>act^.elem)) do begin
+			ant:=act; act:=act^.sig;
+		end;
+		if(act=l)then begin
+			nue^.sig:=l; l:=nue
+		end 
+    else begin
+			ant^.sig:=nue; nue^.sig:=act;
+		end;
+	end;
 end;
 
 procedure cargarLista (var l: lista);
@@ -39,27 +45,42 @@ var
   ale: integer;
   ult: lista;
 begin
-  ale:= random (v2 - v1) + 1;
-  writeln ('El numero generado es: ' ,ale);
-  while (ale => v1) and (ale <= v2) do begin
-      while (ale <> 120) do 
-        agregarAtras (l, ale, ult);
-    ale:= random (v2 - v1) + 1;
-    writeln ('El numero generado es: ' ,ale);
-  end;
+    ale:= random (v2 - v1 + 1) + v1;
+    while (ale <> 120) do begin
+        insertarOrdenado (l, ale);
+        ale:= random (v2 - v1 + 1) + v1;
+    end;
 end;
 
 procedure imprimirLista (l: lista);
 begin
-  while (l <> nil) do begin
+  writeln ('La lista ordenada es la siguiente: ');
+  while (l <> nil) do 
     writeln ('Se almacena el valor: ' , l^.ele);
+    l:= l^.sig;
+end;
+
+function buscarElemento (l: lista; valor: integer): boolean;
+var
+  encontre: boolean;
+begin
+  encontre:= false;
+  while (l<> nil) and (valor > l^.ele) do begin 
+    l:= l^.sig;
+  if (l <> nil) and (l^.ele = valor) then 
+    encontre:= true;
+  buscarElemento:= encontre;
 end;
 
 var
   l: lista;
+  valor: integer;
 begin
   randomize;
   l:= nil;
   cargarLista (l); //inciso A;
   imprimirLista (l); //inciso B;
+  writeln ('Ingrese un numero a buscar '); 
+  readln (valor);
+  writeln (buscarElemento (l,valor)); //inciso C;
 end.
