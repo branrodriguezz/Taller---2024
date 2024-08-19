@@ -26,22 +26,31 @@ c) Modifique el programa para que imprima 20 números aleatorios.
 end.
 d) Modifique el programa para que imprima N números aleatorios en el rango (A,B), donde N, A y B son números enteros que se leen por teclado.
   
-  program NumAleatorio; 
+ program ej1; 
   var 
     ale,i,N,A,B: integer;
   begin
     randomize;
+    writeln ('Ingrese el limite33333 inferior del rango: ');
     readln (A);//limite inferior del rango
+    writeln ('Ingrese el limite superior del rango: ');
     readln (B); //limite superior del rango
+    writeln ('Ingrese la cantidad de numeros aleatorios a generar: ');
     readln (N);// cantidad de numeros aleatorios a generar
     if (A <= B) then begin
       for i:= 1 to N do begin
-        ale := random (B - A) + 1;
+        ale := random (B - A) + A;
         writeln ('El número aleatorio generado es: ', ale); 
       end;
-    end;
+    end
+    else
+		begin
+			for i:= N downto 1 do begin
+				ale := random (B - A) + A;
+				writeln ('El número aleatorio generado es: ', ale); 
+			end;
+		end;
   end.
-
 e) Modifique el programa para que imprima números aleatorios en el rango (A,B) hasta que se genere un valor igual a F, el cual no debe imprimirse. 
 F, A y B son números enteros que se leen por teclado.
   
