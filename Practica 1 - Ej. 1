@@ -9,7 +9,8 @@ c. Un módulo que ordene el vector de ventas por código.
 d. Un módulo que muestre el contenido del vector resultante del punto c).
 e. Un módulo que elimine, del vector ordenado, las ventas con código de producto entre dos valores que se ingresan como parámetros.
 f. Un módulo que muestre el contenido del vector resultante del punto e).
-g. Un módulo que retorne la información (ordenada por código de producto de menor a mayor) de cada código par de producto junto a la cantidad total de productos vendidos.
+g. Un módulo que retorne la información (ordenada por código de producto de menor a mayor) de cada código par de producto junto a la cantidad
+total de productos vendidos.
 h. Un módulo que muestre la información obtenida en el punto g).
 
 program ej1p1;
@@ -25,8 +26,12 @@ type
     cod: codigo;
     cantv: unidades;
   end;
+  producto = record;
+    cod: integer;
+    cantotal: integer;
+  end;
   superventas = array [comercio] of venta;
-
+  vector = array [1..7] of producto;
 procedure leerventas (var v: ventas);
 var
   codi: codigo;
@@ -105,23 +110,38 @@ end;
 
 procedure eliminarporcodigo (var sv: superventas; var dimL: comercio; pos1, pos2: codigo);
 var
-  i,j: comercio;
+  i: comercio;
   pos: integer;
   val1,val2: integer;
 begin
-  val1:= pos1;
   val2:= pos2;
-  while (vs[pos1].cod < vs[pos2].cod) do begin
-      for j:= aux to (dimL - 1)do begin
-        sv[j]
-  
-        
+  if (vs[pos1].cod < vs[pos2].cod) then begin //necesaria?
+    val1:= pos1;
+    if (val2 < dimL) then begin
+    for i:= (val2 + 1) to dimL do begin
+        sv[val2]:= sv[i];
+        val2:= val2 + 1;
+		end;
+		dimL:= dimL-(pos2-pos1+1);
+  end;      
 end; 
+
+procedure generarVector (sv: superventas, var v: vector; dimL: comercio, var dimLv: integer);
+var
+  i, j: integer;
+begin
+  for i:= 1 to dimL do begin
+    if ((sv[i].cod MOD 2) = 0) then 
+      for j:= 1 to dimLv do begin //ya se que son 7 los codigos pares
+        v[j].cod:= sv[j].cod
+end;
 
 var
   sv: superventas;
   dimL: comercio;
   valor1,valor2: codigo;
+  v: vector;
+  dimLv: integer;
 begin
   Randomize;
   dimL:= 0;
@@ -133,4 +153,5 @@ begin
   readln (valor2);
   eliminarporcodigo (sv,dimL, buscarcod(sv,dimL,valor1),buscarcod(sv,dimL,valor2)); inciso E;
   mostrarcontenido (sv, dimL); inciso F;
+  generarVector (sv,v,dimL, dimLv); //inciso G;
 end.
