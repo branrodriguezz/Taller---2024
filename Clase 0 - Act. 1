@@ -39,14 +39,14 @@ d) Modifique el programa para que imprima N números aleatorios en el rango (A,B
     readln (N);// cantidad de numeros aleatorios a generar
     if (A <= B) then begin
       for i:= 1 to N do begin
-        ale := random (B - A) + A;
+        ale := random (B - A + 1) + A;
         writeln ('El número aleatorio generado es: ', ale); 
       end;
     end
     else
 		begin
 			for i:= N downto 1 do begin
-				ale := random (B - A) + A;
+				ale := random (B - A + 1) + A;
 				writeln ('El número aleatorio generado es: ', ale); 
 			end;
 		end;
@@ -63,10 +63,10 @@ begin
     readln (B); //limite superior del rango
     readln (F);// valor 
     if (A <= B) then begin
-        ale:= A + random (B - A) + 1;
+        ale:= random (B - A + 1) + A;
         while (ale <> F) do begin
             writeln('El número aleatorio generado es: ', ale);
-            ale:= A + random (B-A) + 1;
+            ale:= A + random (B - A + 1) + A ;
         end;
     end;
 end.
