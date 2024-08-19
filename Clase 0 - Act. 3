@@ -19,16 +19,18 @@ type
 
 procedure insertarOrdenado (var l: lista; ale: integer);
 var
-  nuevo: lista;
+  nue: lista;
+  act,ant: lista;
 begin
-  new (nuevo);
-  nuevo^.ele:= ale;
-  nuevo^.sig:= nil;
+  new (nue);
+  nue^.ele:= ale;
+  nue^.sig:= nil;
   if (l = nil) then begin 
-    l:= nuevo;
+    l:= nue;
+   end
   else begin
     act:=l; ant:=l;
-		while ((act<>nil) and (n>act^.elem)) do begin
+		while ((act<>nil) and (ale>act^.ele)) do begin
 			ant:=act; act:=act^.sig;
 		end;
 		if(act=l)then begin
@@ -43,7 +45,6 @@ end;
 procedure cargarLista (var l: lista);
 var
   ale: integer;
-  ult: lista;
 begin
     ale:= random (v2 - v1 + 1) + v1;
     while (ale <> 120) do begin
