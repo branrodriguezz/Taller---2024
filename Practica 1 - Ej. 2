@@ -38,22 +38,23 @@ end;
 procedure generarvector (var v: vectoroficinas; var dimL: integer);
 var
   o: oficina;
+  i: integer;
 begin
-  leeroficina (o);
-  while (o.cod <> -1) do begin
+  for i:= 1 to 3 do begin
+	leeroficina (o);
     agregarvector (v,o, dimL);
-    leeroficina (o);
   end;
 end;
 
 procedure ordenarVectorinsercion (var v: vectoroficinas; dimL: integer);
 var
-  i,j, act: integer; 
+  i,j: integer; 
+  act: oficina;
 begin
   for i:= 2 to dimL do begin
     act:= v[i];
     j:= i-1;
-    while (j > 0) and (v[j].cod > v [i].cod) do
+    while (j > 0) and (v[j].cod > v[i].cod) do
       begin
         v[j+1]:= v[J];
         j:= j - 1;
@@ -64,7 +65,8 @@ end;
 
 procedure ordenarVectorseleccion (var v: vectoroficinas; dimL: integer);
 var
-  i,j,pos,act: integer;
+  i,j,pos: integer;
+  act: oficina;
 begin
   for i:= 1 to (dimL-1) do begin 
     pos := i;
@@ -78,6 +80,17 @@ begin
   end;
 end;
 
+procedure imprimirVector(v: vectoroficinas; dimL: integer);
+var
+	i: integer;
+begin
+	for i:= 1 to dimL do begin
+		writeln ('Codigo: ', v[i].cod);
+		writeln ('Dni: ', v[i].dni);
+		writeln ('Valor: ', v[i].valor);
+	end;
+end;
+
 var
   v: vectoroficinas;
   dimL: integer;
@@ -86,4 +99,5 @@ begin
   generarvector (v,dimL); //inciso A;
   ordenarVectorinsercion (v, dimL); // inciso B;
   ordenarVectorseleccion (v,dimL); //inciso C;
+  imprimirVector (v,dimL);
 end.
