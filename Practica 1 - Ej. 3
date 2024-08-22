@@ -48,6 +48,7 @@ var
 begin
   for i:= 1 to 8 do begin
     v[i].l:= nil;
+  end;
 end;
 
 procedure agregarAtras (var l, ult: lista; p: pelicula);
@@ -58,7 +59,7 @@ begin
   nuevo^.ele:= p;
   nuevo^.sig:= nil;
   if (l = nil) then
-    l:= nuevo;
+    l:= nuevo
   else begin
     ult^.sig:= nuevo;
     ult:= nuevo;
@@ -82,7 +83,7 @@ var
   i: integer;
 begin
   for i:= 1 to 8 do begin
-    vc[i]:= -1;
+    vc[i].punt:= 0;
 end;
 procedure calcularmayorpuntaje (l: lista; var codmax: integer; var punmax: real);
 begin
@@ -113,23 +114,15 @@ end;
 procedure imprimirmaxymin (vc: vectorcodigos);
 var
   i: integer;
-  maxCod,minCod: integer;
-  max,min: real;
 begin 
   max:= -1;
-  min:= 9999;
-  for i: 1 to 8 do begin
-    if (vc[i].punt > max) then begin
-      max:= vc[i].punt;
-      maxCod:= vc[i].codi;
-    end;
-    if (vc[].punt < min) then begin
-      min:= vc[i].punt;
-      minCod:= vc[i].codi;
-    end;
-  end;
-  writeln ('El codigo de pelicula con mayor puntaje es: ', maxCod);
-  writeln ('El codigo de pelicula con menor puntaje es: ',minCod);
+  m
+  while (vc[i].punt = 0) and (i <= dimF)do begin
+	i:= i + 1;
+	if (vc[i].punt <> 0) then begin
+		writeln ('El codigo de pelicula con mayor puntaje es: ', vc[i].punt;
+		writeln ('El codigo de pelicula con mayor puntaje es: ', vc[dimF].punt);
+	end;
 end;
 
 var
