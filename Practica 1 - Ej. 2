@@ -11,7 +11,7 @@ const
   dimF = 300;
 type
   ofi = 1..dimF;
-  oficina = record;
+  oficina = record
     cod: integer;
     dni: integer;
     valor: real;
@@ -20,16 +20,16 @@ type
 
 procedure leeroficina (var o: oficina);
 begin
-  read (v.cod);
-  if (v.cod <> -1) then begin
-    read (v.dni);
-    read (v.valor);
+  read (o.cod);
+  if (o.cod <> -1) then begin
+    read (o.dni);
+    read (o.valor);
   end;
 end;
 
-procedure agregarvector (var v:vectoroficinas; o: oficina var dimL: integer);
+procedure agregarvector (var v:vectoroficinas; o: oficina; var dimL: integer);
 begin
-  if (dimL < dimF) do begin
+  if (dimL < dimF) then begin
     v [dimL]:= o;
     dimL:= dimL + 1;
   end;
@@ -40,20 +40,20 @@ var
   o: oficina;
 begin
   leeroficina (o);
-  while (v.cod <> -1) do begin
+  while (o.cod <> -1) do begin
     agregarvector (v,o, dimL);
     leeroficina (o);
   end;
 end;
 
-procedure ordenarVectorinsercion (var v: vector; dimL: integer);
+procedure ordenarVectorinsercion (var v: vectoroficinas; dimL: integer);
 var
   i,j, act: integer; 
 begin
   for i:= 2 to dimL do begin
-    act:= v[i].cod;
+    act:= v[i];
     j:= i-1;
-    while (j > 0) and (v[j].cod › actual) do
+    while (j > 0) and (v[j].cod > v [i].cod) do
       begin
         v[j+1]:= v[J];
         j:= j - 1;
@@ -62,14 +62,14 @@ begin
   end;
 end;
 
-procedure ordenarVectorseleccion (var v: vector; dimL: integer);
+procedure ordenarVectorseleccion (var v: vectoroficinas; dimL: integer);
 var
   i,j,pos,act: integer;
 begin
   for i:= 1 to (dimL-1) do begin 
     pos := i;
     for j := (i+1) to dimL do begin
-      if (v[j].cod ‹ v[pos].cod) then 
+      if (v[j].cod < v[pos].cod) then 
         pos:= j;
     end;
     act := v[pos];
