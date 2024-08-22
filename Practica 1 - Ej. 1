@@ -15,38 +15,45 @@ h. Un módulo que muestre la información obtenida en el punto g).
 
 program ej1p1;
 const
-  dimF = 50;
+	dimF = 50;
+	corte = 0;
 type
-  comercio = 1..dimF;
+  comercio = 0..dimF;
   dias = 1..31;
-  codigo = 1..15;
+  codigo = 0..15;
   unidades = 1..99;
-  venta = record;
+  
+  venta = record
     dia: dias;
     cod: codigo;
     cantv: unidades;
   end;
-  producto = record;
-    cod: integer;
-    cantotal: integer;
-  end;
-  superventas = array [comercio] of venta;
-  vector = array [1..7] of producto;
-procedure leerventas (var v: ventas);
-var
-  codi: codigo;
+  
+  superventas = array [1..dimF] of venta;
+  
+  lista = ^nodo;
+  nodo = record
+	ele: venta;
+	sig: lista;
+	end;
+
+procedure leerventas (var v: venta);
 begin
-  read (v.dias);
-  if (v.dias <> 0) then
-    begin
-      v.cod:= Random (15) + 1;
-      read (v.cantv);
+  writeln ('Dia');
+  v.dia:= random (32);
+  if (v.dia <> corte) then begin
+		writeln ('Codigo');
+		v.cod:= Random (16) + 1;
+		writeln (v.cod);
+		writeln ('Cantidad de ventas');
+		readln (v.cantv);
+		writeln (v.cantv);
     end;
 end;
 
 procedure cargarVenta (var sv: superventas; v: venta; var dimL: comercio);
 begin
-    if (dimL < dimF) do begin
+    if (dimL < dimF) then begin
       dimL:= dimL + 1;
       sv [dimL]:= v;
     end; 
@@ -54,10 +61,10 @@ end;
 
 procedure procesarventas (var sv: superventas; var dimL: comercio);
 var
-  v: ventas;
+  v: venta;
 begin  
   leerventas (v);
-  while (v.dias <> 0) do begin
+  while (v.dia <> corte) do begin
     cargarVenta (sv,v, dimL);
     leerventas (v);
   end;
@@ -65,9 +72,9 @@ end;
 
 procedure imprimirVenta (v: venta);
 begin
-  writeln (v.dia);
-  writeln (v.cod);
-  writeln (v.cantv);
+  writeln ('Dia: ' , v.dia);
+  writeln ('Codigo: ' , v.cod);
+  writeln ('Cantidad de ventas: ' , v.cantv);
 end;
 
 procedure mostrarcontenido (sv: superventas; dimL: comercio);
@@ -95,63 +102,101 @@ begin
     sv[j+1].cod:= actual;
 end;
 
-function buscarcod (sv: superventas; dimL: comercio; valor1: codigo): comercio;
-var
-  aux: comercio;
+function buscarPosicion (sv: superventas; dimL: comercio ; elemABuscar: codigo): comercio;
+var 
+	pos: comercio;
 begin
-  aux:= 1;
-  while (aux <= dimL) do begin
-    if (sv[aux].cod = valor1) then
-        buscarcod:= aux;
-    else
-      aux:= aux + 1;
-  end;
+    pos:= 1;
+    while (pos <= dimL) and (elemABuscar > sv[pos].cod) do
+       pos:= pos + 1;
+    if (pos > dimL) then 
+		buscarPosicion:= 0;
+    else 
+		buscarPosicion:= pos;
+end;
+  
+function BuscarPosicionDesde (sv: superventas; dimL, pos : integer; elemABuscar: codigo): comercio;
+begin
+    while (pos <= dimL) and (elemABuscar >= sv[pos].cod) do
+       pos:= pos + 1;
+    if (pos > dimL) then 
+		BuscarPosicionDesde:= dimL;
+	else 
+		BuscarPosicionDesde:= pos - 1;
 end;
 
-procedure eliminarporcodigo (var sv: superventas; var dimL: comercio; pos1, pos2: codigo);
-var
-  i: comercio;
-  pos: integer;
-  val1,val2: integer;
-begin
-  val2:= pos2;
-  if (vs[pos1].cod < vs[pos2].cod) then begin //necesaria?
-    val1:= pos1;
-    if (val2 < dimL) then begin
-    for i:= (val2 + 1) to dimL do begin
-        sv[val2]:= sv[i];
-        val2:= val2 + 1;
+procedure eliminarporcodigo (var v: vector; var dimL: rango3; valorInferior, valorSuperior: codigo);
+var 
+	posInferior, posSuperior, i,j: comercio; 
+Begin
+	posInferior:= buscarPosicion (v, dimL, valorInferior);
+	if (posInferior <> 0) then begin
+		posSuperior:= BuscarPosicionDesde (sv, dimL, posInferior, valorSuperior);
+        for i:= posInferior to posSuperior do begin
+			for j:= posInferior to (diml-1) do 
+				v[j]:=v[j+1];
 		end;
-		dimL:= dimL-(pos2-pos1+1);
-  end;      
-end; 
+		dimL:= dimL - (posSuperior - posInferior + 1); 
+    end;
+end;
 
-procedure generarVector (sv: superventas, var v: vector; dimL: comercio, var dimLv: integer);
-var
-  i, j: integer;
+function cumple (codigo: codigo): boolean;
 begin
-  for i:= 1 to dimL do begin
-    if ((sv[i].cod MOD 2) = 0) then 
-      for j:= 1 to dimLv do begin //ya se que son 7 los codigos pares
-        v[j].cod:= sv[j].cod
+	cumple:= (codigo MOD 2 = 0);
+end;
+
+procedure agregarAdelante (var l: lista; vent: venta);
+var
+ nuevo:lista;
+begin
+	new (nuevo); 
+	nuevo^.elem:= vent; 
+	nuevo^.sig:= nil; 
+	if (l = nil) then 
+		l:= nuevo
+	else begin
+        nuevo^.sig:= l;
+        l:=nuevo;
+    end;
+end;
+
+procedure generarLista (sv: superventas; dimL: comercio, var l: lista);
+var
+  var i: comercio; 
+begin
+	for i:= dimL downto 1 do begin //por que down to...ordenada por código de producto de menor a mayor.
+		if (cumple (sv[i].cod)) then
+		agregarAdelante (l,sv[i]);
+	end;
+end;
+
+procedure mostrarconte (l: lista);
+begin
+	while (l <> nil) do begin
+		writeln ('Dia: ' , l^.ele.dia);
+		writeln ('Codigo: ' , l^.ele.cod);
+		writeln ('Cantidad de ventas: ' , l^.ele.cantv);
+	end;
 end;
 
 var
-  sv: superventas;
+  l: lista;
   dimL: comercio;
-  valor1,valor2: codigo;
+  valorInferior,valorSuperior: codigo;
   v: vector;
   dimLv: integer;
 begin
   Randomize;
   dimL:= 0;
+  l:= nil;
   procesarventas (sv,dimL); // inciso A.
   mostrarcontenido (sv, dimL); //inciso B.
-  ordenarporcodigo (sv, dimL); inciso C;
-  mostrarcontenido (sv, dimL); inciso D;
-  readln (valor1);
-  readln (valor2);
-  eliminarporcodigo (sv,dimL, buscarcod(sv,dimL,valor1),buscarcod(sv,dimL,valor2)); inciso E;
-  mostrarcontenido (sv, dimL); inciso F;
-  generarVector (sv,v,dimL, dimLv); //inciso G;
+  ordenarporcodigo (sv, dimL); //inciso C.
+  mostrarcontenido (sv, dimL); //inciso D;
+  readln (valorInferior);
+  readln (valorSuperior);
+  eliminarporcodigo (sv,dimL,valorInferior, valorSuperior)); //inciso E;
+  mostrarcontenido (sv, dimL); //inciso F;
+  generarLista (v,dimL,l); //inciso G;
+  mostrarconte (l); //inciso H;
 end.
