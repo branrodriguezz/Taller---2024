@@ -19,7 +19,7 @@ const
 	corte = 0;
 type
   comercio = 0..dimF;
-  dias = 1..31;
+  dias = 0..31;
   codigo = 0..15;
   unidades = 1..99;
   
@@ -39,13 +39,13 @@ type
 
 procedure leerventas (var v: venta);
 begin
-  writeln ('Dia');
-  v.dia:= random (32);
-  if (v.dia <> corte) then begin
+  write('ingrese dia:' );
+  readln(v.dia);
+  if (v.dia <> 0) then begin
 		writeln ('Codigo');
 		v.cod:= Random (16) + 1;
 		writeln (v.cod);
-		writeln ('Cantidad de ventas');
+		write ('Cantidad de ventas: ');
 		readln (v.cantv);
 		writeln (v.cantv);
     end;
@@ -64,7 +64,7 @@ var
   v: venta;
 begin  
   leerventas (v);
-  while (v.dia <> corte) do begin
+  while (v.dia <> 0) do begin
     cargarVenta (sv,v, dimL);
     leerventas (v);
   end;
@@ -89,56 +89,52 @@ end;
 procedure ordenarporcodigo (var sv: superventas; dimL: comercio);
 var
   i,j: comercio;
-  actual: codigo; 
+  actual: venta; 
 begin
   for i:= 2 to dimL do begin //siempre 2?
-    actual:= sv[i].cod;
+    actual:= sv[i];
     j:= i - 1;
-    while (j > 0) and (sv[j].cod > actual) do
+    while (j > 0) and (sv[j].cod > actual.cod) do
       begin
         sv[j+1].cod:= sv[j].cod;
         j:= j - 1;
       end;
-    sv[j+1].cod:= actual;
+    sv[j+1]:= actual;
+  end;
 end;
 
-function buscarPosicion (sv: superventas; dimL: comercio ; elemABuscar: codigo): comercio;
-var 
-	pos: comercio;
-begin
-    pos:= 1;
-    while (pos <= dimL) and (elemABuscar > sv[pos].cod) do
-       pos:= pos + 1;
-    if (pos > dimL) then 
-		buscarPosicion:= 0;
-    else 
-		buscarPosicion:= pos;
-end;
-  
-function BuscarPosicionDesde (sv: superventas; dimL, pos : integer; elemABuscar: codigo): comercio;
-begin
-    while (pos <= dimL) and (elemABuscar >= sv[pos].cod) do
-       pos:= pos + 1;
-    if (pos > dimL) then 
-		BuscarPosicionDesde:= dimL;
-	else 
-		BuscarPosicionDesde:= pos - 1;
-end;
-
-procedure eliminarporcodigo (var v: vector; var dimL: rango3; valorInferior, valorSuperior: codigo);
-var 
-	posInferior, posSuperior, i,j: comercio; 
-Begin
-	posInferior:= buscarPosicion (v, dimL, valorInferior);
-	if (posInferior <> 0) then begin
-		posSuperior:= BuscarPosicionDesde (sv, dimL, posInferior, valorSuperior);
-        for i:= posInferior to posSuperior do begin
-			for j:= posInferior to (diml-1) do 
-				v[j]:=v[j+1];
+procedure eliminarElemento(var sv : superventas; var dimL : comercio; pos : integer);
+	var
+		i : integer;
+	begin
+		for i := pos to dimL - 1 do begin
+			sv[i] := sv[i+1];
 		end;
-		dimL:= dimL - (posSuperior - posInferior + 1); 
-    end;
-end;
+		dimL := dimL - 1;
+	end;
+
+procedure recorrerVector (var sv : superventas; var diml : comercio; valorInferior, valorSuperior: codigo);
+	var
+		i: integer;
+	begin
+	  
+	  // ajustando que lim_1 sea el menor siempre 
+		if (valorInferior > valorSuperior) then begin
+			i := valorInferior;
+			valorInferior := valorSuperior;
+			valorSuperior := i;
+		end;
+	  
+		i := 1;
+		while (i <= diml) do begin
+			if (sv[i].cod >= valorInferior) and (sv[i].cod <= valorSuperior) then begin //corroboro que el codigo del indice i no sea el mismo que la iteracion anterior
+				eliminarElemento(sv, dimL, i);
+			end 
+			else begin
+				i := i + 1; 
+			end;
+		end;
+	end;
 
 function cumple (codigo: codigo): boolean;
 begin
@@ -150,7 +146,7 @@ var
  nuevo:lista;
 begin
 	new (nuevo); 
-	nuevo^.elem:= vent; 
+	nuevo^.ele:= vent; 
 	nuevo^.sig:= nil; 
 	if (l = nil) then 
 		l:= nuevo
@@ -160,14 +156,18 @@ begin
     end;
 end;
 
-procedure generarLista (sv: superventas; dimL: comercio, var l: lista);
-var
-  var i: comercio; 
+procedure generarLista (sv: superventas; dimL: comercio; var l: lista);
+var 
+	i: comercio; 
+	total: integer;
 begin
+	total:= 0;
 	for i:= dimL downto 1 do begin //por que down to...ordenada por código de producto de menor a mayor.
+		total:= total + sv[i].cantv;
 		if (cumple (sv[i].cod)) then
-		agregarAdelante (l,sv[i]);
+			agregarAdelante (l,sv[i]);
 	end;
+	writeln ('La cantidad total de productos vendidos es: ' , total);
 end;
 
 procedure mostrarconte (l: lista);
@@ -182,9 +182,8 @@ end;
 var
   l: lista;
   dimL: comercio;
-  valorInferior,valorSuperior: codigo;
-  v: vector;
-  dimLv: integer;
+  valorInferior,valorSuperior: comercio;
+  sv: superventas;
 begin
   Randomize;
   dimL:= 0;
@@ -193,10 +192,12 @@ begin
   mostrarcontenido (sv, dimL); //inciso B.
   ordenarporcodigo (sv, dimL); //inciso C.
   mostrarcontenido (sv, dimL); //inciso D;
+  writeln ('Ingrese el limite inferior: ');
   readln (valorInferior);
+  writeln ('Ingrese el limite superior: ');
   readln (valorSuperior);
-  eliminarporcodigo (sv,dimL,valorInferior, valorSuperior)); //inciso E;
+  recorrerVector (sv,dimL,valorInferior,valorSuperior); //inciso E;
   mostrarcontenido (sv, dimL); //inciso F;
-  generarLista (v,dimL,l); //inciso G;
+  generarLista (sv,dimL,l); //inciso G;
   mostrarconte (l); //inciso H;
 end.
