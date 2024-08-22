@@ -20,11 +20,14 @@ type
 
 procedure leeroficina (var o: oficina);
 begin
-  read (o.cod);
-  if (o.cod <> -1) then begin
-    read (o.dni);
-    read (o.valor);
-  end;
+	writeln ('Codigo: ');
+	read (o.cod);
+	if (o.cod <> -1) then begin
+		writeln ('DNI: ');
+		read (o.dni);
+		writeln ('Valor: ');
+		read (o.valor);
+	end;
 end;
 
 procedure agregarvector (var v:vectoroficinas; o: oficina; var dimL: integer);
@@ -87,7 +90,7 @@ begin
 	for i:= 1 to dimL do begin
 		writeln ('Codigo: ', v[i].cod);
 		writeln ('Dni: ', v[i].dni);
-		writeln ('Valor: ', v[i].valor);
+		writeln ('Valor: ', v[i].valor :2);
 	end;
 end;
 
