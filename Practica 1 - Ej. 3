@@ -11,24 +11,28 @@ d. Muestre el código de película con mayor puntaje y el código de película c
 
 program p1ej3;
 type
-  rangogenero = 1..8;
-  vector = array [rangogenero] of lista;
-  puntycod = record
-    punt: real;
-    codi: integer;
-  end;
-  vectorcodigos = array [rangogenero] of puntycod;
-  pelicula = record
-    cod: integer;
-    codgenero: rangogenero;
-    puntprom: real;
-  end;
-  lista = ^nodo
-  nodo = record
-    ele: pelicula;
-    sig: lista;
-  end;
-
+	rangogenero = 1..8;
+	puntycod = record
+		punt: real;
+		codi: integer;
+	end;
+	vectorcodigos = array [rangogenero] of puntycod;
+	pelicula = record
+		cod: integer;
+		codgenero: rangogenero;
+		puntprom: real;
+	end;
+	lista = ^nodo;
+	nodo = record
+		ele: pelicula;
+		sig: lista;
+	end;
+	registro = record
+		l: lista;
+		ult:lista;
+	end;
+	vector = array [rangogenero] of registro;
+	
 procedure leerpelicula (var p: pelicula);
 begin
   readln (p.cod);
@@ -42,8 +46,8 @@ procedure inicializarVector (var v: vector);
 var
   i: integer;
 begin
-  for i: 1 to 8 do begin
-    v[i]:= nil;
+  for i:= 1 to 8 do begin
+    v[i].l:= nil;
 end;
 
 procedure agregarAtras (var l, ult: lista; p: pelicula);
@@ -64,11 +68,11 @@ end;
 procedure cargarVector (var v: vector);
 var
   p: pelicula;
-  ult: lista;
+  r: registro;
 begin
   leerpelicula (p);
   while (p.cod <> -1) do begin
-    agregarAtras (v[codgenero], ult, p);
+    agregarAtras (v[codgenero], r.l, r.ult,p);
     leerpelicula (p);
   end;
 end;
@@ -80,7 +84,6 @@ begin
   for i:= 1 to 8 do begin
     vc[i]:= -1;
 end;
-
 procedure calcularmayorpuntaje (l: lista; var codmax: integer; var punmax: real);
 begin
   while (l <> nil) do begin
@@ -107,7 +110,6 @@ begin
     vc[i] := act;
   end;
 end;
-
 procedure imprimirmaxymin (vc: vectorcodigos);
 var
   i: integer;
