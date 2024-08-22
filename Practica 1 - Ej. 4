@@ -16,18 +16,18 @@ const
 type
   rangorubros = 1..8;
   rangorubro3 = 1..dimF;
-  vector = array [rangorubros] of lista;
-  vectorubro3 = array [rangorubro3] of producto;
   producto = record
     cod: integer;
     rubro: rangorubros;
     precio: real;
   end;
   lista = ^nodo;
-  nodo = record;
+  nodo = record
     ele: producto;
     sig: lista;
   end;
+  vector = array [rangorubros] of lista;
+  vectorubro3 = array [rangorubro3] of producto;
 
 procedure leerproducto (var p: producto);
 begin
@@ -44,7 +44,7 @@ begin
     v[i]:= nil;
 end;
 
-procedure insertarordenado (var l: lista; p: producto);
+procedure insertarordenado (var l:lista; p:producto);
 var
   act,ant, nuevo: lista;
 begin
