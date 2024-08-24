@@ -1,4 +1,4 @@
-3.- Netflix ha publicado la lista de películas que estarán disponibles durante el mes de diciembre de 2022. 
+{3.- Netflix ha publicado la lista de películas que estarán disponibles durante el mes de diciembre de 2022. 
 De cada película se conoce: código de película, código de género (1: acción, 2: aventura, 3: drama, 4: suspenso, 5: comedia, 6: bélico, 7: documental y 8: terror) 
 y puntaje promedio otorgado por las críticas.
 Implementar un programa que invoque a módulos para cada uno de los siguientes puntos:
@@ -7,7 +7,7 @@ La lectura finaliza cuando se lee el código de la película -1.
 b. Genere y retorne en un vector, para cada género, el código de película con mayor puntaje obtenido entre todas las críticas, 
 a partir de la estructura generada en a)..
 c. Ordene los elementos del vector generado en b) por puntaje utilizando alguno de los dos métodos vistos en la teoría.
-d. Muestre el código de película con mayor puntaje y el código de película con menor puntaje, del vector obtenido en el punto c).
+d. Muestre el código de película con mayor puntaje y el código de película con menor puntaje, del vector obtenido en el punto c).}
 
 program p1ej3;
 type
@@ -35,9 +35,12 @@ type
 	
 procedure leerpelicula (var p: pelicula);
 begin
+  write ('Codigo:' );
   readln (p.cod);
   if (p.cod <> -1) then begin
+	write ('Codigo de genero (del 1 al 8):' );
     readln (p.codgenero);
+    write ('Puntaje promedio:' );
     readln (p.puntprom);
   end;
 end;
@@ -46,9 +49,8 @@ procedure inicializarVector (var v: vector);
 var
   i: integer;
 begin
-  for i:= 1 to 8 do begin
+  for i:= 1 to 8 do
     v[i].l:= nil;
-  end;
 end;
 
 procedure agregarAtras (var l, ult: lista; p: pelicula);
@@ -69,11 +71,10 @@ end;
 procedure cargarVector (var v: vector);
 var
   p: pelicula;
-  r: registro;
 begin
   leerpelicula (p);
   while (p.cod <> -1) do begin
-    agregarAtras (v[codgenero], r.l, r.ult,p);
+    agregarAtras (v[p.codgenero].l, v[p.codgenero].ult, p);
     leerpelicula (p);
   end;
 end;
@@ -83,27 +84,30 @@ var
   i: integer;
 begin
   for i:= 1 to 8 do begin
-    vc[i].punt:= 0;
+    vc[i].codi:= 0;
+    vc[i].punt:= -1;
+   end;
 end;
-procedure calcularmayorpuntaje (l: lista; var codmax: integer; var punmax: real);
+procedure calcularmayorpuntaje (r: registro; var codmax: integer; var punmax: real);
 begin
-  while (l <> nil) do begin
-    if (l^.ele.puntprom > max) then begin
-      punmax:= l^.ele.puntprom;
-      codmax:= l^.ele.cod;
+  while (r.l <> nil) do begin
+    if (r.l^.ele.puntprom > punmax) then begin
+      punmax:= r.l^.ele.puntprom;
+      codmax:= r.l^.ele.cod;
     end;
-    l:= l^.sig;
+    r.l:= r.l^.sig;
   end;
 end;
 
 procedure ordenarVector (vc: vectorcodigos); //seleccion
 var
-  i,j,pos,act: integer;
+  i,j,pos: integer;
+  act: puntycod;
 begin
-  for i:= 1 to (dimLog-1) do begin 
+  for i:= 1 to (8-1) do begin 
     pos := i;
-    for j := (i+1) to dimLog do begin
-      if (vc[j].punt ‹ vc[pos].punt) then 
+    for j := (i+1) to 8 do begin
+      if (vc[j].punt < vc[pos].punt) then 
         pos:= j;
     end;
     act := vc[pos];
@@ -111,17 +115,20 @@ begin
     vc[i] := act;
   end;
 end;
+
+
 procedure imprimirmaxymin (vc: vectorcodigos);
 var
   i: integer;
 begin 
-  max:= -1;
-  m
-  while (vc[i].punt = 0) and (i <= dimF)do begin
-	i:= i + 1;
+	i:= 1;
+	while (vc[i].punt <> 0) and (i <= 8)do begin
+		i:= i + 1;
 	if (vc[i].punt <> 0) then begin
-		writeln ('El codigo de pelicula con mayor puntaje es: ', vc[i].punt;
-		writeln ('El codigo de pelicula con mayor puntaje es: ', vc[dimF].punt);
+		writeln ('El codigo de pelicula con menor puntaje es: ', vc[i].codi);
+		writeln ('El codigo de pelicula con mayor puntaje es: ', vc[8].codi);
+	end;
+		
 	end;
 end;
 
@@ -130,11 +137,12 @@ var
   i: integer;
   codmax: integer;
   punmax: real;
+  vc: vectorcodigos;
 begin
   inicializarVector (v);
   cargarVector (v); //inciso A
-  inicizalizarVectorcodigos (vc);
-  for i: 1 to 8 do begin //inciso B
+  inicializarVectorcodigos(vc);
+  for i:= 1 to 8 do begin //inciso B
     codmax:= 0;
     punmax:= 0;
     calcularmayorpuntaje (v[i], codmax, punmax);
