@@ -1,4 +1,4 @@
-1.- Se desea procesar la información de las ventas de productos de un comercio (como máximo 50).
+{Se desea procesar la información de las ventas de productos de un comercio (como máximo 50).
 Implementar un programa que invoque los siguientes módulos:
 a. Un módulo que retorne la información de las ventas en un vector. De cada venta se conoce el día de la venta, 
 código del producto (entre 1 y 15) y cantidad vendida (como máximo 99 unidades). 
@@ -11,7 +11,7 @@ e. Un módulo que elimine, del vector ordenado, las ventas con código de produc
 f. Un módulo que muestre el contenido del vector resultante del punto e).
 g. Un módulo que retorne la información (ordenada por código de producto de menor a mayor) de cada código par de producto junto a la cantidad
 total de productos vendidos.
-h. Un módulo que muestre la información obtenida en el punto g).
+h. Un módulo que muestre la información obtenida en el punto g).}
 
 program ej1p1;
 const
@@ -39,15 +39,14 @@ type
 
 procedure leerventas (var v: venta);
 begin
-  write('ingrese dia:' );
+  write('Ingrese dia:' );
   readln(v.dia);
   if (v.dia <> 0) then begin
-		writeln ('Codigo');
+		write ('Codigo:');
 		v.cod:= Random (16) + 1;
 		writeln (v.cod);
 		write ('Cantidad de ventas: ');
 		readln (v.cantv);
-		writeln (v.cantv);
     end;
 end;
 
@@ -103,38 +102,23 @@ begin
   end;
 end;
 
-procedure eliminarElemento(var sv : superventas; var dimL : comercio; pos : integer);
-	var
-		i : integer;
-	begin
-		for i := pos to dimL - 1 do begin
-			sv[i] := sv[i+1];
-		end;
-		dimL := dimL - 1;
+procedure eliminarVector (var sv : superventas; var diml : comercio; valorInicial, valorFinal: codigo);
+var i,j:integer;
+begin
+	if(valorInicial > valorFinal)then begin
+		i:= valorInicial; 
+		valorInicial:= valorFinal; 
+		valorFinal:=i;
 	end;
-
-procedure recorrerVector (var sv : superventas; var diml : comercio; valorInferior, valorSuperior: codigo);
-	var
-		i: integer;
-	begin
-	  
-	  // ajustando que lim_1 sea el menor siempre 
-		if (valorInferior > valorSuperior) then begin
-			i := valorInferior;
-			valorInferior := valorSuperior;
-			valorSuperior := i;
-		end;
-	  
-		i := 1;
-		while (i <= diml) do begin
-			if (sv[i].cod >= valorInferior) and (sv[i].cod <= valorSuperior) then begin //corroboro que el codigo del indice i no sea el mismo que la iteracion anterior
-				eliminarElemento(sv, dimL, i);
-			end 
-			else begin
-				i := i + 1; 
-			end;
-		end;
-	end;
+	i:=1;
+	while(i<=dimL)and(valorFinal > sv[i].cod)do 
+		i:=i+1;
+	while(i<=dimL)and(sv[i].cod <= valorFinal)do begin
+		for j:= i to(dimL - 1)do 
+			sv[j]:=sv[j+1];
+		dimL:=dimL - 1;
+	end; 
+end;
 
 function cumple (codigo: codigo): boolean;
 begin
@@ -176,28 +160,33 @@ begin
 		writeln ('Dia: ' , l^.ele.dia);
 		writeln ('Codigo: ' , l^.ele.cod);
 		writeln ('Cantidad de ventas: ' , l^.ele.cantv);
+		l:= l^.sig;
 	end;
 end;
 
 var
   l: lista;
   dimL: comercio;
-  valorInferior,valorSuperior: comercio;
+  valorInicial,valorFinal: comercio;
   sv: superventas;
 begin
   Randomize;
   dimL:= 0;
   l:= nil;
   procesarventas (sv,dimL); // inciso A.
+  writeln ('El vector luego de la carga es: ');
   mostrarcontenido (sv, dimL); //inciso B.
   ordenarporcodigo (sv, dimL); //inciso C.
+  writeln ('El vector luego de la ordenacion es: ');
   mostrarcontenido (sv, dimL); //inciso D;
-  writeln ('Ingrese el limite inferior: ');
-  readln (valorInferior);
-  writeln ('Ingrese el limite superior: ');
-  readln (valorSuperior);
-  recorrerVector (sv,dimL,valorInferior,valorSuperior); //inciso E;
+  write ('Ingrese el limite inferior: ');
+  readln (valorInicial);
+  write ('Ingrese el limite superior: ');
+  readln (valorFinal);
+  eliminarVector (sv,dimL,valorInicial,valorFinal); //inciso E;
+  writeln ('El vector luego de la eliminacion es: ');
   mostrarcontenido (sv, dimL); //inciso F;
   generarLista (sv,dimL,l); //inciso G;
+  writeln ('La lista generada es: ');
   mostrarconte (l); //inciso H;
 end.
