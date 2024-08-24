@@ -1,4 +1,4 @@
-Una librería requiere el procesamiento de la información de sus productos. De cada producto se conoce el código del producto, 
+{Una librería requiere el procesamiento de la información de sus productos. De cada producto se conoce el código del producto, 
 código de rubro (del 1 al 8) y precio.
 Implementar un programa que invoque a módulos para cada uno de los siguientes puntos:
 a. Lea los datos de los productos y los almacene ordenados por código de producto y agrupados por rubro, en una estructura de datos adecuada. 
@@ -8,7 +8,7 @@ c. Genere un vector (de a lo sumo 30 elementos) con los productos del rubro 3. C
 Si la cantidad de productos del rubro 3 es mayor a 30, almacenar los primeros 30 que están en la lista e ignore el resto.
 d. Ordene, por precio, los elementos del vector generado en c) utilizando alguno de los dos métodos vistos en la teoría.
 e. Muestre los precios del vector resultante del punto d).
-f. Calcule el promedio de los precios del vector resultante del punto d).
+f. Calcule el promedio de los precios del vector resultante del punto d).}
 
 program p1ej4;
 const
@@ -40,7 +40,7 @@ procedure inicializarVector (var v: vector);
 var
   i: integer;
 begin 
-  for i:= 1 to 8 do begin
+  for i:= 1 to 8 do 
     v[i]:= nil;
 end;
 
@@ -52,7 +52,7 @@ begin
   nuevo^.ele:= p;
   nuevo^.sig:= nil;
   if (l = nil) then 
-    l:= nuevo;
+    l:= nuevo
   else begin
     act:= l;
     ant:= l;
@@ -63,7 +63,7 @@ begin
     if (act = l) then begin
       nuevo^.sig:= l;
       l:= nuevo;
-    end;
+    end
     else begin
       ant^.sig:= nuevo;
       nuevo^.sig:= act;
@@ -79,6 +79,7 @@ begin
   while (p.precio <> 0) do begin 
     insertarordenado (v[p.rubro], p);
     leerproducto (p);
+   end;
 end;
 
 procedure mostrarcodigos (l: lista);
@@ -113,12 +114,13 @@ begin
   for i:= 2 to dimL do begin
     act:= vt[i];
     j:= i-1;
-    while (j > 0) and (vt[j].precio › vt[i].precio) do
+    while (j > 0) and (vt[j].precio > vt[i].precio) do
       begin
         vt[j+1]:= vt[j];
         j:= j - 1;
       end;
     vt[j+1]:= act; //no me guarda solo el precio? Quiero que guarde todo el registro;
+   end;
 end;
 
 var
@@ -135,7 +137,7 @@ begin
   mostrarProductos (v); //inciso B;
   generarVectorRubro3 (v[3],vt, dimL); //inciso C; 
   ordenarPorPrecio (vt,dimL); //inciso D;
-  for i: 1 to dimL do begin
+  for i:= 1 to dimL do begin
     writeln ('El precio del producto: ' , i, ' es ' , vt[i].precio);// inciso E;
     total:= total + vt[i].precio;
   end;
