@@ -57,7 +57,7 @@ begin
 	end;
 end;
  
-procedure maximoRecursivo (v: vector; dimL: integer; var max: integer);
+procedure maximoRecursivo (v: vector; dimL: integer; var max: integer); //por que conservo el max?
 Begin
     If (dimL > 0) then begin
         If (v[dimL] > max) then
@@ -68,7 +68,7 @@ end;
 
 function estaEnelVector (v: vector; dimL: integer; valor: integer): boolean;
 begin
-	if (dimL < 0) then 
+	if (dimL <= 0) then 
 		estaEnelVector:= false
 	else begin
 		if (v[dimL] = valor) then
@@ -113,9 +113,11 @@ begin
 	cargarVectorRecursivo(v,dimL); //INCISO A;
 	writeln ('El vector es: (de manera no recursiva)');
 	imprimirVectorNorecursivo (v, dimL); //INCISO B;
+	writeln;
 	writeln ('El vector es: (de manera recursiva)');
 	imprimirVectorRecursivo (v, dimL); //INCISO C;
 	sumaPares:= sumaPares + sumaContenidosPares (v, pos, dimL); //INCISO D;
+	writeln;
 	writeln ('La suma de los valores pares contenidos en el vector es: ' , sumaPares);
 	maximoRecursivo (v, dimL, max); //INCISO E;
 	writeln ('El maximo valor del vector es: ' , max);
