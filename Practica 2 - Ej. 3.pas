@@ -18,8 +18,8 @@ procedure generarVectorRecursivo (var v: vector; i: integer);
 var
 	r: integer;
 begin
-	r:= min + random (max - min + 1);
-	if (i < dimF) then begin
+	if (i <= dimF) then begin
+		r := min + random (max - min + 1);
 		v[i]:= r;
 		generarVectorRecursivo (v, i + 1)
 	end;
@@ -45,19 +45,12 @@ procedure busquedaDicotomica (v: vector; ini,fin: integer; dato:integer; var pos
 var
 	medio: integer;
 begin
-	ini:= 1;
-	fin:= dimF;
-	medio:= (ini + fin) DIV 2;
-	while (v[medio] <> dato) and (ini<=fin) do
-		begin
-			if (dato < v[medio]) then
-				fin:= medio - 1
-			else 
-				ini:= medio + 1;
-			medio:= (ini + fin) DIV 2;
-		end;
-	if (ini <= fin) and (v[medio] = dato) then
-		pos:= medio
+	if (ini <= fin) then begin 
+		medio:= (ini + fin) DIV 2;
+		if (dato < v[medio]) then busquedaDicotomica (v, ini, medio -1, dato, pos)
+		else if (dato > v [medio]) then busquedaDicotomica (v, medio + 1, fin, dato, pos)			
+			 else pos:= medio
+		end
 	else
 		pos:= -1;
 end;
@@ -66,30 +59,27 @@ procedure imprimirVector (v: vector; i: integer);
 begin
 	if (i <= dimF) then begin
 		write('| ',v[i],' ');
-		imprimirVector (v, i + 1);
+		imprimirVector (v,i + 1);
 	end
-	else writeln('|');
 end;
-
 var
 	v: vector;
-	i, ini, fin, dato, pos: integer;
+	i, dato, pos: integer;
 begin
 	i:= 1;
-	ini:= 1;
-	fin:= 20;
 	Randomize;
 	generarVectorRecursivo (v,i);
 	writeln ('El vector desordenado: ');
 	writeln;
 	imprimirVector (v,i); //DESORDENADO;
 	ordenarVectorSeleccion (v);
+	writeln;
 	writeln ('El vector ordenado: ');
 	writeln;
 	imprimirVector (v,i); //ORDENADO;
 	writeln;
 	write ('Ingrese el dato a buscar: ');
 	readln (dato);
-	busquedaDicotomica (v,ini,fin,dato,pos);
+	busquedaDicotomica (v,1,dimF,dato,pos);
 	write ('La posicion del dato dentro del vector es: ' , pos)
 end.
