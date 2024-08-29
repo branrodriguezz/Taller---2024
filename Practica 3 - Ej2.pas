@@ -40,20 +40,15 @@ Type
 		hd2: arbol2;
 	end;
 	
-	lista = ^nodo
-	nodo = record
+	lista = ^nodolista;
+	nodolista = record
 		ele: venta;
-		sig:= nil;
-	end;
-	
-	produvendidos = record
-		cod: integer;
-		listav: lista; //lista de las ventas realizadas del producto.
+		sig: lista;
 	end;
 	
 	arbol3 = ^nodo3;
 	nodo3 = record
-		dato3: produvendidos;
+		dato3: lista; //en la lista ya esta el codigo de producto
 		hi3: arbol3;
 		hd3: arbol3;
 	end;
@@ -65,7 +60,7 @@ begin
 	v.cant:= random (100);
 end;
 
-procedure agregar (a1: arbol1; v: venta);
+procedure agregar (var a1: arbol1; v: venta);
 begin
 	if (a1 = nil) then begin
 		new (a1);
@@ -75,7 +70,7 @@ begin
 	end
 	else begin
 		if (v.cod < a1^.dato.cod) then 
-			agregar (a1^.hi, v) //chequearrrrrrrr lo del repetido para el lado derecho
+			agregar (a1^.hi, v) 
 		else 
 			agregar (a1^.hd, v);
 	end;
@@ -128,11 +123,16 @@ begin
 	end;
 end;
 
-procedure generarArboles (var a1: arbol1; var a2: arbol2);
+procedure cargarArbol3 (var a3: arbol3);
+var 
+begin
+end;
+
+procedure generarArboles (var a1: arbol1; var a2: arbol2; var a3: arbol3);
 begin
 	cargarArbol1 (a1);
 	cargarArbol2 (a1,a2); 
-	cargarArbol3 (a
+	cargarArbol3 (a3);
 end;
 
 var
