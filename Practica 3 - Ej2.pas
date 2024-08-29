@@ -1,227 +1,146 @@
-{1. Descargar el programa ImperativoEjercicioClase3.pas que contiene parte del código del siguiente enunciado a resolver. Implementar lo indicado en el código.
-Escribir un programa que:
-a. Implemente un módulo que almacene información de socios de un club en un árbol binario de búsqueda. De cada socio se debe almacenar número de socio, nombre y edad. 
-La carga finaliza con el número de socio 0 y el árbol debe quedar ordenado por número de socio. La información de cada socio debe generarse aleatoriamente.
-b. Una vez generado el árbol, realice módulos independientes que reciban el árbol como parámetro y que :
-i. Informar los datos de los socios en orden creciente.
-ii. Informar los datos de los socios en orden decreciente.
-iii. Informar el número de socio con mayor edad. Debe invocar a un módulo recursivo que retorne dicho valor.
-iv. Aumentar en 1 la edad de los socios con edad impar e informar la cantidad de socios que se les aumentó la edad.
-vi. Leer un nombre e informar si existe o no existe un socio con ese nombre. Debe invocar a un módulo recursivo que reciba el nombre leído y retorne verdadero o falso.
-vii. Informar la cantidad de socios. Debe invocar a un módulo recursivo que retorne dicha cantidad.
-viii. Informar el promedio de edad de los socios. Debe invocar a un módulo recursivo que retorne el promedio de las edades de los socios.}
+{2. Escribir un programa que:
+a. Implemente un módulo que genere aleatoriamente información de ventas de un comercio. 
+Para cada venta generar código de producto, fecha y cantidad de unidades vendidas. Finalizar con el código de producto 0. Un producto puede estar en más de una venta. 
+Se pide:
+i. Generar y retornar un árbol binario de búsqueda de ventas ordenado por código de producto. Los códigos repetidos van a la derecha.
+ii. Generar y retornar otro árbol binario de búsqueda de productos vendidos ordenado por código de producto. Cada nodo del árbol debe contener el código de producto y 
+la cantidad total de unidades vendidas.
+iii. Generar y retornar otro árbol binario de búsqueda de productos vendidos ordenado por código de producto. Cada nodo del árbol debe contener el código de producto y
+ la lista de las ventas realizadas del producto.
+Nota: El módulo debe retornar TRES árboles.
+b. Implemente un módulo que reciba el árbol generado en i. y una fecha y retorne la cantidad total de productos vendidos en la fecha recibida.
+c. Implemente un módulo que reciba el árbol generado en ii. y retorne el código de producto
+con mayor cantidad total de unidades vendidas.
+c. Implemente un módulo que reciba el árbol generado en iii. y retorne el código de producto con mayor cantidad de ventas.}
 
 program ej1p3;
-const
-	min = 1;
-	max = 100;
-	minV = 1;
-	dimF = 5;
-type
-	vector = array [1..dimF] of string;
-	socio = record
-		num: integer;
-		nombre: string;
-		edad: integer;
+Type
+	venta = record
+		cod: integer;
+		fecha: integer;
+		cant: integer;
 	end;
 	
-	arbol = ^nodo;
+	arbol1 = ^nodo;
 	nodo = record
-		dato: socio;
-		hi: arbol;
-		hd: arbol;
+		dato: venta;
+		hi: arbol1;
+		hd: arbol1;
+	end;
+	
+	producto = record
+		cod: integer;
+		total: integer;
+	end;
+	
+	arbol2 = ^nodo2;
+	nodo2 = record
+		dato2: producto;
+		hi2: arbol2;
+		hd2: arbol2;
+	end;
+	
+	lista = ^nodo
+	nodo = record
+		ele: venta;
+		sig:= nil;
+	end;
+	
+	produvendidos = record
+		cod: integer;
+		listav: lista; //lista de las ventas realizadas del producto.
+	end;
+	
+	arbol3 = ^nodo3;
+	nodo3 = record
+		dato3: produvendidos;
+		hi3: arbol3;
+		hd3: arbol3;
 	end;
 
-procedure cargarVectorNombres (var v: vector);
-var
-	i: integer;
-	name: string;
+procedure generarInformacion (var v: venta);
 begin
-	for i:= 1 to dimF do begin
-		write('Ingrese un nombre: ');
-		readln (name);
-		v[i]:= name;
-	end;
+	v.cod:= random (100); //un producto puede estar en mas de una venta
+	v.fecha:= random (31) + 1;
+	v.cant:= random (100);
 end;
 
-procedure agregar (var a: arbol; s: socio);
+procedure agregar (a1: arbol1; v: venta);
 begin
-	if (a = nil) then begin
-		new (a);
-		a^.dato:= s;
-		a^.hi:= nil; 
-		a^.hd:= nil;
+	if (a1 = nil) then begin
+		new (a1);
+		a1^.dato:= v;
+		a1^.hi:= nil; 
+		a1^.hd:= nil;
 	end
 	else begin
-		if (s.num <= a^.dato.num) then 
-			agregar (a^.hi, s)
+		if (v.cod < a1^.dato.cod) then 
+			agregar (a1^.hi, v) //chequearrrrrrrr lo del repetido para el lado derecho
 		else 
-			agregar (a^.hd, s);
+			agregar (a1^.hd, v);
 	end;
 end;
 
-procedure generarSocio (var s: socio; v: vector);
-begin
-	s.num:= random (100);
-	s.nombre:= v [minV + random (dimF - minV + 1)];
-	s.edad:= min + random (max - min + 1);
-end; 
-
-procedure cargarArbol (var a: arbol; v: vector);
+procedure cargarArbol1 (var a1: arbol1);
 var
-	s: socio;
+	v: venta;
 begin
-	generarSocio (s,v);
-	if (s.num <> 0) then begin
-		agregar (a, s);
-		cargarArbol (a,v);
-	end;	
-end;
-
-procedure imprimirVector (v: vector);
-var
-	i: integer;
-begin
-	for i:= 1 to dimF do 
-		write ('|', v[i], '|');
-end;
-
-procedure imprimir (s: socio);
-begin
-	write ('Numero de socio:  ' , s.num);
-	writeln;
-	write ('Nombre :  ' , s.nombre);
-	writeln;
-	write ('Edad: ' ,s.edad);
-	writeln;
-end;
-
-procedure informarArbolCreciente (a: arbol);
-begin
-	if (a <> nil) then begin
-		informarArbolCreciente (a^.hi);
-		imprimir (a^.dato);
-		informarArbolCreciente (a^.hd);
+	generarInformacion (v);
+	if (v.cod <> 0) then begin
+		agregar (a1, v);
+		cargarArbol1 (a1);
 	end;
 end;
 
-procedure informarArbolDecreciente (a: arbol);
+procedure agregar (var a2: arbol2; p: producto);
 begin
-	if (a <> nil) then begin
-		informarArbolDecreciente (a^.hd);
-		imprimir (a^.dato);
-		informarArbolDecreciente (a^.hi);
-	end;
-end;
-
-procedure actualizarMaximo(var maxValor,maxElem : integer; nuevoValor, nuevoElem : integer);
-begin
-	if (nuevoValor >= maxValor) then
-		begin
-			maxValor := nuevoValor;
-			maxElem := nuevoElem;
-		end;
-end;
-	
-procedure buscarMaxEdad (a: arbol; var maxEdad: integer; var maxNum: integer);
-begin
-	if (a <> nil) then
-	   begin
-		  actualizarMaximo(maxEdad,maxNum,a^.dato.edad,a^.dato.num);
-		  buscarMaxEdad(a^.hi, maxEdad,maxNum);
-		  buscarMaxEdad(a^.hd, maxEdad,maxNum);
-	   end; 
-end;
-
-procedure aumentarEdadSocioImpar (a: arbol; var cant: integer);
-begin
-	if (a <> nil) then begin 
-		if (a^.dato.edad MOD 2 = 1) then begin
-			a^.dato.edad:= a^.dato.edad + 1;
-			cant:= cant + 1;
-		end;
-		aumentarEdadSocioImpar (a^.hi, cant);
-		aumentarEdadSocioImpar (a^.hd, cant);
-	end;
-end;
-
-function estaEnelArbol (a: arbol; nombre: string): boolean;
-begin
-	if (a = nil) then 
-		estaEnelArbol:= false
+	if (a2 = nil) then begin
+		new (a2);
+		a2^.dato2:= p;
+		a2^.hi2:= nil; 
+		a2^.hd2:= nil;
+	end
 	else begin
-		if (a^.dato.nombre = nombre) then
-			estaEnelArbol:= true
+		if (p.cod <= a2^.dato2.cod) then 
+			agregar (a2^.hi2, p)
 		else 
-			estaEnelArbol:= estaEnelArbol (a^.hi, nombre) or estaEnelArbol (a^.hd, nombre);
+			agregar (a2^.hd2, p);
 	end;
 end;
 
-procedure cantidadDeSocios (a: arbol; var socios: integer);
+procedure cargarArbol2 (a1: arbol1; var a2: arbol2);
+var
+	act: integer;
+	p: producto;
+	cantv: integer;
 begin
-	if (a <> nil) then begin
-		cantidadDeSocios (a^.hi,socios);
-		cantidadDeSocios (a^.hd,socios);
-		socios:= socios + 1;
+	if (a1 <> nil) then begin
+		cantv:= 0; //dudoso
+		act:= a1^.dato.cod;
+		if (act = a1^.dato.cod) then begin //aplico corte de control
+			cantv:= cantv + 1; 
+			cargarArbol2 (a1^.hi,a2);
+			cargarArbol2 (a1^.hd,a2);
+		end;
+		p.cod:= act; p.total:= cantv;
+		agregar (a2,p);
+		cargarArbol2 (a1, a2);
 	end;
 end;
 
-procedure promedioSocios (a: arbol; var edades: integer);
+procedure generarArboles (var a1: arbol1; var a2: arbol2);
 begin
-	if (a <> nil) then begin
-		edades:= edades + a^.dato.edad;
-		promedioSocios (a^.hi, edades);
-		promedioSocios (a^.hd, edades);
-	end;
+	cargarArbol1 (a1);
+	cargarArbol2 (a1,a2); 
+	cargarArbol3 (a
 end;
 
 var
-	a: arbol;
-	v: vector;
-	maxEdad, maxNum, cant, socios, edades: integer;
-	nombre: string;
+	a1: arbol1;
+	a2: arbol2;
 begin
-	a:= nil;
-	maxEdad:= -1;
-	maxNum:= -1;
-	cant:= 0;
-	socios:= 0;
-	edades:= 0;
+	a1:= nil;
+	a2:= nil;
 	Randomize;
-	cargarVectorNombres (v);
-	cargarArbol (a,v);
-	writeln;
-	write ('El vector de nombres es: ');
-	imprimirVector (v); //extra
-	writeln;
-	write ('El arbol en orden creciente es: ');
-	writeln;
-	informarArbolCreciente (a); //inciso b1
-	writeln;
-	write ('El arbol en orden decreciente es: ');
-	writeln;
-	informarArbolDecreciente (a); //inciso b2
-	writeln;
-	buscarMaxEdad (a, maxEdad, maxNum);
-	write ('El numero de socio con mayor edad es: ', maxNum); 
-	writeln;
-	aumentarEdadSocioImpar (a, cant); //inciso b4 //revisar!11!
-	write ('El arbol luego de la actualizacion de las edades es: ');
-	writeln;
-	informarArbolCreciente (a);
-	writeln;
-	write ('La cantidad de socios que se les aumento la edad es: ' , cant); 
-	writeln;
-	write ('Ingrese el nombre del socio a buscar: ');
-	readln (nombre);
-	if (estaEnelArbol (a,nombre)) then //inciso b5 , controlar!!1!
-		write ('El nombre de socio buscado si se encuentra en el arbol')
-	else
-		write ('El nombre de socio buscado no se encuentra en el arbol');
-	writeln;
-	cantidadDeSocios (a, socios); //inciso b6
-	write ('La cantidad total de socios es: ' ,socios);
-	writeln;
-	promedioSocios (a, edades); //inciso b7
-	write ('El promedio de edad de los socios es: ' , (edades/socios):0:2);
+	generarArboles (a1,a2); //inciso A
 end.
