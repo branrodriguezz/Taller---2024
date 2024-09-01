@@ -133,15 +133,23 @@ begin
 	   end; 
 end;
 
+function cumple (var edad: integer): boolean;
+begin
+	if (edad MOD 2 <> 0) then begin
+		edad:= edad + 1;
+		cumple:= true
+	end
+	else
+		cumple:= false;
+end;
+
 procedure aumentarEdadSocioImpar (a: arbol; var cant: integer);
 begin
-	if (a <> nil) then begin 
-		if (a^.dato.edad MOD 2 = 1) then begin
-			a^.dato.edad:= a^.dato.edad + 1;
+	if (a <> nil) then begin
+		if (cumple (a^.dato.edad)) then 
 			cant:= cant + 1;
-		end;
 		aumentarEdadSocioImpar (a^.hi, cant);
-		aumentarEdadSocioImpar (a^.hd, cant);
+		aumentarEdadSocioImpar (a^.hi, cant);
 	end;
 end;
 
@@ -152,8 +160,9 @@ begin
 	else begin
 		if (a^.dato.nombre = nombre) then
 			estaEnelArbol:= true
-		else 
+		else begin
 			estaEnelArbol:= estaEnelArbol (a^.hi, nombre) or estaEnelArbol (a^.hd, nombre);
+		end;
 	end;
 end;
 
@@ -203,14 +212,14 @@ begin
 	informarArbolDecreciente (a); //inciso b2
 	writeln;
 	buscarMaxEdad (a, maxEdad, maxNum);
-	write ('El numero de socio con mayor edad es: ', maxNum); 
+	write ('El numero de socio con mayor edad es: ', maxNum); //inciso b3 aca se pueden repetir los numeros de socios? 
 	writeln;
 	aumentarEdadSocioImpar (a, cant); //inciso b4 //revisar!11!
 	write ('El arbol luego de la actualizacion de las edades es: ');
 	writeln;
 	informarArbolCreciente (a);
 	writeln;
-	write ('La cantidad de socios que se les aumento la edad es: ' , cant); 
+	write ('La cantidad de socios que se les aumento la edad es: ' , cant); //revisar!!!!
 	writeln;
 	write ('Ingrese el nombre del socio a buscar: ');
 	readln (nombre);
