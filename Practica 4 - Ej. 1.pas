@@ -99,9 +99,10 @@ end;
 procedure buscarMin (a: arbol; var minCod: integer);
 begin
 	if (a <> nil) then begin
-		if (a^.hi <> nil) then
-			buscarMin (a^.hi,minCod); //esta bien que busque solo por el izquierdo si me pide retornar menores?
-		else minCod:= a^.dato.codigo;
+		if (a^.hi <> nil) then //chequeo que no me quede sin elementos del lado izquierdo que es donde estan los mas chicos
+			buscarMin (a^.hi,minCod) //esta bien que busque solo por el izquierdo si me pide retornar menores?
+		else 
+			minCod:= a^.dato.codigo; //salgo del if porque ya me quede sin menores
 	end;
 end;
 
