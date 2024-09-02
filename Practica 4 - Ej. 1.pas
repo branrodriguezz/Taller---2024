@@ -117,10 +117,11 @@ end;
 procedure codigosMenores (a: arbol; valor: integer; var cant: integer);
 begin
 	if (a <> nil) then begin
-		if (a^.dato.codigo < valor) then
+		if (a^.dato.codigo < valor) then begin
 			cant:= cant + 1;
-		codigosMenores (a^.hi,valor,cant); //por que si recorro solo para el lado izquierdo me tira datos erroneos?
-		codigosMenores (a^.hd, valor, cant);
+			codigosMenores (a^.hd,valor,cant); 
+		end;
+		codigosMenores (a^.hi, valor, cant);
 	end;
 end;
 
@@ -172,5 +173,5 @@ begin
 	readln (codfin);
 	writeln;
 	totalComprendidos (a,codini, codfin, total);
-	write ('El monto total entre todos los códigos de productos comprendidos entre dos valores recibidos (sin incluir) es: ' , total:0:2);
+	write ('El monto total entre todos los codigos de productos comprendidos entre dos valores recibidos (sin incluir) es: ' , total:0:2);
 end.
