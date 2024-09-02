@@ -101,22 +101,53 @@ begin
 end;
 
 
-function socioMasGrande (a: arbol): integer; 
-var
-	maxSocio: integer;
+procedure socioMasGrande (a: arbol; var maxSocio: integer); 
 begin
-	if (a <> nil) then
-		socioMasGrande (a^.hi);
-		socioMasGrande (a^.hd);
-		socioMasGrande:= 
+	if (a <> nil) then begin
+		if (a^.hd <> nil) then //chequeo que no me quede sin elementos del lado derecho del arbol porque estan los + grandes
+			socioMasGrande (a^.hd,maxSocio) //llamo solo con los de la derecha
+		else maxSocio:= a^.dato.num; //salgo del if y retorno el valor maximo si el lado derecho es igual a nil
+	end;
+end;
+
+procedure socioMasChico (a: arbol; var socioMinimo: socio);
+begin
+	if (a <> nil) then begin
+		if (a^.hi <> nil) then
+			socioMasChico (a^.hi, socioMinimo)
+		else socioMinimo:= a^.dato;
+	end;
+end;
+
+function esta (a: arbol; valor: integer): boolean;
+begin
+	if (a <> nil) then begin
+		if (a^.dato.num = valor) then
+			esta:= true
+		else begin
+			if (valor < a^.dato.num) then
+				esta:= esta (a^.hi, valor)
+			else 
+				esta:= esta (a^.hd, valor);
+		end;
+	end
+	else
+		esta:= false;
 end;
 
 var
 	a: arbol;
 	v: vector;
+	maxSocio: integer;
+	socioMinimo: socio;
+	valor: integer;
 begin
 	a:= nil;
 	Randomize;
+	maxSocio:= -1;
+	socioMinimo.num:= 0;
+	socioMinimo.nombre:= '';
+	socioMinimo.edad:= 0;
 	cargarVectorNombres (v);
 	cargarArbol (a, v);
 	write ('El vector de nombres es: ');
@@ -128,5 +159,19 @@ begin
 	informarArbolCreciente (a); //inciso b1
 	writeln;
 	writeln ('////////////////////////////////////////////////////////');
-	write ('El numero de socio mas grande es: ' , socioMasGrande(a));
+	socioMasGrande(a,maxSocio);
+	write ('El numero de socio mas grande es: ', maxSocio);
+	writeln;
+	writeln ('////////////////////////////////////////////////////////');
+	socioMasChico (a,socioMinimo);
+	write ('Los datos del numero de socio mas chico es: ', socioMinimo.num, '|' ,socioMinimo.nombre , '|' , socioMinimo.edad);
+	writeln;
+	writeln ('////////////////////////////////////////////////////////');
+	writeln;
+	write ('Ingrese un valor a buscar');
+	readln (valor);
+	if (esta(a, valor)) then
+		write ('El valor esta dentro del arbol')
+	else
+		write ('El valor no esta dentro del arbol');
 end.
