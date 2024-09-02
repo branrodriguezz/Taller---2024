@@ -135,12 +135,31 @@ begin
 		esta:= false;
 end;
 
+procedure cantidadDeSociosEntre (a: arbol; var cantS: integer; valorini: integer; valorfin: integer);
+begin
+	if (a <> nil) then begin
+		if (a^.dato.num >= valorini) and (a^.dato.num <= valorfin) then begin
+			cantidadDeSociosEntre (a^.hi, cantS, valorini, valorfin);
+			cantidadDeSociosEntre (a^.hd, cantS, valorini, valorfin);
+			cantS:= cantS + 1;
+		end
+		else begin
+			if (a^.dato.num < valorini) then
+				cantidadDeSociosEntre (a^.hd, cantS, valorini, valorfin)
+			else
+				cantidadDeSociosEntre (a^.hi, cantS, valorini, valorfin);
+		end;
+	end;
+end;
+
 var
 	a: arbol;
 	v: vector;
 	maxSocio: integer;
 	socioMinimo: socio;
 	valor: integer;
+	cantS: integer;
+	valorini,valorfin: integer;
 begin
 	a:= nil;
 	Randomize;
@@ -148,6 +167,7 @@ begin
 	socioMinimo.num:= 0;
 	socioMinimo.nombre:= '';
 	socioMinimo.edad:= 0;
+	cantS:= 0;
 	cargarVectorNombres (v);
 	cargarArbol (a, v);
 	write ('El vector de nombres es: ');
@@ -174,4 +194,12 @@ begin
 		write ('El valor esta dentro del arbol')
 	else
 		write ('El valor no esta dentro del arbol');
+	writeln;
+	write ('Ingrese el valor inicial del rango: ');
+	readln (valorini);
+	writeln;
+	write ('Igrese el valor final del rango: ');
+	readln (valorfin);
+	cantidadDeSociosEntre (a, cantS,valorini,valorfin);
+	write ('La cantidad de socios que estan dentro del rango es: ', cantS);
 end.
