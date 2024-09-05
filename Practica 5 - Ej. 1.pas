@@ -88,11 +88,48 @@ begin
 	end;
 end;
 
+function busquedaDicotomica (v: vector; inf: integer; sup: integer; codigo: integer): integer;
+var 
+	medio: integer;
+begin
+	if (inf <= sup) then begin
+		medio:= (inf + sup) DIV 2;
+		if (codigo < v[medio].codigo) then busquedaDicotomica (v, inf, medio - 1, codigo)
+		else 
+			if (codigo > v[medio].codigo) then busquedaDicotomica (v, medio + 1, sup, codigo)
+			else busquedaDicotomica:= medio;
+  end
+	else
+		busquedaDicotomica:= 0;
+end;
+
+function llamadaBusquedaDicotomica (v: vector; dimL: integer; codigo: integer): integer;
+var
+	inf, sup: integer;
+begin
+	inf:= 1;
+	sup:= dimL;
+	llamadaBusquedaDicotomica:= busquedaDicotomica (v, inf, sup, codigo);
+end;
+
+procedure montoTotal (v: vector; dimL: integer; var total: real);
+begin
+	if (dimL > 0) then begin
+		total:= total + v[dimL].valor;
+		montoTotal (v,dimL - 1, total);
+	end;
+end;
+
 var
 	v: vector;
 	dimL: integer;
+	codigo: integer;
+	i: integer;
+	total: real;
 begin
 	dimL:= 0;
+	i:= 0;
+	total:= 0;
 	cargarVector (v, dimL);
 	writeln;
 	writeln;
@@ -105,5 +142,17 @@ begin
 	imprimirVector (v, dimL);//extra
 	writeln;
 	writeln;
-	busquedaDicotomica (v, dimL);
+	write ('Ingrese un codigo a buscar: ');
+	readln (codigo);
+	writeln; 
+	writeln;
+	i:= llamadaBusquedaDicotomica (v,dimL, codigo);
+	if ( i <> 0) then
+		write ('El dni del codigo buscado es: ' , v[i].dni)
+	else
+		write ('No se encontro la oficina');
+	writeln;
+	writeln;
+	montoTotal (v, dimL, total);
+	write ('El monto total de las expensas es: ', total:0:2);
 end.
