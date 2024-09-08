@@ -1,3 +1,11 @@
+{Una oficina requiere el procesamiento de los reclamos de las personas. De cada reclamo se ingresa código, DNI de la persona, año y tipo de reclamo. 
+El ingreso finaliza con el código de igual a 0. Se pide:
+a) Un módulo que retorne estructura adecuada para la búsqueda por DNI. Para cada DNI se deben tener almacenados cada reclamo y 
+la cantidad total de reclamos que realizó.
+b) Un módulo que reciba la estructura generada en a) y un DNI y retorne la cantidad de reclamos efectuados por ese DNI.
+c) Un módulo que reciba la estructura generada en a) y dos DNI y retorne la cantidad de reclamos efectuados por todos los DNI comprendidos entre los dos DNI recibidos.
+d) Un módulo que reciba la estructura generada en a) y un año y retorne los códigos de los reclamos realizados en el año recibido.}
+
 program ej4p5;
 const
 	dimF = 5;
@@ -47,20 +55,22 @@ procedure generarInformacion (var r: reclamo);
 var
 	vr: array [1..dimF] of string = ('Mala atencion','Operacion mal efectuada','Cobros indebidos','Fallos en el servicio','Producto daniado');
 begin
-	r.dni:= random(10);
-	if(r.dni <> 0) then begin
-		r.codigo:=random(100)*100;
+	r.codigo:=random(100)*100;
+	if(r.codigo <> 0) then begin
+		r.dni:= random(10);
 		r.anio:=random(2024-2000+1)+2000;
 		r.tipoReclamo:= vr [random (dimF) + 1];
 	end;
 end;
 
-procedure agregarAdelante (var l: lista; ri: reclamito);
+procedure agregarAdelante (var l: lista; r: reclamo);
 var
 	nuevo: lista;
 begin
 	new (nuevo);
-	nuevo^.ele:= ri;
+	nuevo^.ele.codigo:= r.codigo;
+	nuevo^.ele.anio:= r.anio;
+	nuevo^.ele.tipoReclamo:= r.tipoReclamo;
 	nuevo^.sig:= nil;
 	if (l = nil) then
 		l:= nuevo
@@ -71,25 +81,20 @@ begin
 end;
 
 procedure cargarArbol (var a: arbol; r: reclamo);
-var
-	ri: reclamito;
 begin
 	if (a = nil) then begin
 		new (a);
 		a^.dato.dni:= r.dni;
 		a^.dato.reclamos:= nil;
 		a^.dato.cantidad:= 1;
-		ri.codigo:= r.codigo;
-		ri.anio:= r.anio;
-		ri.tipoReclamo:= r.tipoReclamo;
-		agregarAdelante (a^.dato.reclamos, ri);
+		agregarAdelante (a^.dato.reclamos, r);
 		a^.hi:= nil;
 		a^.hd:= nil;
 	end
 	else begin
 		if (r.dni = a^.dato.dni) then begin
 			a^.dato.cantidad:= a^.dato.cantidad + 1;
-			agregarAdelante (a^.dato.reclamos, ri);
+			agregarAdelante (a^.dato.reclamos, r);
 		end
 		else begin
 			if (r.dni < a^.dato.dni) then
