@@ -14,12 +14,12 @@ public static void main(String[] args) {
     obtenida por cada aspecto.
     */
     
-    int [][] matriz = new int [5+1][4]; //matriz de 5 clientes con sus puntajes a cada uno de los 4 aspectos.
+    int [][] matriz = new int [5][4]; //matriz de 5 clientes con sus puntajes a cada uno de los 4 aspectos.
         
         int i,j;
         
         //inicializo el vector de puntajes enteros (1..10)
-        for (i = 1; i <= 5; i++) {
+        for (i = 0; i < 5; i++) {
             for (j = 0; j < 4; j++)
                 matriz [i][j] = 0;
         }
@@ -27,30 +27,33 @@ public static void main(String[] args) {
         int puntaje;
                 
         //cargo el matriz de puntajes de enteros (1..10)
-        for (i = 1; i <= 5; i++) {
-                System.out.println("Ingrese un puntaje (entre 1 y 10) de atencion al cliente: ");
+        for (i = 0; i < 5; i++) {
+                System.out.println ("Cliente: " + (i+1));
+                System.out.print ("Atencion: ");
                 puntaje = Lector.leerInt ();
                 matriz [i][0] = puntaje;
                 
-                System.out.println("Ingrese un puntaje (entre 1 y 10) de calidad de comida: ");
+                System.out.print ("Comida: ");
                 puntaje = Lector.leerInt ();
                 matriz [i][1] = puntaje;
                 
-                System.out.println("Ingrese un puntaje (entre 1 y 10) de precio: ");
+                System.out.print ("Precio: ");
                 puntaje = Lector.leerInt ();
                 matriz [i][2] = puntaje;
                 
-                System.out.println("Ingrese un puntaje (entre 1 y 10) de comida: ");
+                System.out.print ("Ambiente: ");
                 puntaje = Lector.leerInt ();
                 matriz [i][3] = puntaje;
+                
+                System.out.println();
         }
         
         System.out.print ("---- Puntajes (5X4) ----");
         System.out.println ();
         
-        for (i = 1; i <= 5; i++) {
+        for (i = 0; i < 5; i++) {
             System.out.println ();
-            System.out.println ("Cliente: " + i + " | ");
+            System.out.print ("Cliente: " + (i+1) +  " | ");
             System.out.print ("Atencion: " + matriz [i][0] + " | ");
             System.out.print ("Calidad de comida: " + matriz [i][1] + " | ");
             System.out.print ("Precio: " + matriz [i][2] + " | ");
@@ -62,7 +65,7 @@ public static void main(String[] args) {
         double total;
         for (j = 0; j < 4; j++){//recorro las columnas de aspectos
             total = 0;
-            for (i = 1; i <= 5; i++)
+            for (i = 0; i < 5; i++)
                 total = total + matriz [i][j];
             System.out.println ("La calificacion promedio del aspecto " + j + " es " + total/5.0);
             System.out.println ();
