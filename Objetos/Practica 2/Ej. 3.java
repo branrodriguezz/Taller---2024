@@ -31,19 +31,21 @@ public class ej03 {
         int Turnos = 8;
         String CORTE = "ZZZ";
         Persona [][] matriz = new Persona [Dias][Turnos];
-        
+        int [] vectorDim = new int [8];
         String nombre;
         int DNI;
         int edad;
         
         int DL = 0; //dimension logica de los 5 dias
-        int DLT; //dimension logica de los turnos, necesaria??
+        int DLT; //dimension logica de los turnos
         
         int i, j;
         
         //CONSULTAS
         //inicializo la matriz? hasta donde? 
-        //esta mal si en un dia no hay 8 personas?
+        //inicializo el vector de dimensiones logicas
+		for (i = 0; i < Turnos; i++) 
+			vectorDim [i] = 0;
         
         System.out.print ("Nombre: ");
         nombre = Lector.leerString();
@@ -52,12 +54,15 @@ public class ej03 {
         
         //carga de informacion
         while (DL < Dias && !nombre.equals(CORTE)){ 
-            for (j = 0; j < Turnos && !nombre.equals(CORTE); j++) {
-                DNI = GeneradorAleatorio.generarInt(40000); //esta bien si yo declaro la variable dentro del bucle?
+			DLT = 0;
+            while (DLT < Turnos && !nombre.equals(CORTE)) {
+                DNI = GeneradorAleatorio.generarInt(40000);
                 edad = GeneradorAleatorio.generarInt(100);
-                matriz [DL][j] = new Persona (nombre, DNI, edad);
+                matriz [DL][DLT] = new Persona (nombre, DNI, edad);
+				vectorDim [DL] = DLT + 1;
                 System.out.print ("Nombre: ");
                 nombre = Lector.leerString();
+				DLT++;
             }
             DL++;
         }
@@ -65,7 +70,13 @@ public class ej03 {
         System.out.println ();
         System.out.println ("La dimension logica o los dias de casting son en total: " + DL);
         System.out.println();
+		
+		//imprimir vector de dimensiones logicas de cada dia del casting
+		System.out.println ("-------- VECTOR DE DIMENSIONES LOGICAS DE TURNOS -----------");
+        for (i = 0; i < Turnos; i++)
+			System.out.println(" El dia: " + (i + 1) + " tiene dimension logica/turnos de personas " + vectorDim [i] );
         
+		
         System.out.println ("------- MATRIZ DEL CASTING -------");
         
         //chequeo si la matriz se cargo bien
