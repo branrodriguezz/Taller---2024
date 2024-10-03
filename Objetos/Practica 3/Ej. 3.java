@@ -4,6 +4,12 @@
  */
 package tema3;
 
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package tema3;
+
 /**
  *
  * @author branroodriguez
@@ -59,19 +65,20 @@ public class Estante {
         int i;
         for (i = 0; i < dimL; i++) { //preguntar por el metodo equals, puedo usarlo en este caso?
             if (vector[i].getTitulo().equals(titulo)) {
-                return vector [i]; //preguntar
+                return vector [i]; //preguntar con while
             }
         }
         return null;
     }
     
-    public void imprimir () {
+    public String toString() {
+        String info = "";
         for (int i = 0; i < dimL; i++) {
-            System.out.print (" | Libro " + (i+1) + " |");
-            System.out.print (vector[i].toString());
-            System.out.println ();
-            System.out.print (" ------------------------------------------------------------------------------------------------- ");
+            info = info  + " | Libro " + (i+1) + " | " + vector[i].toString() + "\n";
+            info = info + " ------------------------------------------------------------------------------------------------- ";
         }
+        
+        return info;
     }
 }
 
