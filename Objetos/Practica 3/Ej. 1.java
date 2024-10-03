@@ -88,7 +88,7 @@ public class Triangulo {
     }
     
     public Double calcularArea () {
-        double aux = (lado1 + lado2 + lado3) / 2 ;
+        double aux = this.calcularPerimetro() / 2 ;
         double area = Math.sqrt(aux * (aux - lado1) * (aux - lado2) * (aux - lado3));
         return area;
     }
