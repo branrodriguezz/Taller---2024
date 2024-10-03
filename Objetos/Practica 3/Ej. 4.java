@@ -75,13 +75,6 @@ public class Habitacion {
         costo = Uncosto;
         ocupada = Ocu;
     }
-    
-    //constructor para crear una habitacion con costo, si esta ocupada o no, y un cliente
-    public Habitacion (Double unCosto, Boolean unOcupada, Persona unCliente) {
-        costo = unCosto;
-        ocupada = unOcupada;
-        cliente = unCliente;
-    }
 
     public void setCosto(Double uncosto) {
         costo = uncosto;
@@ -109,6 +102,7 @@ public class Habitacion {
     
     public void cargarCliente (Persona uncliente) {
         cliente = uncliente;
+        ocupada = true;
     } 
     
     @Override
@@ -142,7 +136,7 @@ public class Hotel {
         num = N;
         //creo un hotel
         vector = new Habitacion [N]; //preguntar
-        for (int i = 0; i < num; i++) {
+        for (int i = 0; i < N; i++) {
             //inicializo todas las habitaciones con costo e/ 2000 y 8000 y habitaciones desocupadas
             Double costo = GeneradorAleatorio.generarDouble(8000) + 2000;
             Boolean ocupad = false;
@@ -173,9 +167,8 @@ public class Hotel {
     //- Ingresar un cliente C en la habitación número X. Asuma que X es válido (es decir, está
     //en el rango 1..N) y que la habitación está libre.
     //recibo un boolean de si la hab. esta ocupada o no.
-    public void ingresarCliente (Persona C, int X, Boolean Ocup) {
+    public void ingresarCliente (Persona C, int X) {
         vector [X].cargarCliente(C);
-        vector [X].setOcupada(Ocup);
     }
     //- Aumentar el precio de todas las habitaciones en un monto recibido.
     //la variable num guardo en el constructor la cantidad de habitaciones
@@ -189,14 +182,14 @@ public class Hotel {
     {Habitación N: costo, libre u ocupada, información del cliente si está ocupada}
     */
     
-    public void imprimir (){ //preguntar; habia q hacer un to string?
+    @Override
+    public String toString (){ 
+        String info = "";
         for (int i = 0; i < num; i++) {
-            System.out.print (" | Habitacion " + (i+1) + " |");
-            System.out.print (vector[i].toString()); //imprimo siempre si esta o no esta ocupada.
-            System.out.println ();
-            System.out.print (" ------------------------------------------------------------------------------------------------- ");
-            System.out.println();
+            info = (" | Habitacion " + (i+1) + " |" + vector[i].toString() + "\n"); //imprimo siempre si esta o no esta ocupada.
+            info = info + (" ------------------------------------------------------------------------------------------------- " + "\n");
         }
+        return info;
     }
 }
 /*
@@ -236,7 +229,7 @@ public class ej04 {
             
             Persona cli = new Persona (nombre, DNI, edad);
             
-            hotel.ingresarCliente(cli, i, true); //pongo la vi de la habitacion en ture para simbolizar que ya esta reservada
+            hotel.ingresarCliente(cli, i); 
             
             System.out.print ("Nombre: ");
             nombre = Lector.leerString();
@@ -246,7 +239,7 @@ public class ej04 {
         
         System.out.println (" -------------------------- HOTEL CON N HABITACIONES --------------------------------");
         //muestro el hotel
-        hotel.imprimir();
+        System.out.print (hotel.toString());
         System.out.println ();
         
         //aumento el precio de las habitaciones
@@ -254,6 +247,6 @@ public class ej04 {
         
         System.out.println (" -------------------------- HOTEL CON N HABITACIONES POST AUMENTO DEL COSTO -------------------");
         //muestro de nuevo el hotel
-        hotel.imprimir();
+        hotel.toString();
     }
 }
