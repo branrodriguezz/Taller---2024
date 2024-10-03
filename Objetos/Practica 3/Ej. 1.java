@@ -82,17 +82,15 @@ public class Triangulo {
         colorLinea = unColorLinea;
     }
     
-    public String calcularPerimetro (){
+    public Double calcularPerimetro (){
         double aux = lado1 + lado2 + lado3;
-        String aux1 = "El perimetro de este triangulo es: " + aux;
-        return aux1;
+        return aux;
     }
     
-    public String calcularArea () {
+    public Double calcularArea () {
         double aux = (lado1 + lado2 + lado3) / 2 ;
         double area = Math.sqrt(aux * (aux - lado1) * (aux - lado2) * (aux - lado3));
-        String aux1 = "El area de este triangulo es: " + area;
-        return aux1;
+        return area;
     }
     
     public static double leerLado (){
@@ -119,8 +117,6 @@ public class Triangulo {
         return aux;
     }
 }
-
-//programa 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -151,8 +147,10 @@ public class ej01 {
         
         System.out.println (t.toString());
         
-        System.out.println (t.calcularPerimetro());
+        System.out.println ("El perimetro del triangulo es: ");
+        System.out.print (t.calcularPerimetro() + " \n ");
         
-        System.out.println (t.calcularArea());
+        System.out.println ("El area del triangulo es: ");
+        System.out.print (t.calcularArea() + "\n");
     }
 }
