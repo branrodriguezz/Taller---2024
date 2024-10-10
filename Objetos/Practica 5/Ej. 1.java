@@ -59,6 +59,7 @@ public class Ejercicio1PracticaDeRepaso {
     }
     
 }
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -122,14 +123,17 @@ public class UNLP { //administra proyectos
     //otorgar todos los subsidios no-otorgados del investigador llamado
     //nombre_completo
     public void otorgarTodos (String nombre_completo){
-        int i = 0;
+        int i = 0, aux = 0;
         boolean encontre = false;
         while (i < this.dimLInvestigador && encontre == false) {
-            if (vectorInvestigadores[i].getNombre().equals(nombre_completo)) 
+            if (vectorInvestigadores[i].getNombre().equals(nombre_completo)) {
                 encontre = true;
+                aux = i;
+            }
+            i++;
         }
         if (encontre == true) 
-            vectorInvestigadores[i].otorgarSubsidios(); //
+            vectorInvestigadores[aux].otorgarSubsidios(); //
         else 
             System.out.println ("No se encontro ese investigador");
     }
@@ -142,12 +146,12 @@ public class UNLP { //administra proyectos
     
     @Override
     public String toString (){
-        String aux = " Proyecto: "  +
+        String aux = " Proyecto: " +
                      this.getNombre() + " codigo " + 
                      this.getCodigo() + " nombre del director " + 
                      this.getDirector() + " el total de dinero otorgado del proyecto es: " +
-                     this.dineroTotalOtorgado();
-                     for (int i = 0; i < this.getDimLInvestigador(); i++) {
+                     this.dineroTotalOtorgado() + "\n";
+                    for (int i = 0; i < this.getDimLInvestigador(); i++) {
                          aux = aux + " | " + vectorInvestigadores[i].toString() + " | " + "\n";
                      }
         return aux;
@@ -187,6 +191,7 @@ public class UNLP { //administra proyectos
     }
     
 }
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -218,9 +223,7 @@ public class Investigador {
         this.setEspecialidad (unaEspecialidad);
         //inicializo el vector de subsidios
         vectorSubsidios = new Subsidio [5]; //preguntar si aca o en la declaracion de variables.
-        for (int i = 0; i < 5; i++){
-            vectorSubsidios [i] = null;
-        }
+        
     }
     
     
@@ -229,7 +232,7 @@ public class Investigador {
     public void agregarSubsidio (Subsidio unSubsidio) {
         if (this.getDimLSubsidios() < 5) {
             vectorSubsidios [this.getDimLSubsidios()] = unSubsidio;
-            this.setDimLSubsidios(1); //cambiar
+            this.incrementrarDimL(); 
         }
     }
     
@@ -240,13 +243,11 @@ public class Investigador {
     public double dineroTotalOtorgadoInvestigador (){
         double total = 0;
         for (int i = 0; i < this.getDimLSubsidios(); i++) {
-            if (vectorSubsidios [i].getOtorgado() == true) //no me deja usar un equals si es boolean? solo con strings?
+            if (vectorSubsidios [i].getOtorgado() == true) 
                 total = total + vectorSubsidios[i].getMontoPedido();
         }
         return total;
     }
-    
-    //metodo otorgar - privado, porque no quiero que cualquiera otorge solo el de un nombre de investigador en especifico?
      
     public void otorgarSubsidios (){
         for (int i = 0; i < this.dimLSubsidios; i++)
@@ -255,6 +256,7 @@ public class Investigador {
     
     //metodo to string
     //la siguiente información de cada investigador: nombre, categoría, especialidad, 
+    @Override
     public String toString (){
         String aux = " Nombre: " + this.getNombre() + " Categoria: " +
                      this.getCategoria() + " Especialidad: " + this.getEspecialidad() +
@@ -284,7 +286,7 @@ public class Investigador {
         this.nombre = unNombre;
     }
     
-    //preguntar si chequeo aca si esta en el rango o cuando genero o leo numeros
+    
     public void setCategoria (int categoria){
         if (categoria >= 1 && categoria <= 5) 
             this.categoria = categoria;
@@ -294,12 +296,16 @@ public class Investigador {
         this.especialidad = especialidad;
     }
     
+    public void incrementrarDimL (){
+        this.dimLSubsidios++;
+    }
     private void setDimLSubsidios (int subsidios){
-        this.dimLSubsidios = 0 + subsidios;
+        this.dimLSubsidios = 0;
     }
             
     
 }
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
