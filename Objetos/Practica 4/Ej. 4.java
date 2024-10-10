@@ -40,7 +40,7 @@ public class Ej04 {
        sistemaMensual.setTemperatura (2023, 3, 200);
        
        System.out.println (sistemaMensual.toString());
-       System.out.println (sistemaAnual.mayorTemperatura());
+       System.out.println (sistemaMensual.mayorTemperatura());
     }
 }
 /*
