@@ -44,6 +44,7 @@ public class Dibujo {
       //seteo el titulo
       setTitulo (titulo);
       //recorro el vector y pongo todo en null porq voy a almacenar figuras
+      this.setGuardadas(0);
       vector = new Figura [this.getCapacidadMaxima()];
       for (int i = 0; i < this.getCapacidadMaxima(); i++) {
           vector [i] = null; 
@@ -54,7 +55,7 @@ public class Dibujo {
   //agrega la figura al dibujo
     public void agregar(Figura f){
         vector [this.getGuardadas()] = f; //esta bien?
-        this.setGuardadas(1);
+        this.incrementarGuardadas();
         System.out.println("La figura: " +
                         f.toString() +
                         " se ha guardado" + "\n");
@@ -102,8 +103,12 @@ public class Dibujo {
         this.titulo = titulo;
     }
 
+    public void incrementarGuardadas() {
+        this.guardadas++;
+    }
+
     public void setGuardadas(int guardadas) {
-        this.guardadas = 0 + guardadas;
+        this.guardadas = guardadas;
     }
     //seteo solo el set o el get tmb?
     private void setCapacidadMaxima(int capacidadMaxima) {
