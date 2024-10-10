@@ -44,8 +44,9 @@ public class Ejercicio1PracticaDeRepaso {
 
                 Subsidio subsidio = new Subsidio (monto, motivo );
                 investigador.agregarSubsidio(subsidio);
-                proyecto.agregarInvestigador(investigador);
+               
             }
+             proyecto.agregarInvestigador(investigador);
         }
         
         System.out.println ("------------------ Otorgar el subsidio de uno de ellos -------------------- ");
@@ -93,9 +94,7 @@ public class UNLP { //administra proyectos
         //inicializo el vector de investigadores en null
         
         vectorInvestigadores = new Investigador [50];
-        for (int i = 0; i < 50; i++) {
-            vectorInvestigadores [i] = null;
-        }
+        this.dimLInvestigador = 0;
     }
     
     //metodos
@@ -106,7 +105,7 @@ public class UNLP { //administra proyectos
     public void agregarInvestigador (Investigador unInvestigador) {
         if (this.getDimLInvestigador() < 50) {
             vectorInvestigadores[this.getDimLInvestigador()] = unInvestigador;
-            this.setDimLInvestigador(1); //preguntar
+            this.dimLInvestigador++; //tmb bien
         }
     }
     //c. double dineroTotalOtorgado();
@@ -178,13 +177,13 @@ public class UNLP { //administra proyectos
         return director;
     }
     
-    public int getDimLInvestigador (){
+    private int getDimLInvestigador (){
         return dimLInvestigador;
     }
     
     //preguntar si lo puedo inicializar aca o en la declaracion de variable
     private void setDimLInvestigador (int dimLInvestigador){
-        this.dimLInvestigador = 0 + dimLInvestigador; //preguntar
+        this.dimLInvestigador = 0; 
     }
     
 }
@@ -230,7 +229,7 @@ public class Investigador {
     public void agregarSubsidio (Subsidio unSubsidio) {
         if (this.getDimLSubsidios() < 5) {
             vectorSubsidios [this.getDimLSubsidios()] = unSubsidio;
-            this.setDimLSubsidios(1);
+            this.setDimLSubsidios(1); //cambiar
         }
     }
     
@@ -240,10 +239,10 @@ public class Investigador {
     
     public double dineroTotalOtorgadoInvestigador (){
         double total = 0;
-        for (int i = 0; i < this.getDimLSubsidios(); i++) 
+        for (int i = 0; i < this.getDimLSubsidios(); i++) {
             if (vectorSubsidios [i].getOtorgado() == true) //no me deja usar un equals si es boolean? solo con strings?
                 total = total + vectorSubsidios[i].getMontoPedido();
-                
+        }
         return total;
     }
     
