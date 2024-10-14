@@ -8,26 +8,23 @@ package ejercicio4.practica.de.repaso;
  *
  * @author branroodriguez
  */
-public class coroHilera extends Coro{
+public class CoroHilera extends Coro{
     /*
     o En el coro por hileras los coristas se deben ir agregando de izquierda a derecha, 
     completando la hilera antes de pasar a la siguiente.
     */
     private Corista[][] coroHilera;
-    private int [] vecDimL;
     private int hileras;
     private int intPorHilera;
-    private int dimL;
+    private int dimLHileras;
+    private int dimLIntPorHileras;
     //constructor
     
-    public coroHilera (String nombre, Director director, int intPorHilera, int hileras){
+    public CoroHilera (String nombre, Director director, int intPorHilera, int hileras){
         super (nombre, director);
         this.setHileras (hileras);
         this.setIntPorHilera (intPorHilera);
-        this.vecDimL = new int [hileras]; //guarda la dimL de la hilera 
         this.coroHilera = new Corista[hileras][intPorHilera]; //matriz de coristas
-        this.inicializarMatriz();
-        this.inicializarVector();
     }
     
     //metodos
@@ -36,21 +33,8 @@ public class coroHilera extends Coro{
     completando la hilera antes de pasar a la siguiente.
     */
     
-    public void inicializarMatriz (){
-        for (int i = 0; i < this.getHileras(); i++) {
-            for (int j = 0; i < this.getIntPorHileras(); j++){
-                this.coroHilera [i][j] = null;
-            }
-        }
-    }
-    
-    public void inicializarVector (){
-        for (int i = 0; i < this.getHileras(); i++)
-            this.vecDimL [i] = 0;
-    }
-    
     @Override
-    public boolean estaLleno (){
+    public boolean estaLleno (){ //ESTA MAL. NO HAY POSICIONES NULL EN EL MEDIO.
         boolean lleno = true;
         int i = 0;
         while (i < this.getHileras() && lleno == true){
@@ -70,10 +54,14 @@ public class coroHilera extends Coro{
     @Override
     public void agregarCorista (Corista corista){
         if (this.estaLleno() == false){
-            coroHilera [this.getDimL()][this.vecDimL[this.getDimL()]] = corista;
-            this.vecDimL[this.getDimL()]++;
-            if (vecDimL[this.getDimL()] == this.getIntPorHileras()) 
-                this.dimL++;
+            coroHilera [this.getDimLHileras()][this.getDimLIntPorHileras()] = corista;
+            if (this.getDimLHileras() < this.getIntPorHileras()) {
+                this.dimLHileras++;
+            }
+            else {
+                 this.dimLHileras = 0;
+                 this.dimLIntPorHileras++;
+            }
         }
     }
    
@@ -117,15 +105,21 @@ public class coroHilera extends Coro{
         return intPorHilera;
     }
 
-   private void setDimL(int dimL) {
-        this.dimL = 0;
+   private void setDimLHileras(int dimL) {
+        this.dimLHileras = 0;
     }
 
-    private int getDimL() {
-        return dimL;
+    private int getDimLHileras() {
+        return dimLHileras;
     }
     
+    private void setDimLPorHileras (){
+        this.dimLIntPorHileras = 0;
+    }
     
+    private int getDimLIntPorHileras (){
+        return dimLIntPorHileras;
+    }
     
     
     @Override
