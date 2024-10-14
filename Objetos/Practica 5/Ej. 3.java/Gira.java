@@ -18,6 +18,7 @@ public class Gira extends Recital {
     private Fecha[] vectorFechas;
     private int actual;
     private int cantF;
+    private int dimL;
     
     //constructor
     //el constructor de giras además recibe el nombre de la gira y la cantidad de fechas que tendrá.
@@ -38,19 +39,20 @@ public class Gira extends Recital {
     */
     
     public void agregarFecha (Fecha fecha){
-        this.incrementarActual();
-        if (this.getActual() < this.getCantF()) {
-            vectorFechas [this.getActual()] = fecha;
+        if (this.getDimL () < this.getCantF()) {
+            vectorFechas [this.getDimL()] = fecha;
+            this.incrementarDimL();
         }
     }
     
     @Override
     public String actuar (){
         String aux = "";
-        for (){
-            aux = aux + " Gira nro: " + (this.getActual() + 1) + " Buenas noches... " + vectorFechas [this.getActual()].getCiudad();
-            this.incrementarActual();
+        if (this.getActual() < this.getDimL()) {
+            aux = aux + vectorFechas [this.getActual()].toString();
+            this.actual++;
         }
+        return aux;
     }
     
     @Override
@@ -76,6 +78,17 @@ public class Gira extends Recital {
         return actual;
     }
     
+    public int getDimL () {
+        return dimL;
+    }
+
+    @Override
+    public void incrementarDimL (){
+        this.dimL++;
+    }
+    public void setDimL (){
+        this.dimL = 0;
+    }
     public void setCantF (int cantF){
         this.cantF = cantF;
     }
