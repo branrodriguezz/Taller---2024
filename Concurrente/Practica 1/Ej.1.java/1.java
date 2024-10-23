@@ -38,7 +38,7 @@ procesos
     
   fin
 areas
-  ciudad: AreaP (1,1,1,100)
+  ciudad: AreaP (1,1,1,100) {esta bien si pongo un area privada y de ese tamaño?}
 robots
   robot robot1
   comenzar
