@@ -9,15 +9,10 @@ procesos
       tomarFlor 
       flores:= flores + 1
   fin
-  proceso recorrerAvenida(E numAv: numero)
+  proceso recorrerAvenida(E numAv: numero, ES cantTotalFlores, ES esquinasSinFlores)
   variables
     flores : numero
-    cantTotalFlores : numero
-    esquinasSinFlores : numero
   comenzar
-    esquinasSinFlores:= 0
-    cantTotalFlores:= 0
-    {}
     Pos(numAv, 1)
     repetir 99
       juntarFlores (flores)
@@ -33,16 +28,21 @@ procesos
     {}
     repetir cantTotalFlores 
       depositarFlor
-    Informar (cantTotalFlores)
-    Informar (esquinasSinFlores) 
     
   fin
 areas
   ciudad: AreaP (1,1,1,100) {esta bien si pongo un area privada y de ese tamaño?}
 robots
   robot robot1
+  variables
+    cantTotalFlores: numero
+    esquinasSinFlores : numero
   comenzar
-    recorrerAvenida(1)
+    esquinasSinFlores:= 0
+    cantTotalFlores:= 0
+    recorrerAvenida(1, cantTotalFlores, esquinasSinFlores)
+    Informar (cantTotalFlores)
+    Informar (esquinasSinFlores) 
   fin
 variables
   R_info: robot1
