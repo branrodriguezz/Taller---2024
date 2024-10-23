@@ -38,7 +38,7 @@ procesos
     
   fin
 areas
-  ciudad: AreaC (1,1,100,100)
+  ciudad: AreaP (1,1,1,100)
 robots
   robot robot1
   comenzar
