@@ -26,7 +26,7 @@ procesos
       esquinasSinFlores:= esquinasSinFlores + 1
     cantTotalFlores:= cantTotalFlores + flores
     
-    repetir cantTotalFlores 
+    repetir cantTotalFlores  {preguntar}
       depositarFlor
   fin 
   
