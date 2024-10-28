@@ -18,7 +18,7 @@ procesos
   comenzar
     mientras (HayPapelEnLaEsquina)
       tomarPapel
-      papeles:= papeles + 1 {contadores, necesarios?}
+      papeles:= papeles + 1 
   fin
   
   proceso recorridoRobot1 
@@ -29,7 +29,8 @@ procesos
     repetir 15
       juntarFlores (flores)
       mover
-    repetir flores {preguntar por el mientras hay flor en la bolsa y esto}
+    juntarFlores (flores)
+    repetir flores 
       depositarFlor 
   fin
   
@@ -41,6 +42,8 @@ procesos
     repetir 20
       juntarPapeles (papeles)
       mover
+    juntarPapeles (papeles)
+    Pos (PosAv, PosCa - 20)
     repetir papeles
       depositarPapel 
   fin
@@ -53,6 +56,7 @@ procesos
     repetir 30
       juntarFlores (flores)
       mover
+    juntarFlores (flores)
     repetir flores
       depositarFlor
   fin
@@ -65,6 +69,8 @@ procesos
     repetir 10
       juntarPapeles (papeles)
       mover
+    juntarPapeles (papeles)
+    Pos (PosAv, PosCa - 10)
     repetir papeles
       depositarPapel
   fin
@@ -124,7 +130,7 @@ variables
   r4: robot4
   
 comenzar
-  AsignarArea (r1, area1) {preguntar areas}
+  AsignarArea (r1, area1) 
   AsignarArea (r1, area12)
   
   AsignarArea(r2, area2)
@@ -136,10 +142,9 @@ comenzar
   AsignarArea(r4, area4)
   AsignarArea(r4, area42)
   
-  Iniciar (r1, 1, 80) {si inicio hace falta q posicione el robot en alguna pos inicial?}
+  Iniciar (r1, 1, 80) 
   Iniciar (r2, 75, 80)
   Iniciar (r3, 70, 15)
   Iniciar (r4, 10, 1)
   
 fin
-
