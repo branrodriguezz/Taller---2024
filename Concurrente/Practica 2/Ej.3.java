@@ -23,67 +23,54 @@ procesos
   proceso realizarTareaA1 
   variables
     papeles: numero
-    empeza: boolean
   comenzar
     papeles:= 0
-    empeza:= F
     repetir 9
       juntarPapeles (papeles)
       mover
       
     juntarPapeles (papeles)
-    empeza:= V
-    EnviarMensaje (empeza, r2) {preguntar si es necesario enviar que robot envia el mensaje}
     EnviarMensaje (papeles, r2)
   fin
   
   proceso realizarTareaA2 (ES papelesTotal: numero)
   variables
     papelesNuevo, papeles: numero
-    empiezo: boolean
   comenzar
-    RecibirMensaje (empiezo, r1)
-    si (empiezo = V)
-      RecibirMensaje (papeles, r1)
-      papelesNuevo:= 0
-      repetir 9
-        juntarPapeles (papelesNuevo)
-        mover
+    RecibirMensaje (papeles, r1)
+    papelesNuevo:= 0
+    repetir 9
       juntarPapeles (papelesNuevo)
-      papelesTotal:= papeles + papelesNuevo
+      mover
+    juntarPapeles (papelesNuevo)
+    papelesTotal:= papeles + papelesNuevo
+    
   fin
   
   proceso realizarTareaB1
   variables
     flores: numero
-    empeza: boolean 
   comenzar
     flores:= 0
-    empeza:= F
     repetir 9
       juntarFlores (flores)
       mover
       
     juntarFlores (flores)
-    empeza:= V
-    EnviarMensaje (empeza, r4)
     EnviarMensaje (flores, r4)
   fin
   
   proceso realizarTareaB2 (ES floresTotal: numero)
   variables
     floresNuevo, flores: numero
-    empiezo: boolean
   comenzar 
-    RecibirMensaje (empiezo, r3)
-    si (empiezo = V)
-      RecibirMensaje (flores, r3)
-      floresNuevo:= 0
-      repetir 9
-        juntarFlores (floresNuevo)
-        mover
+    RecibirMensaje (flores, r3)
+    floresNuevo:= 0
+    repetir 9
       juntarFlores (floresNuevo)
-      floresTotal:= flores + floresNuevo
+      mover
+    juntarFlores (floresNuevo)
+    floresTotal:= flores + floresNuevo
   fin
   
 areas
