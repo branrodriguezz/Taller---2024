@@ -1,4 +1,8 @@
-{Modifique el programa anterior para que cada equipo repita el recorrido con las siguientes 20 esquinas de sus correspondientes calles.}
+{Realice un programa con 2 equipos:}
+{- El equipo A, compuesto por los robots A1 y A2, debe juntar papeles de las primeras 20 esquinas de la calle 1}
+{- El equipo B, compuesto por los robots B1 y B2, debe juntar flores de las primeras 20 esquinas de la calle 5}
+{Los robots A1 y B1 deberán realizar las 10 primeras esquinas de su recorrido, y al finalizar avisarán a los robots A2 y B2 respectivamente para que continúen con las siguientes 10 esquinas. El segundo robot de cada equipo debe informar la cantidad de elementos recogidos en las 20 esquinas.}
+{Inicialice los 4 robots en las esquinas que considere más apropiadas según el trayecto que le corresponde realizar a cada uno.}
 
 programa p2ej3
 procesos
@@ -18,98 +22,102 @@ procesos
   
   proceso realizarTareaA1 
   variables
-    papeles: numero
-    empeza, salto: boolean
+    papeles, papelesTotal: numero
   comenzar
     papeles:= 0
-    empeza:= F
+    papelesTotal:= 0
     repetir 9
       juntarPapeles (papeles)
       mover
       
     juntarPapeles (papeles)
-    empeza:= V
-    EnviarMensaje (empeza, r2) {preguntar si es necesario enviar que robot envia el mensaje}
     EnviarMensaje (papeles, r2)
-    RecibirMensaje(salto, r2)
-    si (salto = V)
-      empeza:= F
-      papeles:= 0
-      Pos(30,1)
-      repetir 9
-        juntarPapeles (papeles)
-        mover
+    RecibirMensaje (papelesTotal, r2)
+    Pos (21,1)
+    papeles:= 0
+    repetir 9
       juntarPapeles (papeles)
-      empeza:= V
-      EnviarMensaje (empeza, r2)
-      EnviarMensaje (papeles, r2)
+      mover
+    juntarPapeles (papeles)
+    papelesTotal:= papelesTotal + papeles
+    EnviarMensaje (papelesTotal, r2)
   fin
   
+
   proceso realizarTareaA2 (ES papelesTotal: numero)
   variables
-    papelesNuevo, papeles: numero
-    empiezo, salta: boolean
+    papelesNuevo, papelesTotal: numero
   comenzar
-    RecibirMensaje (empiezo, r1)
-    si (empiezo = V)
-      RecibirMensaje (papeles, r1)
-      papelesNuevo:= 0
-      repetir 9
-        juntarPapeles (papelesNuevo)
-        mover
+    papelesTotal:= 0
+    RecibirMensaje (papelesTotal, r1)
+    papelesNuevo:= 0
+    repetir 9
       juntarPapeles (papelesNuevo)
-      papelesTotal:= papeles + papelesNuevo
-    salta:= V
-    EnviarMensaje (salta, r1)
-    RecibirMensaje (empiezo,r1)
-    si (empiezo = V)
-      RecibirMensaje (papeles,r1)
-      papelesNuevo:= 0
-      repetir 9
-        juntarPapeles (papelesNuevo)
-        mover
+      mover
+    juntarPapeles (papelesNuevo)
+    papelesTotal:= papelesTotal + papelesNuevo
+    EnviarMensaje (papelesTotal, r1)
+    RecibirMensaje (papelesTotal, r1)
+    Pos (31,1)
+    papelesNuevo:= 0
+    repetir 9
       juntarPapeles (papelesNuevo)
-      papelesTotal:= papeles + papelesNuevo
-    
+      mover
+    juntarPapeles (papelesNuevo)
+    papelesTotal:= papelesTotal + papelesNuevo
   fin
-  
+
   proceso realizarTareaB1
   variables
-    flores: numero
-    empeza: boolean 
+    flores, floresTotal: numero
   comenzar
     flores:= 0
-    empeza:= F
+    floresTotal:= 0
     repetir 9
       juntarFlores (flores)
       mover
       
     juntarFlores (flores)
-    empeza:= V
-    EnviarMensaje (empeza, r4)
     EnviarMensaje (flores, r4)
+    RecibirMensaje (floresTotal, r4)
+    Pos (21,5)
+    flores:= 0
+    repetir 9
+      juntarFlores (flores)
+      mover
+    juntarFlores (flores)
+    floresTotal:= floresTotal + flores
+    EnviarMensaje (floresTotal, r4)
+    
   fin
   
   proceso realizarTareaB2 (ES floresTotal: numero)
   variables
-    floresNuevo, flores: numero
-    empiezo: boolean
+    floresNuevo, floresTotal: numero
   comenzar 
-    RecibirMensaje (empiezo, r3)
-    si (empiezo = V)
-      RecibirMensaje (flores, r3)
-      floresNuevo:= 0
-      repetir 9
-        juntarFlores (floresNuevo)
-        mover
+    floresTotal:= 0
+    RecibirMensaje (floresTotal, r3)
+    floresNuevo:= 0
+    repetir 9
       juntarFlores (floresNuevo)
-      floresTotal:= flores + floresNuevo
+      mover
+    juntarFlores (floresNuevo)
+    floresTotal:= floresTotal + floresNuevo
+    EnviarMensaje (floresTotal, r3)
+    RecibirMensaje (floresTotal, r3)
+    Pos (31,5)
+    floresNuevo:= 0
+    repetir 9
+      juntarFlores (floresNuevo)
+      mover
+    juntarFlores (floresNuevo)
+    floresTotal:= floresTotal + floresNuevo
   fin
   
 areas
 
   areaA: AreaPC (1,1, 40,1)
-  areaB: AreaPC (1,5, 20,5)
+  areaB: AreaPC (1,5, 40,5)
 
 robots
 
