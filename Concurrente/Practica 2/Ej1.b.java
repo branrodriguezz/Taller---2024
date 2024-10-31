@@ -19,22 +19,15 @@ areas
 robots
   robot juntador
   variables
-    avenida, calleini, callefin, calles, soy, flores: numero
+    soy, flores: numero
     
   comenzar
     flores:= 0
-    calles:= 0
     RecibirMensaje (soy, robot3)
-    RecibirMensaje (avenida, robot3)
-    RecibirMensaje (calleini, robot3)
-    RecibirMensaje (callefin, robot3)
- 
-    calles:= (callefin - calleini)
-    repetir calles
+    repetir 9
       juntarFlores (flores)
       mover
     juntarFlores (flores)
-    
     EnviarMensaje (soy, robot3)
     EnviarMensaje (flores, robot3)
   fin
@@ -47,15 +40,7 @@ robots
     min:= 999
     max:= -1
     EnviarMensaje (1, robot1)
-    EnviarMensaje (1, robot1)
-    EnviarMensaje (1, robot1)
-    EnviarMensaje (10, robot1)
-    
     EnviarMensaje (2, robot2)
-    EnviarMensaje (2, robot2)
-    EnviarMensaje (11, robot2)
-    EnviarMensaje (20, robot2)
-    
     repetir 2 
       RecibirMensaje (quien, *)
       si (quien = 1)
