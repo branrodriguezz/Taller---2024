@@ -28,35 +28,30 @@ robots
 
   robot robot1
   variables
-  
+ 
     flores, floresR2, floresT: numero
-    gane: boolean
-    
+   
   comenzar
   
     realizarTareaFlores (flores)
-    EnviarMensaje (flores, robot2)
-    RecibirMensaje (gane, robot2)
-    si (gane = V)
-      RecibirMensaje (floresR2, robot2)
+    EnviarMensaje (flores, ro2)
+    RecibirMensaje (floresR2, ro2)
+    si (flores > floresR2)
       floresT:= (flores - floresR2)
-      Informar ("Gano R1 con diferencia de", floresT)
+      Informar (" Gano r1 con una diferencia de flores ", floresT)
   fin
-  
+ 
   robot robot2
   variables
     flores, floresR1, floresT: numero
-    ganaste: boolean
   comenzar
   
     realizarTareaFlores (flores)
-    RecibirMensaje (floresR1, robot1)
-    si (floresR1 > flores)
-      EnviarMensaje (ganaste, robot1)
-      EnviarMensaje (flores, robot2)
-    sino
+    RecibirMensaje (floresR1, ro1)
+    EnviarMensaje (flores, ro1)
+    si (flores > floresR1)
       floresT:= (flores - floresR1)
-      Informar ("Gano R2 con diferencia de", floresT)
+      Informar (" Gano r2 con una diferencia de flores ", floresT)
   fin
   
 variables
