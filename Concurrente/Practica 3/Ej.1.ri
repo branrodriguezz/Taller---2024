@@ -1,0 +1,122 @@
+{1- Realice un programa con 2 robots recolectores de flores (floreros) y 2 robots recolectores de papeles (papeleros).}
+{Los floreros comparten área y tienen 5 intentos cada uno para juntar las flores de una esquina, dentro de dicha área, elegida al azar en cada intento.} {Del mismo modo, los papeleros comparten área y tienen 3 intentos cada uno para juntar los papeles. En cada intento cada robot va a la esquina al azar, junta todos los elementos (flores o papeles según le corresponda) y vuelve a su esquina original. Al finalizar sus intentos cada robot debe acceder a la esquina (10, 10) y depositar los elementos recogidos de a uno.}
+{- Área de floreros: (1,1) a (5, 10)}
+{- Área de papeleros: (6, 1) a (10, 9)}
+{- Esquinas de inicio de floreros: (6,10) y (7,10)}
+{- Esquinas de inicio de papeleros: (8,10) y (9,10)}
+
+programa p3ej1
+
+procesos
+  proceso juntarFlores (ES f: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f := f + 1
+  fin
+  
+  proceso juntarPapeles (ES p: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p := p + 1
+  fin
+
+  proceso laborFlorera
+  variables
+    avIni, caIni: numero
+    avAzar, caAzar: numero
+    flores: numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    flores := 0
+    repetir 5
+      Random (avAzar, 1, 5)
+      Random (caAzar, 1, 10)
+      BloquearEsquina (avAzar, caAzar)
+      Pos (avAzar, caAzar)
+      juntarFlores (flores)
+      Pos(avIni, caIni)
+      LiberarEsquina (avAzar, caAzar)
+    
+    BloquearEsquina (10, 10)
+    Pos (10, 10)
+    repetir flores
+      depositarFlor
+    Pos (avIni, caIni)
+    LiberarEsquina (10, 10)    
+  fin
+  
+  proceso laborPapelera
+  variables
+    avIni, caIni: numero
+    avAzar, caAzar: numero
+    papeles: numero
+  comenzar
+    avIni := PosAv
+    caIni := PosCa
+    papeles := 0
+    repetir 3
+      Random (avAzar, 6, 10)
+      Random (caAzar, 1, 9)
+      BloquearEsquina (avAzar, caAzar)
+      Pos (avAzar, caAzar)
+      juntarPapeles (papeles)
+      Pos (avIni, caIni)
+      LiberarEsquina (avAzar, caAzar)
+    
+    BloquearEsquina (10, 10)
+    Pos (10, 10)
+    repetir papeles
+      depositarPapel
+    Pos (avIni, caIni)
+    LiberarEsquina (10, 10)      
+  fin
+  
+areas
+  areaFlorera: AreaPC (1, 1, 5, 10)
+  areaPapelera: AreaPC (6, 1, 10, 9)
+  areaFinal: AreaP (10, 10, 10, 10)
+  areaIniF1: AreaP (6, 10, 6, 10)
+  areaIniF2: AreaP (7, 10, 7, 10)
+  areaIniP1: AreaP (8, 10, 8, 10)
+  areaIniP2: AreaP (9, 10, 9, 10)
+  
+robots
+  robot florero
+  comenzar
+    laborFlorera
+  fin
+  
+  robot papelero
+  comenzar
+    laborPapelera
+  fin
+  
+variables
+  r1: florero
+  r2: florero
+  r3: papelero
+  r4: papelero
+  
+comenzar
+  AsignarArea (r1, areaFlorera)
+  AsignarArea (r1, areaFinal)
+  AsignarArea (r1, areaIniF1)
+  AsignarArea (r2, areaFlorera)
+  AsignarArea (r2, areaIniF2)
+  AsignarArea (r2, areaFinal)
+  AsignarArea (r3, areaPapelera)
+  AsignarArea (r3, areaFinal)
+  AsignarArea (r3, areaIniP1)
+  AsignarArea (r4, areaPapelera)
+  AsignarArea (r4, areaFinal)
+  AsignarArea (r4, areaIniP2)
+  
+  Iniciar (r1, 6, 10)
+  Iniciar (r2, 7, 10)
+  Iniciar (r3, 8, 10)
+  Iniciar (r4, 9, 10)
+  
+fin
