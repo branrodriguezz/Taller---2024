@@ -1,0 +1,147 @@
+{Realice un programa donde 4 robots colaboren para recoger todas las flores de una esquina indicada por un robot jefe, seleccionada de manera aleatoria dentro del cuadrante (2,2) y (10,10). Para ello el jefe determina inicialmente una esquina y los robots deben accederla, tomar de a una las flores y volver a su posición inicial. }
+{Cuando los robots terminan el jefe deberá informar cuál de ellos logró recoger más flores.}
+{Las esquinas de inicio de los robots deberán ser jefe (1,1) y robots (2,1), (3, 1), (4,1) y (5,1).}
+
+programa p3ej3
+procesos
+
+  proceso mandarIds 
+  comenzar
+  
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    EnviarMensaje (4, r4)
+ 
+  fin
+  
+  proceso determinarEsq (E a: numero; E c: numero)
+  comenzar
+  
+    EnviarMensaje (a, r1)
+    EnviarMensaje (c, r1)
+    EnviarMensaje (a, r2)
+    EnviarMensaje (c, r2)
+    EnviarMensaje (a, r3)
+    EnviarMensaje (c, r3)
+    EnviarMensaje (a, r4)
+    EnviarMensaje (c, r4)
+    
+  fin
+  
+  proceso recibirMensajes (E id: numero; E a: numero; E c: numero)
+  comenzar
+    RecibirMensaje (id, rf)
+    RecibirMensaje (a, rf)
+    RecibirMensaje (c, rf)
+  fin
+  
+  proceso limpiarEsquina (ES flores: numero; E a: numero; E c: numero)
+  variables
+    avIni, caIni: numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    
+    BloquearEsquina (a,c)
+    flores:= 0
+    Pos (a,c)
+    mientras (HayFlorEnLaEsquina) {tomar de a una flor}
+      tomarFlor
+      flores:= flores + 1
+      Pos (avIni, caIni) {no salta muchas veces a la misma esquina, repetitivo}
+      LiberarEsquina (a,c)
+      BloquearEsquina (a,c)
+      Pos (a,c) 
+      
+    Pos (avIni, caIni)
+    LiberarEsquina (a,c)
+  
+  fin
+  
+  proceso determinarMax (ES max: numero; ES maxR: numero)
+  variables
+    id: numero
+    flores: numero
+  comenzar
+    repetir 4
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (flores, r1)
+      sino
+        si (id = 2)
+          RecibirMensaje (flores, r2)
+        sino
+          si (id = 3)
+            RecibirMensaje (flores, r3)
+          sino
+            RecibirMensaje (flores, r4)
+      
+      si (flores > max)
+        max:= flores
+        maxR:= id
+        
+  fin
+  
+areas
+
+  areaCuadrante: AreaPC (2,2,10,10)
+  areaJefe: AreaP (1,1,1,1)
+  areaInicial: AreaPC (2,1,5,1)
+  
+robots
+  robot jefe
+  variables
+    a,c: numero
+    max,maxR: numero
+  comenzar
+    max:= -1
+    mandarIds {para identificar a cada robot}
+    Random (a, 2, 10)
+    Random (c, 2, 10)
+    determinarEsq (a,c)
+    determinarMax (max, maxR)
+    Informar ('El ganador fue', maxR)
+    
+  fin
+  
+  robot recolector
+  variables
+    id, a, c: numero
+    flores: numero
+  comenzar
+  
+    recibirMensajes (id, a, c)
+    limpiarEsquina (flores, a, c) 
+    EnviarMensaje (id, rf)
+    EnviarMensaje (flores, rf)
+    
+  fin
+  
+variables
+
+  rf: jefe
+  r1: recolector
+  r2: recolector
+  r3: recolector
+  r4: recolector
+  
+comenzar
+  AsignarArea (rf, areaJefe)
+  AsignarArea (r1, areaInicial)
+  AsignarArea (r1, areaCuadrante)
+  AsignarArea (r2, areaInicial)
+  AsignarArea (r2, areaCuadrante)
+  AsignarArea (r3, areaInicial)
+  AsignarArea (r3, areaCuadrante)
+  AsignarArea (r4, areaInicial)
+  AsignarArea (r4, areaCuadrante)
+  
+  Iniciar (rf, 1,1)
+  Iniciar (r1, 2,1)
+  Iniciar (r2, 3,1)
+  Iniciar (r3, 4,1)
+  Iniciar (r4, 5,1)
+
+fin
+
