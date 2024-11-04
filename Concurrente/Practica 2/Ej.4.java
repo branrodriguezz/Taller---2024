@@ -70,7 +70,6 @@ procesos
     cantT: numero
   comenzar
     max:= -1
-    maxRobot:= 0
     repetir 4
       RecibirMensaje (id, *)
       si (id = 1)
@@ -96,27 +95,27 @@ procesos
   comenzar
     ganaste:= V
     si (maxR = 1)
-      EnviarMensaje (ganaste, r1) {le aviso que gane al robot ganador unicamente poniendolo en true y el resto false}
-      EnviarMensaje (~ganaste, r2)
-      EnviarMensaje (~ganaste, r3)
-      EnviarMensaje (~ganaste, r4)
+      EnviarMensaje (V, r1) {le aviso que gane al robot ganador unicamente poniendolo en true y el resto false}
+      EnviarMensaje (F, r2)
+      EnviarMensaje (F, r3)
+      EnviarMensaje (F, r4)
     sino
       si (maxR = 2)
-        EnviarMensaje (~ganaste, r1)
-        EnviarMensaje (ganaste, r2)
-        EnviarMensaje (~ganaste, r3)
-        EnviarMensaje (~ganaste, r4)
+        EnviarMensaje (F, r1)
+        EnviarMensaje (V, r2)
+        EnviarMensaje (F, r3)
+        EnviarMensaje (F, r4)
       sino
         si (maxR = 3)
-          EnviarMensaje (~ganaste, r1)
-          EnviarMensaje (~ganaste, r2)
-          EnviarMensaje (ganaste, r3)
-          EnviarMensaje (~ganaste, r4)
+          EnviarMensaje (F, r1)
+          EnviarMensaje (F, r2)
+          EnviarMensaje (V, r3)
+          EnviarMensaje (F, r4)
         sino
-          EnviarMensaje (~ganaste, r1)
-          EnviarMensaje (~ganaste, r2)
-          EnviarMensaje (~ganaste, r3)
-          EnviarMensaje (ganaste, r4)
+          EnviarMensaje (F, r1)
+          EnviarMensaje (F, r2)
+          EnviarMensaje (F, r3)
+          EnviarMensaje (V, r4)
           
   fin
   
