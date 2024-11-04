@@ -29,7 +29,7 @@ procesos
     
   fin
   
-  proceso recibirMensajes (E id: numero; E a: numero; E c: numero)
+  proceso recibirMensajes (ES id: numero; ES a: numero; ES c: numero)
   comenzar
     RecibirMensaje (id, rf)
     RecibirMensaje (a, rf)
@@ -46,17 +46,12 @@ procesos
     BloquearEsquina (a,c)
     flores:= 0
     Pos (a,c)
-    mientras (HayFlorEnLaEsquina) {tomar de a una flor}
+    si (HayFlorEnLaEsquina) {tomar de a una flor}
       tomarFlor
       flores:= flores + 1
-      Pos (avIni, caIni) {no salta muchas veces a la misma esquina, repetitivo}
-      LiberarEsquina (a,c)
-      BloquearEsquina (a,c)
-      Pos (a,c) 
-      
-    Pos (avIni, caIni)
+    Pos (avIni, caIni) {no salta muchas veces a la misma esquina, repetitivo}
     LiberarEsquina (a,c)
-  
+      
   fin
   
   proceso determinarMax (ES max: numero; ES maxR: numero)
@@ -144,4 +139,3 @@ comenzar
   Iniciar (r4, 5,1)
 
 fin
-
