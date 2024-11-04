@@ -1,0 +1,129 @@
+{Realice un programa en el que 4 robots juegan una carrera por avenidas diferentes: 4, 6, 8 y 10 respectivamente. Todos los robots inician en la calle 1.}
+{Para poder avanzar, cada robot debe juntar un papel de una fuente de papeles localizada en la esquina (11,11), colocarlo en la esquina actual de su avenida y avanzar un paso. Cuando la esquina fuente ya no tiene más papeles, o cuando se haya completado la avenida, deberán avisar al robot coordinador y este determinará el robot que llegó más lejos.}
+
+programa p3ej5
+procesos
+  proceso mandarIds
+  comenzar
+  
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    EnviarMensaje (4, r4)
+    
+  fin
+  
+  proceso carrera (ES caAct: numero)
+  variables
+    ok: boolean
+    avAct, caAct: numero
+  comenzar
+    ok:= V
+    avAct:= PosAv
+    caAct:= PosCa
+    Pos (avAct, caAct)
+    mientras (ok) & (PosCa <= 100)
+      BloquearEsquina (11,11)
+      Pos (11,11)
+      si (HayPapelEnLaEsquina)
+        tomarPapel
+      sino
+        ok:= F
+        
+      Pos (avAct, caAct)
+      LiberarEsquina (11,11)
+      
+      si (ok)
+        depositarPapel
+        mover
+        
+      caAct:= PosCa
+      
+  fin
+  
+  proceso calcularGanador (ES max: numero; ES maxR: numero)
+  variables
+    id: numero
+    caAct: numero
+  comenzar
+    repetir 4
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (caAct, r1)
+      sino
+        si (id = 2)
+          RecibirMensaje (caAct, r2)
+        sino
+          si (id = 3)
+            RecibirMensaje (caAct,r3)
+          sino
+            RecibirMensaje(caAct, r4)
+            
+      si (caAct > max)
+        max:= caAct
+        maxR:= id
+  fin
+  
+areas
+
+  areaC1: AreaP (4,1,4,100)
+  areaC2: AreaP (6,1,6,100)
+  areaC3: AreaP (8,1,8,100)
+  areaC4: AreaP (10,1,10,100)
+  areaCoordinador: AreaP (1,1,1,1)
+  areaFuente: AreaP (11,11,11,11)
+  
+robots
+
+  robot coordinador
+  variables
+    max: numero
+    maxR: numero
+  comenzar
+  
+    max:= -1
+    mandarIds
+    calcularGanador (max, maxR)
+    Informar ('Llego mas lejos y gano', maxR)
+    
+  fin
+  
+  robot corredor
+  variables
+    id: numero
+    ca: numero
+  comenzar
+    
+    RecibirMensaje (id, rc)
+    carrera (ca)
+    EnviarMensaje (id, rc)
+    EnviarMensaje (ca, rc)
+  fin
+  
+variables
+
+  rc: coordinador
+  r1: corredor
+  r2: corredor
+  r3: corredor
+  r4: corredor
+  
+comenzar
+
+  AsignarArea (rc, areaCoordinador)
+  AsignarArea (r1, areaC1)
+  AsignarArea (r1, areaFuente)
+  AsignarArea (r2, areaC2)
+  AsignarArea (r2, areaFuente)
+  AsignarArea (r3, areaC3)
+  AsignarArea (r3, areaFuente)
+  AsignarArea (r4, areaC4)
+  AsignarArea (r4, areaFuente)
+  
+  Iniciar (rc, 1,1)
+  Iniciar (r1, 4,1)
+  Iniciar (r2, 6,1)
+  Iniciar (r3, 8,1)
+  Iniciar (r4, 10,1)
+  
+fin
