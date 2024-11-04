@@ -39,21 +39,24 @@ procesos
   proceso limpiarEsquina (ES flores: numero; E a: numero; E c: numero)
   variables
     avIni, caIni: numero
+    ok: boolean
   comenzar
     avIni:= PosAv
     caIni:= PosCa
     flores:= 0
-    BloquearEsquina (a,c)
-    Pos (a,c)
-    mientras (HayFlorEnLaEsquina) {tomar de a una flor}
-      tomarFlor
-      flores:= flores + 1
-      Pos (avIni,caIni)
-      LiberarEsquina (a,c)
+    ok:= V
+    mientras (ok)
       BloquearEsquina (a,c)
-      
-    Pos (avIni, caIni)
-    LiberarEsquina (a,c)
+      Pos (a,c)
+      si (HayFlorEnLaEsquina) {tomar de a una flor}
+        tomarFlor
+        flores:= flores + 1
+        Pos (avIni,caIni)
+        LiberarEsquina (a,c)
+      sino
+        Pos (avIni, caIni)
+        LiberarEsquina (a,c)
+        ok:= F
       
   fin
   
@@ -97,7 +100,7 @@ robots
     mandarIds {para identificar a cada robot}
     Random (a, 2, 10)
     Random (c, 2, 10)
-    determinarEsq (a,c)
+    determinarEsq (10,5)
     determinarMax (max, maxR)
     Informar ('El ganador fue', maxR)
     
