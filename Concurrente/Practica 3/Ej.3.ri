@@ -42,14 +42,17 @@ procesos
   comenzar
     avIni:= PosAv
     caIni:= PosCa
-    
-    BloquearEsquina (a,c)
     flores:= 0
+    BloquearEsquina (a,c)
     Pos (a,c)
-    si (HayFlorEnLaEsquina) {tomar de a una flor}
+    mientras (HayFlorEnLaEsquina) {tomar de a una flor}
       tomarFlor
       flores:= flores + 1
-    Pos (avIni, caIni) {no salta muchas veces a la misma esquina, repetitivo}
+      Pos (avIni,caIni)
+      LiberarEsquina (a,c)
+      BloquearEsquina (a,c)
+      
+    Pos (avIni, caIni)
     LiberarEsquina (a,c)
       
   fin
