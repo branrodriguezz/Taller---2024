@@ -1,0 +1,362 @@
+programa p3ej6
+procesos
+  
+  proceso mandarIds 
+  comenzar
+    
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    
+  fin
+  
+  proceso juntarFlores (ES f: numero)
+  comenzar
+  
+    mientras (HayFlorEnLaEsquina) 
+      tomarFlor
+      f:= f + 1
+      
+  fin
+  
+  proceso juntarPapeles (ES p: numero)
+  comenzar
+    
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      
+  fin
+  
+  proceso limpiarEsquina (ES f: numero; ES p: numero)
+  comenzar
+  
+    juntarPapeles (p)
+    juntarFlores (f)
+  fin
+  
+  proceso realizarCuadranteR1 (ES f: numero)
+  comenzar
+    repetir 6
+      juntarFlores (f)
+      mover
+    
+    derecha
+    
+    repetir 2
+      juntarFlores (f)
+      mover
+    
+    BloquearEsquina (5,8)
+    mover
+    juntarFlores (f)
+    mover
+    LiberarEsquina (5,8)
+    
+    repetir 2
+      juntarFlores (f)
+      mover
+      
+    derecha
+    
+    repetir 2
+      juntarFlores (f)
+      mover
+    
+    BloquearEsquina (8,5)
+    mover
+    juntarFlores (f)
+    mover
+    LiberarEsquina (8,5)
+    
+    repetir 2
+      juntarFlores (f)
+      mover
+      
+    derecha
+    
+    repetir 6
+      juntarFlores (f)
+      mover
+    
+  fin
+  
+  proceso recorrerCalleR1 (E ca: numero; E f: numero)
+  comenzar
+    
+    repetir 2
+      derecha
+      
+    Pos (1,ca)
+    mientras (PosAv < 100) & (HayFlorEnLaBolsa)
+      depositarFlor
+      f:= f - 1
+      mover
+      
+  fin
+  
+  
+  proceso realizarCuadranteR2 (ES f: numero; ES p: numero)
+  comenzar
+  
+    repetir 2
+      limpiarEsquina (f,p)
+      mover
+    
+    BloquearEsquina (5,8)
+    mover
+    limpiarEsquina (f,p)
+    mover
+    LiberarEsquina (5,8)
+    
+    repetir 6
+      limpiarEsquina (f,p)
+      mover
+      
+    derecha
+    
+    repetir 3
+      limpiarEsquina (f,p)
+      mover
+    
+    BloquearEsquina (9,15)
+    mover
+    limpiarEsquina (f,p)
+    mover
+    LiberarEsquina (9,15)
+    
+    repetir 5
+      limpiarEsquina (f,p)
+      mover
+    
+    derecha
+    
+    repetir 5
+      limpiarEsquina (f,p)
+      mover
+    
+    BloquearEsquina (15,9)
+    mover
+    limpiarEsquina (f,p)
+    mover
+    LiberarEsquina (15,9)
+    
+    repetir 3
+      limpiarEsquina (f,p)
+      mover
+    
+    derecha
+    
+    repetir 6
+      limpiarEsquina (f,p)
+      mover
+    
+    BloquearEsquina (8,5)
+    mover
+    limpiarEsquina (f,p)
+    mover
+    LiberarEsquina (8,5)
+    
+    repetir 2
+      limpiarEsquina (f,p)
+      mover
+    
+  fin
+  
+  proceso recorrerCalleR2 (E ca: numero; E f: numero; E p: numero)
+  comenzar
+    
+    repetir 2
+      derecha
+      
+    Pos (1,ca)
+    mientras (PosAv < 100) & (HayFlorEnLaBolsa | HayPapelEnLaBolsa)
+      si (HayFlorEnLaBolsa)
+        depositarFlor
+        f:= f - 1
+        
+      si (HayPapelEnLaBolsa)
+        depositarPapel
+        p:= p - 1
+        
+      mover
+      
+  fin
+  
+  proceso realizarCuadranteR3 (ES p: numero)
+  comenzar
+    
+    repetir 5
+      juntarPapeles (p)
+      mover
+    
+    BloquearEsquina (9,15)
+    mover
+    juntarPapeles (p)
+    mover
+    LiberarEsquina (9,15)
+    derecha
+    
+    repetir 7
+      juntarPapeles (p)
+      mover
+    
+    derecha
+    repetir 7
+      juntarPapeles (p)
+      mover
+      
+    derecha
+    
+    BloquearEsquina (15,9)
+    mover
+    juntarPapeles (p)
+    mover
+    LiberarEsquina (15,9)
+    
+    repetir 5
+      juntarPapeles (p)
+      mover
+      
+  fin
+  
+  proceso recorrerCalleR3 (E ca: numero; E p: numero)
+  comenzar
+    
+    repetir 2
+      derecha
+      
+    Pos (1,ca)
+    mientras (PosAv < 100) & (HayPapelEnLaBolsa)
+      depositarPapel
+      mover
+      p:= p - 1
+      
+  fin
+  
+  proceso enviarCalles
+  variables
+  
+    calle, id: numero
+    
+  comenzar
+    
+    calle:= 20
+    
+    repetir 3
+      RecibirMensaje (id, *)
+      si (id = 1)
+        EnviarMensaje (calle, r1)
+        
+      sino
+        si (id = 2)
+          EnviarMensaje (calle, r2)
+          
+        sino
+          EnviarMensaje (calle, r3)
+      
+      calle:= calle + 1
+      
+  fin
+areas
+
+  areaRobots: AreaPC (2,2,16,16)
+  areaJefe: AreaP (1,1,1,1)
+  areaCalle20: AreaP (1,20,100,20)
+  areaCalle21: AreaP (1,21,100,21)
+  areaCalle22: AreaP (1,22,100,22)
+  
+robots
+
+  robot robot1 {recolecta flores}
+  variables
+  
+    id: numero
+    f: numero
+    calle: numero
+    
+  comenzar 
+  
+    f:= 0
+    RecibirMensaje (id, rf)
+    realizarCuadranteR1 (f)
+    EnviarMensaje (id, rf)
+    RecibirMensaje (calle, rf)
+    recorrerCalleR1 (calle, f)
+    
+  fin 
+  
+  robot robot2 {recolecta flores y papeles}
+  variables
+  
+    id: numero
+    f,p: numero
+    calle: numero
+    
+  comenzar
+  
+    f:= 0
+    p:= 0
+    RecibirMensaje (id, rf)
+    realizarCuadranteR2 (f,p)
+    EnviarMensaje (id, rf)
+    RecibirMensaje (calle, rf)
+    recorrerCalleR2 (calle,f,p)
+    
+  fin
+  
+  robot robot3 {recolecta papeles}
+  variables
+  
+    id: numero
+    p: numero
+    calle: numero
+    
+  comenzar
+  
+    p:= 0
+    RecibirMensaje (id, rf)
+    realizarCuadranteR3 (p)
+    EnviarMensaje (id, rf)
+    RecibirMensaje (calle, rf)
+    recorrerCalleR3 (calle, p)
+    
+  fin
+  
+  robot jefe
+  comenzar
+  
+    mandarIds 
+    enviarCalles 
+    
+  fin
+  
+  
+variables
+
+  r1: robot1
+  r2: robot2
+  r3: robot3
+  rf: jefe
+  
+comenzar
+
+  AsignarArea (r1, areaRobots)
+  AsignarArea (r1, areaCalle20)
+  AsignarArea (r1, areaCalle21)
+  AsignarArea (r1, areaCalle22)
+  AsignarArea (r2, areaRobots)
+  AsignarArea (r2, areaCalle20)
+  AsignarArea (r2, areaCalle21)
+  AsignarArea (r2, areaCalle22)
+  AsignarArea (r3, areaRobots)
+  AsignarArea (r3, areaCalle20)
+  AsignarArea (r3, areaCalle21)
+  AsignarArea (r3, areaCalle22)
+  AsignarArea (rf, areaJefe)
+ 
+  Iniciar (rf, 1,1)
+  Iniciar (r1, 2,2)
+  Iniciar (r2, 5,5)
+  Iniciar (r3, 9,9)
+  
+fin
