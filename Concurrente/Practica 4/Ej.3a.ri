@@ -1,0 +1,136 @@
+{3. Sincronización barrera}
+{Tres robots deben vaciar de papeles su avenida, comenzando por la calle 1 y terminando en la calle 100. El trabajo lo deben realizar todos juntos y en etapas: los robots inician juntos y cuando todos completan una etapa del trabajo pueden avanzar a la siguiente, lo que significa que para poder pasar de etapa los robots deben esperar que todos hayan completado la etapa en curso. Se proponen dos posibles soluciones a este problema: etapas homogéneas o etapas heterogéneas:}
+{a) Implemente el programa considerando que cada robot completa una etapa cada 5 esquinas}
+{En cada solución, analice cómo debería finalizar el programa.}
+{Los robots inician en las esquinas (1,1), (2,1) y (3,1) respectivamente. Existe un robot coordinador, cuya única tarea es asignar identificadores a cada robot.}
+
+programa p4ej3a {cada robot completa una etapa cada 5 esquinas}
+procesos
+
+  proceso mandarIds
+  comenzar
+    
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    
+  fin
+  
+  proceso realizarEtapa 
+  comenzar
+    
+    repetir 5
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+ 
+  fin
+  
+  proceso realizarEtapa2 
+  comenzar
+    
+    repetir 4
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    
+    mientras (HayPapelEnLaEsquina) {ult esq}
+      tomarPapel
+      
+  fin
+  
+areas
+  
+  areaRP1: AreaP (1,1,1,100)
+  areaRP2: AreaP (2,1,2,100)
+  areaRP3: AreaP (3,1,3,100)
+  areaEsq: AreaP (4,1,4,1)
+  
+robots
+  
+  robot coordinador
+  
+  comenzar
+    
+    mandarIds {identificador}
+      
+  fin
+  
+  robot papelero
+  variables
+  
+    id: numero
+    termino: boolean
+
+  comenzar
+    
+    RecibirMensaje (id, rc) {me identifico}
+    repetir 19
+      si (id = 1)
+        realizarEtapa {termino la etapa cada 5 esquinas}
+        EnviarMensaje (V, r2)
+        EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
+        RecibirMensaje (termino, r2)
+        RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
+      
+      sino
+        si (id = 2)
+          realizarEtapa {termino la etapa cada 5 esquinas}
+          EnviarMensaje (V, r1)
+          EnviarMensaje (V, r3)
+          RecibirMensaje (termino, r1)
+          RecibirMensaje (termino, r3)
+          
+        sino
+          {id = 3}
+          realizarEtapa 
+          EnviarMensaje (V, r1)
+          EnviarMensaje (V, r2)
+          RecibirMensaje (termino, r1)
+          RecibirMensaje (termino, r2)
+ 
+    si (id = 1) {ultimas 5 esquinas}
+      realizarEtapa2 {termino la etapa cada 5 esquinas}
+      EnviarMensaje (V, r2)
+      EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
+      RecibirMensaje (termino, r2)
+      RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
+    
+    sino
+      si (id = 2)
+        realizarEtapa2 {termino la etapa cada 5 esquinas}
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r3)
+        RecibirMensaje (termino, r1)
+        RecibirMensaje (termino, r3)
+      
+      sino
+        {id = 3}
+        realizarEtapa2 
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r2)
+        RecibirMensaje (termino, r1)
+        RecibirMensaje (termino, r2)
+        
+  fin
+  
+variables
+  
+  rc: coordinador
+  r1: papelero
+  r2: papelero
+  r3: papelero
+  
+comenzar
+  
+  AsignarArea (rc, areaEsq)
+  AsignarArea (r1, areaRP1)
+  AsignarArea (r2, areaRP2)
+  AsignarArea (r3, areaRP3)
+  
+  Iniciar (rc, 4,1)
+  Iniciar (r1, 1,1)
+  Iniciar (r2, 2,1)
+  Iniciar (r3, 3,1)
+  
+fin
