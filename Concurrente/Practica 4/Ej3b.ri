@@ -18,15 +18,16 @@ procesos
   fin
   
   proceso realizarEtapa (ES n: numero)
-  variables
-    p: numero
   comenzar
-    p:= 0
-    mientras (p < n)
-      si (HayPapelEnLaEsquina)
+    mientras (PosCa < 100) & (n > 0)
+      mientras (HayPapelEnLaEsquina)
         tomarPapel
-        p:= p + 1
+        n:= n - 1
       mover
+      
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      
   fin
   
 areas
@@ -56,6 +57,7 @@ robots
   comenzar
      
     RecibirMensaje (id, rc) {me identifico}
+    
     mientras (PosCa < 100)
       
       si (id = 1)
