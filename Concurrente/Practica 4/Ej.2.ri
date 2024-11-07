@@ -50,11 +50,11 @@ procesos
     BloquearEsquina (50,50)
     Pos (50,50)
     
-    mientras (HayPapelEnLaEsquina) & (pap <= cant)
+    mientras (HayPapelEnLaEsquina) & (pap < cant)
       tomarPapel
       pap:= pap + 1
    
-    si (V)
+    si (pap = cant)
     
       hayEsaCant:= V
       Pos (avAct, caAct)
