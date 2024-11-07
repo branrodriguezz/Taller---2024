@@ -10,22 +10,24 @@ procesos
   proceso trabajoProductor
   variables
   
-     f: numero
+    f: numero
     avAct, caAct: numero
+    p: numero
     
   comenzar
     
-    f:= 0
+    p:= 0
     avAct:= PosAv
     caAct:= PosCa
     
-    mientras (HayPapelEnLaEsquina) & (PosCa < 100)
-      si (p <= 5)
-        tomarFlor
-        p:= p + 1
+    mientras (PosCa < 100)
+      mientras (HayPapelEnLaEsquina)
+        si (p <= 5)
+          tomarPapel
+          p:= p + 1
       
-      sino 
-        depositarEsq (p,avAct,caAct)
+        si (p = 5)
+          depositarEsq (p,avAct,caAct)
     
       mover
       caAct:= PosCa
@@ -33,7 +35,7 @@ procesos
     si (PosCa = 100) {ULTIMA ESQUINA}
       mientras (HayPapelEnLaEsquina)
         si (p <= 5)
-          tomarFlor
+          tomarPapel
           p:= p + 1
         sino
           depositarEsq (p, avAct, caAct)
@@ -42,20 +44,31 @@ procesos
   
   proceso tomarPapeles (E cant: numero; ES hayEsaCant: boolean; E avAct: numero; E caAct: numero)
   variables
+    pap: numero
   comenzar
-    
+    pap:= 0
     BloquearEsquina (50,50)
     Pos (50,50)
     
-    mientras (pap <> cant)
-      mientras (HayPapelEnLaEsquina)
-        tomarPapel
-        pap:= pap + 1
+    mientras (HayPapelEnLaEsquina) & (pap <= cant)
+      tomarPapel
+      pap:= pap + 1
    
-   si (pap = cant)
+    si (V)
+    
+      hayEsaCant:= V
+      Pos (avAct, caAct)
+      repetir pap
+        depositarPapel
+      LiberarEsquina (50,50)
      
-      
-      sino
+    sino
+      hayEsaCant:= F
+      repetir pap
+        depositarPapel
+      Pos (avAct, caAct)
+      LiberarEsquina (50,50)
+        
   fin
   
   proceso tareaConsumidora 
@@ -66,35 +79,37 @@ procesos
     avAct: numero
     caAct: numero
     hayEsaCant: boolean
+    intentos: numero
     
   comenzar
   
+    intentos:= 0
     avAct:= PosAv
     caAct:= PosCa
     
-    repetir 8 {8 intentos}
+    mientras (intentos < 8) {8 intentos}
     
       Random (cant, 2,5)
       tomarPapeles (cant, hayEsaCant, avAct, caAct)
       
       si (hayEsaCant = V)
+        intentos:= 0
         
-    
-    
+      sino 
+        intentos := intentos + 1
   fin
   
-  
-  proceso depositarEsq (E p: numero; E avAct: numero; E caAct: numero)
-  variables
+  proceso depositarEsq (ES p: numero; E avAct: numero; E caAct: numero)
     
   comenzar
-  
+    
     BloquearEsquina (50,50)
     Pos (50,50)
     repetir p
-      depositarPapeles
+      depositarPapel
     Pos (avAct,caAct)
     LiberarEsquina (50,50)
+    p:= 0
     
   fin
   
@@ -104,24 +119,18 @@ areas
   areaP2 : AreaP (10,1,10,100)
   areaC1 : AreaP (11,1,11,1)
   areaC2 : AreaP (12,1,12,1)
-  esq: AreaP (50,50,50,50)
+  esq: AreaPC (50,50,50,50)
   
 robots
   
-  robot productor 
-  variables
-  
-   
-    
+  robot productor
   comenzar
-  
-    
-          
-      
+    trabajoProductor
   fin
   
   robot consumidor
   comenzar
+    tareaConsumidora
   fin
   
   
