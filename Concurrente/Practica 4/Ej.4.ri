@@ -1,0 +1,169 @@
+{. Jefe y trabajadores - Master/Slave}
+{Un robot jefe asigna tareas a los trabajadores. Las tareas consisten en 1. recoger flores, 2. recoger papeles, 3. vaciar bolsa, 4. finalizar .}
+{Existen 2 robots trabajadores que reciben solicitudes de tareas del robot jefe. Para cada solicitud, reciben la tarea y la esquina donde deben realizarla (salvo cuando la tarea es 4 que no deben acceder a una esquina). Luego de recibir la tarea, los robots van a la esquina indicada, realizan la tarea, avisan al jefe que ya la completaron y quedan a la espera de una nueva tarea.}
+{El robot jefe inicia en la esquina (1,1) y los robots trabajadores inician en las esquinas (2,1) y (3,1). Las tareas se asignan aleatoriamente a cualquier esquina dentro del cuadrante comprendido entre las esquinas (2,2) y (100,100). El robot jefe envía 10 tareas aleatorias (entre 1 y 3) a trabajadores aleatorios y termina. Al finalizar el jefe envía la tarea 4.}
+{Analice: existe el riesgo de que el programa quede bloqueado, y que ningún robot trabajador pueda realizar su tarea. ¿en qué caso puede suceder esto? ¿qué resulta necesario considerar para evitar esta situación?}
+
+programa p4ej4
+procesos
+  
+  proceso mandarIds
+  comenzar
+  
+     EnviarMensaje (1, r1) {id}
+     EnviarMensaje (2, r2) {id}
+     
+  fin
+  
+  proceso mandarInfo (E id: numero)
+  variables
+    
+    tarea: numero
+    av, ca: numero
+    
+  comenzar
+ 
+    Random (tarea, 1,3)
+    Random (av, 2,100)
+    Random (ca, 2,100)
+    EnviarMensaje (tarea, id)
+    EnviarMensaje (av, id)
+    EnviarMensaje (ca, id)
+
+    RecibirMensaje (termino, *) {recibo la señal de que termino su tarea)
+    
+    
+  fin
+  
+  proceso realizarTarea 
+  variables
+    
+    tarea: numero
+    avAct: numero
+    caAct: numero
+    ok: boolean
+    
+  comenzar
+    
+    ok:= V
+    avAct:= PosAv
+    caAct:= PosCa
+    
+    mientras (ok = V)
+    
+      RecibirMensaje (tarea, rf)
+      si (tarea = 1)
+        RecibirMensaje (av, rf)
+        RecibirMensaje (ca, rf)
+        BloquearEsquina (av,ca)
+        Pos (av, ca)
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+        Pos (avAct, caAct)
+        LiberarEsquina (av,ca)
+        EnviarMensaje (V, rf) {le aviso que realice la tarea)
+        RecibirMensaje (quehago, rf) {espero una nueva tarea}
+    
+      sino
+    
+        si (tarea = 2)
+          RecibirMensaje (av, rf)
+          RecibirMensaje (ca, rf)
+          BloquearEsquina (av,ca)
+          Pos (av, ca)
+          mientras (HayPapelEnLaEsquina) 
+            tomarPapel
+          Pos (avAct, caAct)
+          LiberarEsquina (av,ca)
+          EnviarMensaje (V, rf) {le aviso que realice la tarea)
+          RecibirMensaje (quehago, rf) {espero una nueva tarea}
+    
+        sino 
+      
+          si (tarea = 3)
+          
+            RecibirMensaje (av, rf)
+            RecibirMensaje (ca, rf)
+            BloquearEsquina (av,ca)
+             Pos (av, ca)
+            mientras (HayFlorEnLaBolsa)
+              depositarFlor
+            mientras (HayPapelEnLaBolsa)
+              depositarPapel
+            Pos (avAct, caAct)
+            LiberarEsquina (av,ca)
+            EnviarMensaje (V, rf) {le aviso que realice la tarea)
+            RecibirMensaje (quehago, rf) {espero una nueva tarea}
+        
+          sino {TAREA 4}
+             ok:= F
+          
+        
+      
+      
+    
+  fin
+  
+  
+areas
+
+  areaCuadrante: AreaPC (2,100,2,100)
+  areaJefe: AreaP (1,1,1,1)
+  areaInicialR1: AreaP (2,1,2,1)
+  areaInicialR2: AreaP (3,1,3,1)
+  
+  
+robots
+  
+  robot jefe
+  variables
+   
+    id: numero
+    tarea: numero
+    
+  comenzar
+    
+    tarea:= 0
+    mandarIds {los identifico}
+    
+    mientras (tareas < 10)
+      
+      Random (id,1,2)
+      mandarInfo (id)
+      tarea:= tarea + 1
+    
+    EnviarMensaje (4,id)
+    
+  fin
+  
+  robot trabajador
+  variables
+  
+    tarea: numero
+    
+  comenzar
+  
+    RecibirMensaje (id, rf) {quien soy}
+    realizarTarea 
+    
+  fin
+  
+variables
+  
+  rf: jefe
+  r1: trabajador
+  r2: trabajador
+  
+comenzar
+
+  AsignarArea (rf, areaJefe)
+  AsignarArea (r1, areaCuadrante)
+  AsignarArea (r1, areaInicialR1)
+  AsignarArea (r2, areaCuadrante)
+  AsignarArea (r2, areaInicialR2)
+  
+  Iniciar (rf, 1,1)
+  Iniciar (r1, 2,1)
+  Iniciar (r2, 3,1)
+  
+fin
