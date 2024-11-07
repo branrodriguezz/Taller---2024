@@ -1,0 +1,151 @@
+{2. Productores y consumidores}
+{Existen dos robots productores que recorren las avenidas 5 y 10 respectivamente, juntando todos los papeles de su avenida. A lo largo del recorrido, cada vez que juntan 5 papeles, los depositan en la esquina (50,50).}
+{Además existen dos robots consumidores que intentan tomar una cantidad aleatoria de papeles (entre 2 y 5) de la esquina (50,50) para depositarla en su esquina de origen. Si la esquina (50,50) no posee la cantidad de papeles requerida, vuelven a su esquina de origen sin tomar ningún papel.}
+{Si luego de 8 intentos seguidos un consumidor detecta que la esquina (50,50) no tiene papeles suficientes para juntar, entonces asumirá que los productores ya han completado su trabajo y por lo tanto terminará su tarea también.}
+{Los consumidores inician en las esquinas (11,1) y (12,1) respectivamente.}
+
+programa p4ej2
+procesos
+  
+  proceso trabajoProductor
+  variables
+  
+     f: numero
+    avAct, caAct: numero
+    
+  comenzar
+    
+    f:= 0
+    avAct:= PosAv
+    caAct:= PosCa
+    
+    mientras (HayPapelEnLaEsquina) & (PosCa < 100)
+      si (p <= 5)
+        tomarFlor
+        p:= p + 1
+      
+      sino 
+        depositarEsq (p,avAct,caAct)
+    
+      mover
+      caAct:= PosCa
+    
+    si (PosCa = 100) {ULTIMA ESQUINA}
+      mientras (HayPapelEnLaEsquina)
+        si (p <= 5)
+          tomarFlor
+          p:= p + 1
+        sino
+          depositarEsq (p, avAct, caAct)
+          
+  fin
+  
+  proceso tomarPapeles (E cant: numero; ES hayEsaCant: boolean; E avAct: numero; E caAct: numero)
+  variables
+  comenzar
+    
+    BloquearEsquina (50,50)
+    Pos (50,50)
+    
+    mientras (pap <> cant)
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        pap:= pap + 1
+   
+   si (pap = cant)
+     
+      
+      sino
+  fin
+  
+  proceso tareaConsumidora 
+  
+  variables
+  
+    cant: numero
+    avAct: numero
+    caAct: numero
+    hayEsaCant: boolean
+    
+  comenzar
+  
+    avAct:= PosAv
+    caAct:= PosCa
+    
+    repetir 8 {8 intentos}
+    
+      Random (cant, 2,5)
+      tomarPapeles (cant, hayEsaCant, avAct, caAct)
+      
+      si (hayEsaCant = V)
+        
+    
+    
+  fin
+  
+  
+  proceso depositarEsq (E p: numero; E avAct: numero; E caAct: numero)
+  variables
+    
+  comenzar
+  
+    BloquearEsquina (50,50)
+    Pos (50,50)
+    repetir p
+      depositarPapeles
+    Pos (avAct,caAct)
+    LiberarEsquina (50,50)
+    
+  fin
+  
+areas
+  
+  areaP1 : AreaP (5,1,5,100)
+  areaP2 : AreaP (10,1,10,100)
+  areaC1 : AreaP (11,1,11,1)
+  areaC2 : AreaP (12,1,12,1)
+  esq: AreaP (50,50,50,50)
+  
+robots
+  
+  robot productor 
+  variables
+  
+   
+    
+  comenzar
+  
+    
+          
+      
+  fin
+  
+  robot consumidor
+  comenzar
+  fin
+  
+  
+variables
+  
+  rp1: productor
+  rp2: productor
+  rc1: consumidor
+  rc2: consumidor
+  
+comenzar 
+
+  AsignarArea (rp1, areaP1)
+  AsignarArea (rp1, esq)
+  AsignarArea (rp2, areaP2)
+  AsignarArea (rp2, esq)
+  AsignarArea (rc1, areaC1)
+  AsignarArea (rc1, esq)
+  AsignarArea (rc2, areaC2)
+  AsignarArea (rc2, esq)
+  
+  Iniciar (rp1, 5, 1)
+  Iniciar (rp2, 10,1)
+  Iniciar (rc1, 11,1)
+  Iniciar (rc2, 12,1)
+  
+fin
