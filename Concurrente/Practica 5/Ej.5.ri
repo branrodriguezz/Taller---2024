@@ -1,0 +1,192 @@
+{Tres robots recolectores deben avanzar por su calle vaciando las esquinas. El avance debe realizarse en conjunto en etapas, siguiendo el modelo de sincronización barrera, en el cual los robots deben esperar que todos terminen su tarea antes de avanzar a la siguiente etapa.} {Cada etapa consiste en recorrer 10 esquinas y luego depositar todas las flores recolectadas en la esquina (50,50). Una vez que los robots recolectores completaron toda su calle, un robot fiscalizador deberá juntar todas las flores de la esquina (50,50) e informar la cantidad total de flores juntadas. Los robots recolectores inician en las esquinas (1,1), (1,2) y (1,3) respectivamente. El robot fiscalizador inicia en la esquina (1,4).}
+
+programa p5ej2
+procesos 
+  
+  proceso mandarIds 
+  comenzar
+    
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    
+  fin
+  
+  
+  proceso limpiarEsquina (ES f: numero; ES p: numero)
+  comenzar
+    
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f + 1
+      
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p + 1
+      
+  fin
+  
+  proceso depositarEnFuente (E f: numero; E p: numero)
+  variables
+    avAct: numero
+    caAct: numero
+  comenzar
+    
+    avAct:= PosAv
+    caAct:= PosCa
+    
+    BloquearEsquina (50,50)
+    Pos (50,50)
+    
+    repetir f
+      depositarFlor {preguntar}
+    
+    Pos (avAct, caAct)
+    LiberarEsquina (50,50)
+    
+  fin
+  
+  proceso recorrerEsquinas (ES f: numero; ES p: numero)
+  comenzar
+    
+    repetir 10
+      limpiarEsquina (f,p)  
+      mover
+    
+  fin
+  
+  proceso recorrerEsquinas2 (ES f: numero; ES p: numero)
+  comenzar
+    repetir 9
+      limpiarEsquina (f,p)  
+      mover
+    limpiarEsquina (f,p)
+  fin
+  
+  
+areas
+  
+  areaR1: AreaP (1,1,100,1)
+  areaR2: AreaP (1,2,100,2)
+  areaR3: AreaP (1,3,100,3)
+  esq: AreaPC (50,50,50,50)
+  areaJefe: AreaP (1,4,1,4)
+  
+  
+robots
+  
+  robot recolector
+  variables
+  
+    id: numero
+    sig: boolean
+    f, p: numero
+  comenzar 
+
+    derecha
+    RecibirMensaje (id, rf)
+    repetir 9
+      f:= 0
+      p:= 0
+      si (id = 1)
+        recorrerEsquinas (f,p)
+        depositarEnFuente (f,p)
+        EnviarMensaje (V, r2)
+        EnviarMensaje (V, r3)
+        RecibirMensaje (sig, r2)
+        RecibirMensaje (sig,r3)
+      
+      sino
+        
+        si (id = 2)
+          recorrerEsquinas (f,p)
+          depositarEnFuente (f,p)
+          EnviarMensaje (V, r1)
+          EnviarMensaje (V, r3)
+          RecibirMensaje (sig, r1)
+          RecibirMensaje (sig,r3)
+          
+        sino
+          recorrerEsquinas (f,p)
+          depositarEnFuente (f,p)
+          EnviarMensaje (V, r1)
+          EnviarMensaje (V, r2)
+          RecibirMensaje (sig, r1)
+          RecibirMensaje (sig, r2)
+    
+    f:= 0
+    p:= 0
+    si (id = 1)
+      recorrerEsquinas2 (f,p)
+      depositarEnFuente (f,p)
+      EnviarMensaje (V, r2)
+      EnviarMensaje (V, r3)
+      RecibirMensaje (sig, r2)
+      RecibirMensaje (sig,r3)
+      
+    sino
+        
+      si (id = 2)
+        recorrerEsquinas2 (f,p)
+        depositarEnFuente (f,p)
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r3)
+        RecibirMensaje (sig, r1)
+        RecibirMensaje (sig,r3)
+          
+      sino
+        recorrerEsquinas2 (f,p)
+        depositarEnFuente (f,p)
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r2)
+        RecibirMensaje (sig, r1)
+        RecibirMensaje (sig, r2)
+          
+    EnviarMensaje (V, rf) {aviso q terminamos}
+    
+  fin
+  
+  robot fiscalizador
+  variables
+    flor: numero
+    terminaron: boolean
+  comenzar
+    
+    flor:= 0
+    mandarIds {identifico a mis robots}
+    RecibirMensaje (terminaron, *)
+    Pos (50,50)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flor:= flor + 1
+    
+    Informar ('La cantidad total de flores en la esq. es', flor)
+    
+    
+  fin
+  
+  
+variables
+
+  r1: recolector
+  r2: recolector
+  r3: recolector
+  rf: fiscalizador
+  
+comenzar
+
+  AsignarArea (r1, areaR1)
+  AsignarArea (r1, esq)
+  AsignarArea (r2, areaR2)
+  AsignarArea (r2, esq)
+  AsignarArea (r3, areaR3)
+  AsignarArea (r3, esq)
+  AsignarArea (rf, areaJefe)
+  AsignarArea (rf, esq)
+  
+  Iniciar (r1, 1,1)
+  Iniciar (r2, 1,2)
+  Iniciar (r3, 1,3)
+  Iniciar (rf, 1,4)
+  
+fin
