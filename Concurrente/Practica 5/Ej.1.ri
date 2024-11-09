@@ -1,0 +1,200 @@
+programa p5ej1
+procesos
+  
+  proceso mandarIds 
+  comenzar
+    
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, a1)
+    EnviarMensaje (4, a2)
+    
+  fin
+  
+  proceso juntarFlores (ES f: numero)
+  comenzar
+  
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f + 1
+      
+  fin
+  
+  proceso juntarPapeles (ES p: numero)
+  comenzar
+    
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p + 1
+      
+  fin
+ 
+areas
+  
+  areaR1: AreaPC (2,1,2,100) {equipo rojo} {preguntar areas}
+  areaR2: AreaPC (3,1,3,100) {equipo rojo}
+  areaA1: AreaPC (1,98,100,98) {equipo azul}
+  areaA2: AreaPC (1,99,100,99) {equipo azul}
+  areaJefe : AreaP (1,1,1,1) {jefe}
+  
+robots
+  
+  robot equipoRojo
+  variables
+    id: numero
+    f: numero
+  comenzar
+  
+    f:= 0
+    RecibirMensaje (id, rf) {recibo si soy 1 o 2}
+    repetir 96
+      juntarFlores (f)
+      mover
+    juntarFlores (f)
+    si (id = 1)
+      BloquearEsquina (2,98)
+      mover
+      juntarFlores (f)
+      BloquearEsquina (2,99)
+      mover
+      LiberarEsquina (2,98)
+      juntarFlores (f)
+      mover
+      LiberarEsquina (2,99)
+      juntarFlores (f)
+      
+    sino
+      si (id = 2)
+        BloquearEsquina (3,98)
+        mover
+        juntarFlores (f)
+        BloquearEsquina (3,99)
+        mover
+        LiberarEsquina (3,98)
+        juntarFlores (f)
+        mover
+        LiberarEsquina (3,99)
+        juntarFlores (f)
+        
+    EnviarMensaje (id, rf)
+    EnviarMensaje (f, rf)
+        
+  fin
+  
+  robot equipoAzul
+  variables
+    id: numero
+    p: numero
+  comenzar
+    
+    RecibirMensaje (id, rf) {recibo si soy 3 o 4}
+    derecha
+    
+    p:= 0
+    
+    si (id = 3)
+      juntarPapeles (p)
+      BloquearEsquina (2,98)
+      mover
+      juntarPapeles (p)
+      BloquearEsquina (3,98)
+      mover
+      LiberarEsquina (2,98)
+      juntarPapeles (p)
+      mover
+      LiberarEsquina (3,98)
+      
+    sino 
+      si (id = 4)
+        juntarPapeles (p)
+        BloquearEsquina (2,99)
+        mover
+        juntarPapeles (p)
+        BloquearEsquina (3,99)
+        mover
+        LiberarEsquina (2,99)
+        juntarPapeles (p)
+        mover
+        LiberarEsquina (3,99)
+      
+    repetir 96
+      juntarPapeles (p)
+      mover
+    juntarPapeles (p)
+    EnviarMensaje (id, rf)
+    EnviarMensaje (p, rf)
+       
+  fin
+  
+  robot fiscalizador
+  variables
+  
+    id: numero
+    totF: numero
+    totP: numero
+    f, p: numero
+    
+  comenzar
+    
+    totF:= 0
+    totP:= 0
+    
+    mandarIds {los identifico}
+    
+    repetir 4
+    
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (f,r1)
+        totF:= totF + f
+   
+      sino
+        si (id = 2)
+          RecibirMensaje (f,r2)
+          totF:= totF + f
+      
+        sino 
+      
+          si (id = 3)
+            RecibirMensaje (p,a1)
+            totP:= totP + p
+          
+          sino
+            RecibirMensaje (p,a2)
+            totP:= totP + p
+    
+    si (totF > totP)
+      Informar("Ganador equipo rojo", totF)
+      
+    sino 
+      si (totF = totP)
+        Informar ("Empate", totP,totF)
+      
+      sino 
+        Informar ("Ganador equipo azul", totP)
+    
+    
+  fin
+  
+  
+variables
+  
+  r1, r2: equipoRojo
+  a1, a2: equipoAzul
+  rf: fiscalizador
+  
+comenzar
+
+  AsignarArea (r1, areaR1)
+  AsignarArea (r2, areaR2)
+  AsignarArea (a1, areaA1)
+  AsignarArea (a2, areaA2)
+  AsignarArea (rf, areaJefe)
+  
+  Iniciar (rf, 1,1)
+  Iniciar (r1, 2,1)
+  Iniciar (r2, 3,1)
+  Iniciar (a1, 1,98)
+  Iniciar (a2, 1,99)
+  
+fin
