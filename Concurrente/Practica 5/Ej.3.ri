@@ -1,0 +1,111 @@
+{3- Dos robots recolectores avanzan por las calles 3 y 4 respectivamente juntando todas las flores a su paso. Cada esquina tiene a lo sumo una flor. Cada vez que juntan 10 flores o que avanzan 15 esquinas, deberán vaciar de flores su bolsa en el depósito localizado en la esquina (10,10).}
+{Cada vez que se depositan flores en el depósito, un robot cosechador deberá juntar dichas flores.}
+{Cuando ambos recolectores hayan completado sus calles, el robot cosechador deberá informar la 
+cantidad de flores recolectadas.}
+{Los recolectores inician en la esquina (1,3) y (1,4), y el cosechador en la esquina (1,5)}
+
+programa p5ej3
+
+areas
+  
+  areaR1: AreaP (1,3,100,3)
+  areaR2: AreaP (1,4,100,4)
+  esq: AreaC (10,10,10,10)
+  areaCosechador: AreaP (1,5,1,5)
+  
+robots
+  
+  robot recolector
+  variables
+  
+    f: numero
+    esq: numero
+    avIni, caIni: numero
+    
+  comenzar
+    
+    f:= 0
+    esq:= 0
+    
+    derecha 
+    mientras (PosAv < 100)
+      mientras (PosAv < 100) & (f < 10) & (esq < 15)
+        si (HayFlorEnLaEsquina)
+          tomarFlor
+          f:= f + 1
+        
+        esq:= esq + 1
+        mover
+        
+      avIni:= PosAv
+      caIni:= PosCa
+      
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      mientras (HayFlorEnLaBolsa)
+        depositarFlor
+      Pos (avIni,caIni)
+      LiberarEsquina (10,10)
+      
+      si (f = 10)
+        f:= 0
+        EnviarMensaje (V, rc)
+      
+      sino
+        si (esq = 15)
+          esq:= 0
+          EnviarMensaje (V, rc)
+        
+    EnviarMensaje (F, rc) {le avisamos que ambos recolectores completaron sus calles}
+    
+  fin
+  
+  robot cosechador
+  variables
+  
+    voy: boolean
+    avIni, caIni: numero
+    floresT: numero
+    
+  comenzar
+   
+    floresT:= 0
+    RecibirMensaje (voy,*)
+    avIni:= PosAv
+    caIni:= PosCa
+    
+    mientras (voy)
+
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        floresT:= floresT + 1
+      Pos (avIni,caIni)
+      LiberarEsquina (10,10)
+      RecibirMensaje (voy, *)
+   
+    Informar ('La cantidad total de flores recolectadas es', floresT)
+    
+  fin
+  
+variables
+
+  r1: recolector
+  r2: recolector
+  rc: cosechador
+
+comenzar
+  
+  AsignarArea (r1, areaR1)
+  AsignarArea (r1, esq)
+  AsignarArea (r2, areaR2)
+  AsignarArea (r2, esq)
+  AsignarArea (rc, areaCosechador)
+  AsignarArea (rc, esq)
+  
+  Iniciar (r1, 1,3)
+  Iniciar (r2, 1,4)
+  Iniciar (rc, 1,5)
+  
+fin
