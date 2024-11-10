@@ -70,8 +70,8 @@ robots
       realizarTarea (av, ca, flores, avIni, caIni)
       RecibirMensaje (ok, rf)
    
-    EnviarMensaje (flores, rf)
     depositarFlores (flores, avIni, caIni)
+    EnviarMensaje (flores, rf)
     
   fin
   
