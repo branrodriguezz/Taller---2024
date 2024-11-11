@@ -17,17 +17,10 @@ procesos
     
   fin
   
-  proceso realizarEtapa (ES n: numero)
+  proceso realizarEtapa (ES pap: numero)
   comenzar
-    mientras (PosCa < 100) & (n > 0)
-      mientras (HayPapelEnLaEsquina)
-        tomarPapel
-        n:= n - 1
-      mover
-      
     mientras (HayPapelEnLaEsquina)
       tomarPapel
-      
   fin
   
 areas
@@ -52,7 +45,7 @@ robots
   
     id: numero
     termino: boolean
-    n: numero
+    pap: numero
         
   comenzar
      
@@ -60,31 +53,54 @@ robots
     
     mientras (PosCa < 100)
       
-      si (id = 1)
-        Random (n,1,5)
-        realizarEtapa (n) {termino la etapa luego de juntar N papeles.}
-        EnviarMensaje (V, r2)
-        EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
-        RecibirMensaje (termino, r2)
-        RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
-        
-      sino
-        si (id = 2)
-          Random (n,1,5)
-          realizarEtapa (n) {termino la etapa luego de juntar N papeles.}
-          EnviarMensaje (V, r1)
-          EnviarMensaje (V, r3)
-          RecibirMensaje (termino, r1)
-          RecibirMensaje (termino, r3)
-          
-        sino 
-          Random (n,1,5)
-          realizarEtapa (n) {termino la etapa luego de juntar N papeles.}
-          EnviarMensaje (V, r1)
-          EnviarMensaje (V, r2)
-          RecibirMensaje (termino, r1)
-          RecibirMensaje (termino, r2)
+      Random (n,1,5)
+      realizarEtapa (pap) {termino la etapa luego de juntar N papeles.}
+      mover
       
+      si (pap = n)
+        
+        si (id = 1)
+          EnviarMensaje (V, r2)
+          EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}     
+          pap:= 0
+          RecibirMensaje (termino, r2)
+          RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
+        
+        sino
+          si (id = 2)
+            EnviarMensaje (V, r1)
+            EnviarMensaje (V, r3)
+            pap:= 0
+            RecibirMensaje (termino, r1)
+            RecibirMensaje (termino, r3)
+          
+          sino 
+            EnviarMensaje (V, r1)
+            EnviarMensaje (V, r2)
+            pap:= 0
+            RecibirMensaje (termino, r1)
+            RecibirMensaje (termino, r2)
+   
+    realizarTarea (pap)
+    si (id = 1)
+      EnviarMensaje (V, r2)
+      EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
+      RecibirMensaje (termino, r2)
+      RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
+        
+    sino
+      si (id = 2)
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r3)
+        RecibirMensaje (termino, r1)
+        RecibirMensaje (termino, r3)
+          
+      sino 
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r2)
+        RecibirMensaje (termino, r1)
+        RecibirMensaje (termino, r2) 
+    
   fin
   
 variables
