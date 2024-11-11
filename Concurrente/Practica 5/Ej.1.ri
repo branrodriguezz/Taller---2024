@@ -1,5 +1,5 @@
 programa p5ej1
-procesos corregirrrrrr
+procesos 
   
   proceso mandarIds 
   comenzar
@@ -31,10 +31,23 @@ procesos corregirrrrrr
  
 areas
   
-  areaR1: AreaPC (2,1,2,100) {equipo rojo} {preguntar areas}
-  areaR2: AreaPC (3,1,3,100) {equipo rojo}
-  areaA1: AreaPC (1,98,100,98) {equipo azul}
-  areaA2: AreaPC (1,99,100,99) {equipo azul}
+  areaR1tramo1: AreaP (2,1,2,97) {equipo rojo}
+  areaR1tramo2: AreaP (2,100,2,100) {equipo rojo}
+  
+  areaR2tramo1: AreaP (3,1,3,97) {equipo rojo}
+  areaR2tramo2: AreaP (3,100,3,100) {equipo rojo}
+  
+  areaA1tramo1: AreaP (1,98,1,98) {equipo azul}
+  areaA1tramo2: AreaP (4,98,100,98) {equipo azul}
+  
+  areaA2tramo1: AreaP (1,99,1,99) {equipo azul}
+  areaA2tramo2: AreaP (4,99,100,99) {equipo azul}
+  
+  esq1: AreaPC (2,98,2,98)
+  esq2: AreaPC (2,99,2,99)
+  esq3: AreaPC (3,98,3,98)
+  esq4: AreaPC (3,99,3,99)
+  
   areaJefe : AreaP (1,1,1,1) {jefe}
   
 robots
@@ -43,39 +56,28 @@ robots
   variables
     id: numero
     f: numero
+    av: numero
   comenzar
-  
     f:= 0
     RecibirMensaje (id, rf) {recibo si soy 1 o 2}
+    av:= PosAv
+    
     repetir 96
       juntarFlores (f)
       mover
     juntarFlores (f)
-    si (id = 1)
-      BloquearEsquina (2,98)
-      mover
-      juntarFlores (f)
-      BloquearEsquina (2,99)
-      mover
-      LiberarEsquina (2,98)
-      juntarFlores (f)
-      mover
-      LiberarEsquina (2,99)
-      juntarFlores (f)
+    
+    BloquearEsquina (av,98)
+    mover
+    juntarFlores (f)
+    BloquearEsquina (av,99)
+    mover
+    LiberarEsquina (av,98)
+    juntarFlores (f)
+    mover
+    LiberarEsquina (av,99)
+    juntarFlores (f)
       
-    sino
-      si (id = 2)
-        BloquearEsquina (3,98)
-        mover
-        juntarFlores (f)
-        BloquearEsquina (3,99)
-        mover
-        LiberarEsquina (3,98)
-        juntarFlores (f)
-        mover
-        LiberarEsquina (3,99)
-        juntarFlores (f)
-        
     EnviarMensaje (id, rf)
     EnviarMensaje (f, rf)
         
@@ -85,37 +87,26 @@ robots
   variables
     id: numero
     p: numero
+    ca: numero
+    
   comenzar
+    
     
     RecibirMensaje (id, rf) {recibo si soy 3 o 4}
     derecha
-    
+    ca:= PosCa
     p:= 0
     
-    si (id = 3)
-      juntarPapeles (p)
-      BloquearEsquina (2,98)
-      mover
-      juntarPapeles (p)
-      BloquearEsquina (3,98)
-      mover
-      LiberarEsquina (2,98)
-      juntarPapeles (p)
-      mover
-      LiberarEsquina (3,98)
-      
-    sino 
-      si (id = 4)
-        juntarPapeles (p)
-        BloquearEsquina (2,99)
-        mover
-        juntarPapeles (p)
-        BloquearEsquina (3,99)
-        mover
-        LiberarEsquina (2,99)
-        juntarPapeles (p)
-        mover
-        LiberarEsquina (3,99)
+    juntarPapeles (p)
+    BloquearEsquina (2,ca)
+    mover
+    juntarPapeles (p)
+    BloquearEsquina (3,ca)
+    mover
+    LiberarEsquina (2,ca)
+    juntarPapeles (p)
+    mover
+    LiberarEsquina (3,ca)
       
     repetir 96
       juntarPapeles (p)
@@ -185,10 +176,26 @@ variables
   
 comenzar
 
-  AsignarArea (r1, areaR1)
-  AsignarArea (r2, areaR2)
-  AsignarArea (a1, areaA1)
-  AsignarArea (a2, areaA2)
+  AsignarArea (r1, areaR1tramo1)
+  AsignarArea (r1, areaR1tramo2)
+  AsignarArea (r1, esq1)
+  AsignarArea (r1, esq2)
+  
+  AsignarArea (r2, areaR2tramo1)
+  AsignarArea (r2, areaR2tramo2)
+  AsignarArea (r2, esq3)
+  AsignarArea (r2, esq4)
+  
+  AsignarArea (a1, areaA1tramo1)
+  AsignarArea (a1, areaA1tramo2)
+  AsignarArea (a1, esq1)
+  AsignarArea (a1, esq3)
+  
+  AsignarArea (a2, areaA2tramo1)
+  AsignarArea (a2, areaA2tramo2)
+  AsignarArea (a2, esq2)
+  AsignarArea (a2, esq4)
+  
   AsignarArea (rf, areaJefe)
   
   Iniciar (rf, 1,1)
