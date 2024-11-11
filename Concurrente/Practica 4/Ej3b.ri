@@ -49,12 +49,13 @@ robots
     termino: boolean
     pap: numero
     n: numero
- 
+    ok: boolean
+    
   comenzar
-     
+    ok:= V
     RecibirMensaje (id, rc) {me identifico}
     
-    mientras (PosCa < 100)
+    mientras (PosCa < 100) & (ok)
     
       Random (n,1,5)
       
@@ -63,15 +64,16 @@ robots
         mover 
         
       si (pap = n)
-        EnviarMensaje (V, r2)
-        EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}     
+        EnviarMensaje (ok, r2)
+        EnviarMensaje (ok, r3) {le mando mensaje a r2 y r3 que termine mi etapa}     
         pap:= 0
         RecibirMensaje (termino, r2)
         RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
     
+    ok:= F
     juntarPapeles (pap)
-    EnviarMensaje (V, r2)
-    EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
+    EnviarMensaje (ok, r2)
+    EnviarMensaje (ok, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
     RecibirMensaje (termino, r2)
     RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
     
@@ -83,15 +85,15 @@ robots
     pap: numero
     n: numero
     id: numero
-    termino: numero
+    ok, termino: boolean
     
   comenzar
   
     pap:= 0
-    
+    ok:= V
     RecibirMensaje (id, rc)
     
-    mientras (PosCa < 100)
+    mientras (PosCa < 100) & (ok)
     
       Random (n,1,5)
       
@@ -100,15 +102,16 @@ robots
         mover
        
       si (pap = n)
-        EnviarMensaje (V, r1)
-        EnviarMensaje (V, r3)
+        EnviarMensaje (ok, r1)
+        EnviarMensaje (ok, r3)
         pap:= 0
         RecibirMensaje (termino, r1)
         RecibirMensaje (termino, r3)
-  
+    
+    ok:= F
     juntarPapeles (pap)
-    EnviarMensaje (V, r1)
-    EnviarMensaje (V, r3)
+    EnviarMensaje (ok, r1)
+    EnviarMensaje (ok, r3)
     RecibirMensaje (termino, r1)
     RecibirMensaje (termino, r3)
     
@@ -120,13 +123,13 @@ robots
     pap: numero
     n: numero
     id: numero
-    termino: numero
-    
+    termino: boolean
+    ok: boolean
   comenzar
     pap:= 0
     RecibirMensaje (id, rc)
-    
-    mientras (PosCa < 100)
+    ok:= V
+    mientras (PosCa < 100) & (ok)
     
       Random (n,1,5)
       
@@ -135,15 +138,16 @@ robots
         mover
         
       si (pap = n)
-        EnviarMensaje (V, r1)
-        EnviarMensaje (V, r2) {le mando mensaje a r2 y r3 que termine mi etapa}     
+        EnviarMensaje (ok, r1)
+        EnviarMensaje (ok, r2) {le mando mensaje a r2 y r3 que termine mi etapa}     
         pap:= 0
         RecibirMensaje (termino, r1)
         RecibirMensaje (termino, r2)
     
+    ok:= F
     juntarPapeles (pap)
-    EnviarMensaje (V, r1)
-    EnviarMensaje (V, r2)
+    EnviarMensaje (ok, r1)
+    EnviarMensaje (ok, r2)
     RecibirMensaje (termino, r1)
     RecibirMensaje (termino, r2)  
        
