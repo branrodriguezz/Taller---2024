@@ -1,0 +1,131 @@
+{5- Existe un robot servidor que tiene su bolsa con papeles. Tres robots clientes tienen 4 intentos cada uno para solicitar al servidor que les entregue papeles. Cada vez que el servidor recibe un pedido de papeles de un cliente, se ubicará en la esquina (100,1), colocará allí una cantidad aleatoria de papeles (entre 1 y 5) y avisará al cliente correspondiente la cantidad de papeles que le depositó. Una vez que un cliente recibe un aviso, deberá recolectar uno a uno los papeles que le corresponden y depositarlos en su esquina inicial. El programa finalizará cuando todos los clientes hayan completado todos sus intentos. Asuma que el servidor tiene los papeles suficientes para cubrir todas las solicitudes. Los robots clientes inician en las esquinas (10,1), (11,1) y (12,1), y el robot servidor inicia en la esquina (13,1).}
+
+programa p5ej5
+procesos
+  
+  proceso mandarIds
+  comenzar
+    
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    
+  fin
+  
+areas
+  
+  esq: AreaC (100,1,100,1)
+  areaR1: AreaP (10,1,10,1)
+  areaR2: AreaP (11,1,11,1)
+  areaR3: AreaP (12,1,12,1)
+  areaServidor: AreaP (13,1,13,1)
+  
+robots
+  
+  robot servidor
+  variables
+  
+    id: numero
+    depositar: boolean
+    avIni, caIni: numero
+    papeles: numero
+    
+  comenzar
+    
+    mandarIds {identifico a mis robots}
+    
+    avIni:= PosAv
+    caIni:= PosCa
+    
+    repetir 12 {4 por cada uno}
+    
+      RecibirMensaje (id, *)
+      Random (papeles, 1,5) 
+      
+      si (id = 1)
+        RecibirMensaje (depositar, r1) {preg}
+        BloquearEsquina (100,1)
+        Pos (100,1)
+        repetir papeles {preguntar si asi o mientras p < papeles y mhfelb}
+          depositarPapel
+        Pos (avIni, caIni)
+        LiberarEsquina (100,1)
+        EnviarMensaje (papeles, r1) {preguntar si luego de depositar en la pos ini}
+      sino
+        si (id = 2)
+          RecibirMensaje (depositar, r2)
+          BloquearEsquina (100,1)
+          Pos (100,1)
+          repetir papeles {preguntar si asi o mientras p < papeles y mhfelb}
+            depositarPapel
+          Pos (avIni, caIni)
+          LiberarEsquina (100,1)
+          EnviarMensaje (papeles, r2)
+          
+        sino 
+          RecibirMensaje (depositar, r3)
+          BloquearEsquina (100,1)
+          Pos (100,1)
+          repetir papeles {preguntar si asi o mientras p < papeles y mhfelb}
+            depositarPapel
+          Pos (avIni, caIni)
+          LiberarEsquina (100,1)
+          EnviarMensaje (papeles, r3) {le aviso la cantidad de papeles q deposite}
+        
+    
+  fin
+  
+  robot cliente
+  variables
+  
+    id: numero
+    papeles: numero
+    avIni, caIni: numero
+    
+  comenzar
+    
+    avIni:= PosAv
+    caIni:= PosCa
+    
+    RecibirMensaje (id, rs) {recibo quien soy}
+     
+    repetir 4 {4 cada cliente}
+      EnviarMensaje (id, rs) {le mando quien soy}
+      EnviarMensaje (V, rs) {le pido que me deposite flores} {necesaria?}
+      RecibirMensaje (papeles, rs) {recibo la cantidad de papeles que deposito el servidor}
+      repetir papeles
+        BloquearEsquina (100,1)
+        Pos (100,1)
+        si (HayPapelEnLaEsquina)
+          tomarPapel
+        Pos (avIni,caIni)
+        LiberarEsquina (100,1)
+        si (HayPapelEnLaBolsa)
+          depositarPapel {preg}
+    
+  fin
+  
+variables
+  
+  rs: servidor
+  r1: cliente
+  r2: cliente
+  r3: cliente
+  
+comenzar
+  
+  AsignarArea (rs, areaServidor)
+  AsignarArea (rs, esq)
+  AsignarArea (r1, areaR1)
+  AsignarArea (r1, esq)
+  AsignarArea (r2, areaR2)
+  AsignarArea (r2, esq)
+  AsignarArea (r3, areaR3)
+  AsignarArea (r3, esq)
+  
+  Iniciar (rs, 13,1)
+  Iniciar (r1, 10,1)
+  Iniciar (r2, 11,1)
+  Iniciar (r3, 12,1)
+  
+fin
