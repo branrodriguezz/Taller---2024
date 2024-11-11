@@ -4,7 +4,6 @@
 {En cada solución, analice cómo debería finalizar el programa.}
 {Los robots inician en las esquinas (1,1), (2,1) y (3,1) respectivamente. Existe un robot coordinador, cuya única tarea es asignar identificadores a cada robot.}
 
-
 programa p4ej3b {cada robot completa una etapa cada 5 esquinas}
 procesos
 
@@ -16,11 +15,11 @@ procesos
     EnviarMensaje (3, r3)
     
   fin
-  
-  proceso realizarEtapa (ES pap: numero; E n: numero)
+ 
+  proceso juntarPapeles (ES pap: numero)
   comenzar
   
-    mientras (HayPapelEnLaEsquina) & (pap < n)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       pap:= pap + 1
       
@@ -49,51 +48,63 @@ robots
     id: numero
     termino: boolean
     pap: numero
-        
+    n: numero
+ 
   comenzar
      
     RecibirMensaje (id, rc) {me identifico}
     
     mientras (PosCa < 100)
-      
+    
       Random (n,1,5)
-      realizarEtapa (pap) {termino la etapa luego de juntar N papeles.}
-      si (~HayFlorEnLaEsquina)
-        mover
-      sino 
-        si (pap = n)
-          EnviarMensaje (V, r2)
-          EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}     
-          pap:= 0
-          RecibirMensaje (termino, r2)
-          RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
-    realizarTarea (pap)
+      
+      mientras (PosCa < 100) & (pap < n)
+        juntarPapeles (pap) {termino la etapa luego de juntar N papeles.}
+        mover 
+        
+      si (pap = n)
+        EnviarMensaje (V, r2)
+        EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}     
+        pap:= 0
+        RecibirMensaje (termino, r2)
+        RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
+    
+    juntarPapeles (pap)
     EnviarMensaje (V, r2)
     EnviarMensaje (V, r3) {le mando mensaje a r2 y r3 que termine mi etapa}
     RecibirMensaje (termino, r2)
     RecibirMensaje (termino, r3) {espero que r2 y r3 terminen su etapa}
     
   fin
-  
+
   robot papelero2
   variables
+  
     pap: numero
     n: numero
+    id: numero
+    termino: numero
+    
   comenzar
+  
     pap:= 0
+    
     RecibirMensaje (id, rc)
-    mientras (PosAv < 100)
+    
+    mientras (PosCa < 100)
+    
       Random (n,1,5)
-      realizarEtapa (pap) {termino la etapa luego de juntar N papeles.}
-      si (~HayFlorEnLaEsquina)
+      
+      mientras (PosCa < 100) & (pap < n)
+        juntarPapeles (pap) {termino la etapa luego de juntar N papeles.}
         mover
-      sino 
-        si (pap = n)
-          EnviarMensaje (V, r1)
-          EnviarMensaje (V, r3)
-          pap:= 0
-          RecibirMensaje (termino, r1)
-          RecibirMensaje (termino, r3)
+       
+      si (pap = n)
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r3)
+        pap:= 0
+        RecibirMensaje (termino, r1)
+        RecibirMensaje (termino, r3)
   
     juntarPapeles (pap)
     EnviarMensaje (V, r1)
@@ -102,41 +113,48 @@ robots
     RecibirMensaje (termino, r3)
     
   fin
-  
+ 
   robot papelero3
   variables
+  
     pap: numero
     n: numero
+    id: numero
+    termino: numero
+    
   comenzar
     pap:= 0
     RecibirMensaje (id, rc)
+    
     mientras (PosCa < 100)
-      
+    
       Random (n,1,5)
-      realizarEtapa (pap) {termino la etapa luego de juntar N papeles.}
-      si (~HayFlorEnLaEsquina)
+      
+      mientras (PosCa < 100) & (pap < n)
+        juntarPapeles (pap) {termino la etapa luego de juntar N papeles.}
         mover
-      sino 
-        si (pap = n)
-          EnviarMensaje (V, r1)
-          EnviarMensaje (V, r2) {le mando mensaje a r2 y r3 que termine mi etapa}     
-          pap:= 0
-          RecibirMensaje (termino, r1)
-          RecibirMensaje (termino, r2)
+        
+      si (pap = n)
+        EnviarMensaje (V, r1)
+        EnviarMensaje (V, r2) {le mando mensaje a r2 y r3 que termine mi etapa}     
+        pap:= 0
+        RecibirMensaje (termino, r1)
+        RecibirMensaje (termino, r2)
     
     juntarPapeles (pap)
     EnviarMensaje (V, r1)
     EnviarMensaje (V, r2)
     RecibirMensaje (termino, r1)
-    RecibirMensaje (termino, r2)     
+    RecibirMensaje (termino, r2)  
+       
   fin
   
 variables
   
   rc: coordinador
-  r1: papelero
-  r2: papelero
-  r3: papelero
+  r1: papelero1
+  r2: papelero2
+  r3: papelero3
   
 comenzar
   
