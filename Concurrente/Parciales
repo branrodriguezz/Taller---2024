@@ -1,0 +1,140 @@
+programa parcialTE
+procesos
+
+  proceso mandarIds
+  comenzar
+    
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (3, r3)
+    
+  fin
+    
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+      
+  fin
+  
+  proceso cuadrado (E lado: numero; ES flores: numero)
+  comenzar
+  
+    repetir 4
+      repetir lado
+        juntarFlores(flores)
+        mover
+      derecha
+        
+  fin
+  
+  proceso depositarFlores (E flores: numero)
+  variables
+    avIni, caIni: numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    repetir flores
+      BloquearEsquina (50,50)
+      Pos (50,50)
+      depositarFlor
+      Pos (avIni,caIni)
+      LiberarEsquina (50,50)
+      
+  fin
+  
+areas
+  
+  areaR1: AreaP (1,1,5,16)
+  areaR2: AreaP (7,1,11,16)
+  areaR3: AreaP (14,1,18,16)
+  esq: AreaC (50,50,50,50)
+  areaCoordinador: AreaP (51,51,51,51)
+  
+robots
+
+  robot florero
+  variables
+  
+    lado: numero
+    flores: numero
+    recorrido, recorridoTotal: numero
+    id: numero
+    
+  comenzar
+  
+    RecibirMensaje (id, rc) {recibo quien soy}
+    recorridoTotal:= 0
+    repetir 3 {hago mis 3 cuadrados}
+      flores:= 0
+      recorrido:= 0
+      Random (lado,1,4)
+      cuadrado (lado,flores)
+      depositarFlores (flores)
+      recorrido:= (lado * 4)
+      recorridoTotal:= recorridoTotal + recorrido
+      Pos (PosAv, (PosCa + lado + 1))
+      
+    EnviarMensaje (id, rc)
+    EnviarMensaje (recorridoTotal, rc)  
+   
+    
+  fin
+  
+  robot coordinador
+  variables
+  
+    id: numero
+    recorridoTotal: numero
+    max, rMax: numero
+    
+  comenzar
+  
+    max:= -1
+    mandarIds {identifico mis robots}
+    
+    repetir 3
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (recorridoTotal, r1)
+        
+      sino 
+        si (id = 2)
+          RecibirMensaje (recorridoTotal, r2)
+            
+        sino
+          RecibirMensaje (recorridoTotal, r3)
+      
+      si (recorridoTotal > max)
+        max:= recorridoTotal
+        rMax:= id
+    
+    Informar ('El r que recorrio mas esquinas fue', rMax)
+    
+  fin
+  
+variables
+
+  r1: florero
+  r2: florero
+  r3: florero
+  rc: coordinador
+  
+comenzar
+  
+  AsignarArea (r1, areaR1)
+  AsignarArea (r1, esq)
+  AsignarArea (r2, areaR2)
+  AsignarArea (r2, esq)
+  AsignarArea (r3, areaR3)
+  AsignarArea (r3, esq)
+  AsignarArea (rc, areaCoordinador)
+  
+  Iniciar (r1, 1,1)
+  Iniciar (r2, 7,1)
+  Iniciar (r3, 14,1)
+  Iniciar (rc, 51, 51)
+  
+fin
