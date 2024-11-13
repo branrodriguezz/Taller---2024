@@ -1,0 +1,154 @@
+programa parcialTK {cliente-servidor}
+procesos 
+
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+  
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+      
+  fin
+  
+  proceso mandarIds
+  comenzar
+  
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    
+  fin
+  
+  proceso realizarCuadrado (E lado: numero; ES flores: numero)
+  comenzar
+    
+    repetir 4
+      repetir lado
+        juntarFlores (flores)
+        mover
+      derecha
+      
+  fin
+  
+  proceso depositarFlores (E flores: numero)
+  variables
+    av, ca: numero
+  comenzar
+    av:= PosAv
+    ca:= PosCa
+    
+    repetir flores
+      BloquearEsquina (50,50)
+      Pos (50,50)
+      depositarFlor
+      Pos (av,ca)
+      LiberarEsquina (50,50)
+ 
+  fin
+  
+  proceso tomarFlores (ES flores: numero)
+  comenzar  
+    
+    Pos (50,50)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+      
+  fin
+  
+areas
+  
+  areaR1: AreaP (1,1,6,19)
+  areaR2: AreaP (8,1,14,19)
+  areaR3: AreaP (15,1,21,19)
+  areaServidor: AreaP (22,1,22,1)
+  esq: AreaC (50,50,50,50)
+  
+robots
+  
+  robot cliente
+  variables
+  
+    id: numero
+    lado: numero
+    flores: numero
+    
+  comenzar
+    
+    RecibirMensaje (id, rs)
+    flores:= 0
+    
+    repetir 3
+      EnviarMensaje (id, rs) {le solicito mi lado}
+      RecibirMensaje (lado,rs)
+      realizarCuadrado (lado,flores)
+      Pos (PosAv, (PosCa + lado + 1))
+    
+    depositarFlores (flores)
+    EnviarMensaje (V, rs)
+    
+  fin
+  
+  
+  robot servidor
+  variables
+  
+    id: numero
+    lado: numero
+    termine: boolean
+    flores: numero
+    
+  comenzar
+  
+    mandarIds 
+    
+    flores:= 0
+    
+    repetir 9
+    
+      RecibirMensaje (id, *)
+      Random (lado,1,5)
+      si (id = 1)
+        EnviarMensaje (lado, r1)
+        
+      sino
+      
+        si (id = 2)
+          EnviarMensaje (lado, r2)
+          
+        sino
+          EnviarMensaje (lado, r3)
+    
+    repetir 3
+      RecibirMensaje (id, *)
+    
+    tomarFlores (flores)
+    
+    Informar ('La cantidad de flores en la esquina es', flores)
+    
+  fin
+  
+variables
+  
+  r1: cliente
+  r2: cliente
+  r3: cliente
+  rs: servidor
+  
+comenzar
+
+  AsignarArea (r1, areaR1)
+  AsignarArea (r1, esq)
+  AsignarArea (r2, areaR2)
+  AsignarArea (r2, esq)
+  AsignarArea (r3, areaR3)
+  AsignarArea (r3, esq)
+  AsignarArea (rs, areaServidor)
+  AsignarArea (rs, esq)
+  
+  Iniciar (r1, 1,1)
+  Iniciar (r2, 8,1)
+  Iniciar (r3, 15,1)
+  Iniciar (rs, 22,1)
+  
+fin
