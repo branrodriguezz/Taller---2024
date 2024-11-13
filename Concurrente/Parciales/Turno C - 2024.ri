@@ -1,0 +1,206 @@
+programa parcialTC
+procesos
+  proceso mandarIds
+  comenzar
+    
+    EnviarMensaje (1,rf1)
+    EnviarMensaje (2,rf2)
+    EnviarMensaje (3,rp)
+    
+  fin
+  
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  
+  proceso juntarPapeles (ES papeles: numero)
+  comenzar
+  
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+      
+  fin
+  
+areas
+
+  areaRF1: AreaP (6,1,6,1)
+  areaRF2: AreaP (11,1,11,1)
+  areaP: AreaP (2,1,2,1)
+  areaP1erTercio: AreaP (1,2,5,20)
+  areaP2doTercio: AreaP (7,2,10,20)
+  areaP3erTercio: AreaP (12,2,100,20)
+  areaRF11erMedio: AreaPC (6,2,6,20)
+  areaRF12doMedio: AreaP (6,21,6,100)
+  areaRF21erMedio: AreaPC (11,2,11,20)
+  areaRF22doMedio: AreaP (11,21,11,100)
+  areaFiscalizador: AreaP (1,1,1,1)
+  
+robots
+  
+  robot florero
+  variables
+  
+    id: numero
+    flores: numero
+    gane: boolean
+    avIni, caIni: numero
+    ca: numero
+    
+  comenzar
+  
+    flores:= 0
+    avIni:= PosAv
+    caIni:= PosCa
+    
+    RecibirMensaje (id, rf)
+    RecibirMensaje (ca, rf)
+    mientras (PosCa < (ca-1))
+      juntarFlores (flores)
+      mover
+    juntarFlores (flores)
+    BloquearEsquina(PosAv, ca)
+    mover
+    juntarFlores (flores)
+    mover
+    LiberarEsquina (PosAv, ca)
+    mientras (PosCa < 100)
+      juntarFlores (flores)
+      mover
+    juntarFlores (flores)
+   
+    EnviarMensaje (id, rf)
+    EnviarMensaje (flores, rf)
+    RecibirMensaje (gane, rf)
+    si (gane = V)
+      Pos (avIni, caIni)
+     
+  fin
+  
+  robot papelero
+  variables
+  
+    id: numero
+    ca: numero
+    papeles: numero
+    gane: boolean
+    avIni, caIni: numero
+    
+  comenzar
+    papeles:= 0
+    avIni:= PosAv
+    caIni:= PosCa
+    
+    RecibirMensaje (id, rf)
+    RecibirMensaje (ca, rf)
+    Pos (1,ca)
+    derecha
+    repetir 4
+      juntarPapeles (papeles)
+      mover
+    juntarPapeles (papeles)
+    BloquearEsquina (6,ca)
+    mover
+    juntarPapeles (papeles)
+    mover
+    LiberarEsquina (6,ca)
+    repetir 3
+      juntarPapeles (papeles)
+      mover
+    juntarPapeles (papeles)
+    BloquearEsquina (11,ca)
+    mover
+    juntarPapeles (papeles)
+    mover
+    LiberarEsquina (11,ca)
+    repetir 88
+      juntarPapeles (papeles)
+      mover
+    juntarPapeles (papeles)
+    
+    EnviarMensaje (id, rf)
+    EnviarMensaje (papeles, rf)
+    RecibirMensaje (gane,rf)
+    si (gane = V)
+      Pos (avIni,caIni)
+  
+  fin
+  
+  robot fiscalizador
+  variables
+  
+    ca: numero
+    id: numero
+    elementos: numero
+    max, rMax: numero
+    
+  comenzar
+  
+    mandarIds 
+    Random (ca, 2,20)
+    EnviarMensaje (ca, rp)
+    EnviarMensaje (ca, rf1)
+    EnviarMensaje (ca, rf2)
+    
+    repetir 3
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (elementos, rf1)
+      sino
+        si (id = 2)
+          RecibirMensaje (elementos, rf2)
+        sino
+          RecibirMensaje (elementos, rp)
+      si (elementos > max)
+        max:= elementos
+        rMax:= id
+    
+    si (rMax = 1)
+      EnviarMensaje (V, rf1)
+      EnviarMensaje (F, rf2)
+      EnviarMensaje (F, rp)
+      
+    sino
+      si (rMax = 2)
+        EnviarMensaje (V, rf2)
+        EnviarMensaje (F, rf1)
+        EnviarMensaje (F, rp)
+      sino
+        EnviarMensaje (V, rp)
+        EnviarMensaje (F, rf1)
+        EnviarMensaje (F, rf2)
+     
+  fin
+  
+variables
+  
+  rf1: florero
+  rf2: florero
+  rp: papelero
+  rf: fiscalizador
+  
+comenzar
+
+  AsignarArea (rf, areaFiscalizador)
+  AsignarArea (rf1, areaRF1)
+  AsignarArea (rf1, areaRF11erMedio)
+  AsignarArea (rf1, areaRF12doMedio)
+  AsignarArea (rf2, areaRF2)
+  AsignarArea (rf2, areaRF21erMedio)
+  AsignarArea (rf2, areaRF22doMedio)
+  AsignarArea (rp, areaP)
+  AsignarArea (rp, areaP1erTercio)
+  AsignarArea (rp, areaP2doTercio)
+  AsignarArea (rp, areaP3erTercio)
+  AsignarArea (rp, areaRF21erMedio)
+  AsignarArea (rp, areaRF11erMedio)
+  
+  Iniciar (rf, 1,1)
+  Iniciar (rf1, 6,1)
+  Iniciar (rf2, 11,1)
+  Iniciar (rp, 2,1)
+  
+fin
