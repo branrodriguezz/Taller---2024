@@ -1,0 +1,121 @@
+programa parcialTH2
+areas
+  
+  areaCuadrante: AreaPC (10,10,30,30)
+  areaR1: AreaP (1,1,1,1)
+  areaR2: AreaP (2,1,2,1)
+  areaR3: AreaP (3,1,3,1)
+  areaFiscalizador: AreaP (9,9,9,9)
+  
+robots
+  
+  robot florero
+  variables
+  
+    n: numero
+    avIni, caIni: numero
+    id: numero
+    av,ca: numero
+    
+  comenzar
+    
+    Random (n,2,5)
+    
+    avIni:= PosAv
+    caIni:= PosCa
+    RecibirMensaje (id, rf)
+    
+    mientras (n > 0)
+      EnviarMensaje (id, rf)
+      EnviarMensaje (V, rf)
+      RecibirMensaje (av, rf)
+      RecibirMensaje (ca, rf)
+      BloquearEsquina (av,ca)
+      Pos (av,ca)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      Pos (avIni,caIni)
+      LiberarEsquina (av,ca)
+      n:= n - 1
+    
+    EnviarMensaje (id, rf)  
+    EnviarMensaje (F, rf)
+      
+  fin
+  
+  robot fiscalizador
+  variables
+  
+    av,ca: numero
+    termino: boolean
+    totalN: numero
+    terminaron: numero
+    id: numero
+    
+  comenzar
+    terminaron:= 0
+    totalN:= 0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    
+    mientras (terminaron < 3)
+      Random (av, 10,30)
+      Random (ca, 10,30)
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (termino,r1)
+        si (termino = V)
+          totalN:= totalN + 1
+          EnviarMensaje (av, r1)
+          EnviarMensaje (ca, r1)
+        
+        sino
+          terminaron:= terminaron + 1
+      sino
+        
+        si (id = 2)
+          RecibirMensaje (termino, r2)
+          si (termino = V )
+            totalN:= totalN + 1
+            EnviarMensaje (av, r2)
+            EnviarMensaje (ca, r2)
+          sino
+            terminaron:= terminaron + 1
+            
+        sino    
+          RecibirMensaje (termino,r3)
+          si (termino = V)
+            totalN:= totalN + 1
+            EnviarMensaje (av, r3)
+            EnviarMensaje (ca, r3)
+          sino
+            terminaron:= terminaron + 1
+    
+    Informar ('La cantidad total de intentos de los r fue', totalN)
+         
+  fin
+  
+variables
+  
+  r1: florero
+  r2: florero
+  r3: florero
+  rf: fiscalizador
+  
+comenzar
+  
+  AsignarArea (r1, areaR1)
+  AsignarArea (r1, areaCuadrante)
+  AsignarArea (r2, areaR2)
+  AsignarArea (r2, areaCuadrante)
+  AsignarArea (r3, areaR3)
+  AsignarArea (r3, areaCuadrante)
+  AsignarArea (rf, areaFiscalizador)
+  
+  Iniciar (rf, 9,9)
+  Iniciar (r1, 1,1)
+  Iniciar (r2, 2,1)
+  Iniciar (r3, 3,1)
+  
+fin
