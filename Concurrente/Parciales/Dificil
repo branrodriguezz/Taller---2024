@@ -1,0 +1,274 @@
+programa p23052022
+procesos
+  
+  proceso mandarIds
+  comenzar
+    
+    EnviarMensaje (1, r2)
+    EnviarMensaje (2, r5)
+    
+  fin
+  
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  
+  proceso juntarFlores (ES flores: numero)
+  comenzar 
+    flores:= 0
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  
+  proceso depositarFlores (E flores: numero)
+  comenzar
+    repetir flores
+      depositarFlor
+  fin
+  
+areas
+  
+  esq: AreaPC (20,20,20,20)
+  areaE1bajo: AreaP (10,19,19,19)
+  areaR1Ini: AreaP (9,19,9,19)
+  areaE1medio: AreaPC (10,20,19,20)
+  areaR2Ini: AreaP (9,20,9,20) 
+  areaE1alto: AreaP (10,21,19,21)
+  areaR3Ini: AreaP (9,21,9,21)
+  areaE2bajo: AreaP (21,19,30,19)
+  areaR4Ini: AreaP (31,19,31,19)
+  areaE2medio: AreaPC (21,20,30,20)
+  areaR5Ini: AreaP (31,20,31,20)
+  areaE2alto: AreaP (21,21,30,21)
+  areaR6Ini: AreaP (31,21,31,21)
+  areaFiscalizador: AreaP (20,18,20,18)
+  
+robots
+
+  robot lateralAlto
+  variables
+  
+    avIni, caIni: numero
+    flores: numero
+    
+  comenzar
+  
+    si (PosAv = 9)
+      derecha
+      Pos ((PosAv+1), PosCa)
+    
+    sino
+      izquierda
+      Pos ((PosAv-1),PosCa)
+    
+    repetir 9
+      avIni:= PosAv
+      caIni:= PosCa
+      juntarFlores (flores)
+      BloquearEsquina (PosAv, (PosCa-1))
+      Pos (PosAv, (PosCa-1))
+      depositarFlores (flores)
+      Pos (avIni, caIni)
+      LiberarEsquina (PosAv, (PosCa-1))
+      mover
+    
+    avIni:= PosAv
+    caIni:= PosCa
+    juntarFlores (flores)
+    BloquearEsquina (PosAv, (PosCa-1))
+    Pos (PosAv, (PosCa-1))
+    depositarFlores (flores)
+    Pos (avIni, caIni)
+    LiberarEsquina (PosAv, (PosCa-1))
+    
+    si (PosAv = 19)
+      EnviarMensaje (V, r2)
+      
+    sino
+    
+      EnviarMensaje (V, r5)
+    
+  fin
+  
+  robot lateralBajo
+  variables
+  
+    avIni, caIni: numero
+    flores: numero
+    
+  comenzar
+  
+    si (PosAv = 9)
+      derecha
+      Pos ((PosAv+1),PosCa)
+      
+    sino
+      izquierda
+      Pos ((PosAv-1), PosCa)
+    
+    repetir 9
+      avIni:= PosAv
+      caIni:= PosCa
+      
+      juntarFlores (flores)
+      BloquearEsquina (PosAv, (PosCa+1))
+      Pos (PosAv,(PosCa+1))
+      depositarFlores (flores)
+      Pos (avIni, caIni)
+      LiberarEsquina (PosAv, (PosCa+1))
+      mover
+    
+    avIni:= PosAv
+    caIni:= PosCa
+      
+    juntarFlores (flores)
+    BloquearEsquina (PosAv, (PosCa+1))
+    Pos (PosAv,(PosCa+1))
+    depositarFlores (flores)
+    Pos (avIni, caIni)
+    LiberarEsquina (PosAv, (PosCa+1))
+    
+    si (PosAv = 19)
+      EnviarMensaje (V, r2)
+    
+    sino 
+      EnviarMensaje (V, r5)
+  fin
+  
+  robot central
+  variables
+  
+    ahora: boolean
+    flores: numero
+    av,ca: numero
+    id: numero
+    totalFlores: numero
+    
+  comenzar
+  
+    
+    RecibirMensaje (id, rf)
+    repetir 2
+      RecibirMensaje (ahora, *)
+   
+    si (PosAv = 9)
+      derecha
+      Pos ((PosAv + 1), PosCa)
+      
+    sino
+      izquierda
+      Pos ((PosAv-1), PosCa)
+      
+    totalFlores:= 0
+    
+    repetir 9
+      juntarFlores (flores)
+      totalFlores:= totalFlores + flores
+      mover
+    
+    av:= PosAv
+    ca:= PosCa
+    
+    juntarFlores (flores)
+    totalFlores:= totalFlores + flores
+    BloquearEsquina (20,20)
+    Pos (20,20)
+    repetir totalFlores
+      depositarFlor
+    Pos (av,ca)
+    LiberarEsquina (20,20)
+    
+    EnviarMensaje (id, rf)
+    EnviarMensaje (totalFlores, rf)
+      
+      
+  fin
+  
+  robot fiscalizador
+  variables
+  
+    max, eMax: numero
+    id: numero
+    totalF: numero
+    primero: boolean
+    ganador: numero
+    
+  comenzar
+    
+    mandarIds 
+      
+    primero:= V
+    
+    repetir 2
+      RecibirMensaje (id, *)
+      si (id = 1)
+        RecibirMensaje (totalF, r2)
+    
+      sino
+        RecibirMensaje (totalF, r5)
+        
+      si (primero)
+        ganador:= id
+        primero:= F
+      
+    si (ganador = 1)
+      Informar ('El primero en llegar fue el equipo izquierdo', ganador)
+    sino
+      Informar ('El primero en llegar fue el equipo derecho', ganador)
+       
+    si (totalFIzq > totalFDer)
+      Informar ('El ganador fue el equipo izquierdo', totslFIzq)
+    sino
+      Informar ('El ganador fue el equipo derecho', totalFDer)
+   
+  fin
+  
+variables
+  
+  r1: lateralAlto
+  r2: central
+  r3: lateralBajo
+  r4: lateralBajo
+  r5: central
+  r6: lateralAlto
+  rf: fiscalizador
+  
+comenzar
+
+  AsignarArea (r1, areaE1bajo)
+  AsignarArea (r1, areaE1medio)
+  AsignarArea (r1, areaR1Ini)
+  
+  AsignarArea (r2, areaE1medio)
+  AsignarArea (r2, areaR2Ini)
+  
+  AsignarArea (r3, areaE1medio)
+  AsignarArea (r3, areaE1alto)
+  AsignarArea (r3, areaR3Ini)
+  
+  AsignarArea (r4, areaE2bajo)
+  AsignarArea (r4, areaR4Ini)
+  AsignarArea (r4, areaE2medio)
+  
+  AsignarArea (r5, areaE2medio)
+  AsignarArea (r5, areaR5Ini)
+  
+  AsignarArea (r6, areaE2medio)
+  AsignarArea (r6, areaE2alto)
+  AsignarArea (r6, areaR6Ini)
+  
+  AsignarArea (rf, areaFiscalizador)
+  
+  Iniciar (rf, 20,18)
+  Iniciar (r1, 9,19)
+  Iniciar (r2, 9,20)
+  Iniciar (r3, 9,21)
+  
+  Iniciar (r4, 31,19)
+  Iniciar (r5, 31,20)
+  Iniciar (r6, 31,21)
+  
+fin
