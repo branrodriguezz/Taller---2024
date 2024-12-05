@@ -85,10 +85,11 @@ robots
       limpiarEsquina (flores,papeles) {ultima esquina}
       
       EnviarMensaje (id, rc)
+      EnviarMensaje (V, rc)
       RecibirMensaje (av, rc)
       RecibirMensaje (ca, rc)
       
-      depositarRecolectado (flores,papeles,av,ca) {agregar un si flores<>0 y papeles<>0 para ir al modulo?]
+      depositarRecolectado (flores,papeles,av,ca) {agregar un si flores<>0 y papeles<>0 para ir al modulo?}
       si (PosAv < 11)
         Pos (PosAv+2,1)
       
@@ -100,7 +101,7 @@ robots
     av,ca: numero
     id: numero
     finalizo1, finalizo2: numero
-    ok1, ok2: boolean
+    ok, ok1, ok2: boolean
     noLlegoGanador: boolean
     primero: numero
     
@@ -124,10 +125,12 @@ robots
       RecibirMensaje (id, *)
       
       si (id = 1)
+        RecibirMensaje (ok, r1)
         EnviarMensaje (av, r1)
         EnviarMensaje (ca, r1)
         finalizo1:= finalizo1 + 1
       sino
+        RecibirMensaje (ok, r2)
         EnviarMensaje (av, r2)
         EnviarMensaje (ca, r2)
         finalizo2:= finalizo2 + 1
