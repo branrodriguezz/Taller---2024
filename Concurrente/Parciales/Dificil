@@ -1,274 +1,278 @@
-programa p23052022
+programa parcial230522
 procesos
-  
   proceso mandarIds
   comenzar
-    
-    EnviarMensaje (1, r2)
-    EnviarMensaje (2, r5)
-    
-  fin
-  
-  proceso izquierda
-  comenzar
-    repetir 3
-      derecha
+    EnviarMensaje (1, r2EquipoAzul) {se lo mando al central que es como el capitan del equipo}
+    EnviarMensaje (2, r2EquipoVerde)
   fin
   
   proceso juntarFlores (ES flores: numero)
-  comenzar 
-    flores:= 0
+  comenzar
     mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores:= flores + 1
   fin
   
-  proceso depositarFlores (E flores: numero)
+  proceso depositarEnLaCentralLA (E flores: numero)
+  variables
+    av,ca: numero
   comenzar
+    av:= PosAv
+    ca:= PosCa
+    
+    BloquearEsquina (av,ca-1) {bloqueo la avenida y la calle donde estoy - 1}
+    Pos (av, ca-1)
     repetir flores
       depositarFlor
+    Pos (av,ca) {vuelvo a mi esq segura}
+    LiberarEsquina (av,ca-1) {libero la anterior}
+  
+  fin
+  
+  proceso depositarEnLaCentralLB (E flores: numero)
+  variables
+    av,ca: numero
+  comenzar
+    av:= PosAv
+    ca:= PosCa
+    
+    BloquearEsquina (av,ca+1) {bloqueo la avenida y la calle donde estoy + 1}
+    Pos (av, ca+1)
+    repetir flores
+      depositarFlor
+    Pos (av,ca) {vuelvo a mi esq segura}
+    LiberarEsquina (av,ca+1) {libero la anterior}
   fin
   
 areas
+
+  IzquierdaAlto: AreaP (10,21,19,21)
+  IzquierdaMedio: AreaPC (10,20,19,20)
+  IzquierdaBajo: AreaP (10,19,19,19)
+ 
+  DerechoAlto: AreaP (21,21,30,21)
+  DerechoMedio: AreaPC (21,20,30,20)
+  DerechoBajo: AreaP (21,19,30,19)
   
-  esq: AreaPC (20,20,20,20)
-  areaE1bajo: AreaP (10,19,19,19)
-  areaR1Ini: AreaP (9,19,9,19)
-  areaE1medio: AreaPC (10,20,19,20)
-  areaR2Ini: AreaP (9,20,9,20) 
-  areaE1alto: AreaP (10,21,19,21)
-  areaR3Ini: AreaP (9,21,9,21)
-  areaE2bajo: AreaP (21,19,30,19)
-  areaR4Ini: AreaP (31,19,31,19)
-  areaE2medio: AreaPC (21,20,30,20)
-  areaR5Ini: AreaP (31,20,31,20)
-  areaE2alto: AreaP (21,21,30,21)
-  areaR6Ini: AreaP (31,21,31,21)
-  areaFiscalizador: AreaP (20,18,20,18)
+  InicioR1Azul: AreaP (9,19,9,19)
+  InicioR2Azul: AreaP (9,20,9,20)
+  InicioR3Azul: AreaP (9,21,9,21)
+  
+  InicioR1Verde: AreaP (31,19,31,19)
+  InicioR2Verde: AreaP (31,20,31,20)
+  InicioR3Verde: AreaP (31,21,31,21)
+  
+  
+  EsquinaCentral: AreaPC (20,20,20,20)
+  AreaFiscalizador: AreaP (20,18,20,18)
   
 robots
 
   robot lateralAlto
   variables
-  
-    avIni, caIni: numero
     flores: numero
-    
   comenzar
-  
+    
     si (PosAv = 9)
       derecha
-      Pos ((PosAv+1), PosCa)
+      Pos (PosAv+1,PosCa)
     
     sino
-      izquierda
-      Pos ((PosAv-1),PosCa)
+      repetir 3
+        derecha
+      Pos (PosAv-1,PosCa)
     
     repetir 9
-      avIni:= PosAv
-      caIni:= PosCa
+      flores:= 0
       juntarFlores (flores)
-      BloquearEsquina (PosAv, (PosCa-1))
-      Pos (PosAv, (PosCa-1))
-      depositarFlores (flores)
-      Pos (avIni, caIni)
-      LiberarEsquina (PosAv, (PosCa-1))
+      si (flores <> 0)
+        depositarEnLaCentralLA (flores)
       mover
-    
-    avIni:= PosAv
-    caIni:= PosCa
-    juntarFlores (flores)
-    BloquearEsquina (PosAv, (PosCa-1))
-    Pos (PosAv, (PosCa-1))
-    depositarFlores (flores)
-    Pos (avIni, caIni)
-    LiberarEsquina (PosAv, (PosCa-1))
-    
-    si (PosAv = 19)
-      EnviarMensaje (V, r2)
       
-    sino
+    flores:= 0 {ultima esquina}
+    juntarFlores (flores)
+    si (flores <> 0)
+      depositarEnLaCentralLA (flores)
     
-      EnviarMensaje (V, r5)
+    si (PosCa = 19)
+      EnviarMensaje (V, r2EquipoAzul) {le aviso a mi central azul que termine mi lateral}
+    sino
+      EnviarMensaje (V, r2EquipoVerde) {le aviso a mi central verde}
+    
     
   fin
   
   robot lateralBajo
   variables
-  
-    avIni, caIni: numero
     flores: numero
-    
   comenzar
   
     si (PosAv = 9)
       derecha
-      Pos ((PosAv+1),PosCa)
-      
+      Pos (PosAv+1,PosCa)
+    
     sino
-      izquierda
-      Pos ((PosAv-1), PosCa)
+      repetir 3
+        derecha
+      Pos (PosAv-1,PosCa)
     
     repetir 9
-      avIni:= PosAv
-      caIni:= PosCa
-      
+      flores:= 0
       juntarFlores (flores)
-      BloquearEsquina (PosAv, (PosCa+1))
-      Pos (PosAv,(PosCa+1))
-      depositarFlores (flores)
-      Pos (avIni, caIni)
-      LiberarEsquina (PosAv, (PosCa+1))
+      si (flores <> 0)
+        depositarEnLaCentralLB (flores)
       mover
-    
-    avIni:= PosAv
-    caIni:= PosCa
       
+    flores:= 0 {ultima esquina}
     juntarFlores (flores)
-    BloquearEsquina (PosAv, (PosCa+1))
-    Pos (PosAv,(PosCa+1))
-    depositarFlores (flores)
-    Pos (avIni, caIni)
-    LiberarEsquina (PosAv, (PosCa+1))
+    si (flores <> 0)
+      depositarEnLaCentralLB (flores)
     
-    si (PosAv = 19)
-      EnviarMensaje (V, r2)
+    si (PosCa = 19)
+      EnviarMensaje (V, r2EquipoAzul) {le aviso a mi central azul que termine mi lateral}
+    sino
+      EnviarMensaje (V, r2EquipoVerde) {le aviso a mi central verde}
     
-    sino 
-      EnviarMensaje (V, r5)
+    
   fin
-  
   robot central
   variables
   
-    ahora: boolean
+    team: numero
+    ok: boolean
     flores: numero
     av,ca: numero
-    id: numero
-    totalFlores: numero
     
   comenzar
-  
     
-    RecibirMensaje (id, rf)
-    repetir 2
-      RecibirMensaje (ahora, *)
-   
+    RecibirMensaje (team,rf) {recibo mi equipo}
+    repetir 2      
+      RecibirMensaje (ok, *) {recibo el mensaje final del lateral bajo y alto de mi equipo}
+    
     si (PosAv = 9)
       derecha
-      Pos ((PosAv + 1), PosCa)
-      
+      Pos (PosAv+1,PosCa)
     sino
-      izquierda
-      Pos ((PosAv-1), PosCa)
-      
-    totalFlores:= 0
+      repetir 3
+        derecha
+      Pos (PosAv-1,PosCa)
     
+    flores:= 0
     repetir 9
       juntarFlores (flores)
-      totalFlores:= totalFlores + flores
       mover
+    juntarFlores (flores)
     
     av:= PosAv
     ca:= PosCa
     
-    juntarFlores (flores)
-    totalFlores:= totalFlores + flores
     BloquearEsquina (20,20)
-    Pos (20,20)
-    repetir totalFlores
+    mover
+    repetir flores
       depositarFlor
     Pos (av,ca)
     LiberarEsquina (20,20)
     
-    EnviarMensaje (id, rf)
-    EnviarMensaje (totalFlores, rf)
-      
-      
+    EnviarMensaje (team,rf) {le mando que equipo soy}
+    EnviarMensaje (flores,rf) {le mando mis flores}
+   
   fin
+  
   
   robot fiscalizador
   variables
   
-    max, eMax: numero
-    id: numero
-    totalF: numero
-    primero: boolean
-    ganador: numero
+    terminaron: numero
+    team: numero
+    flores: numero
+    primero: numero
+    floresMax,ganador: numero
+    ok: boolean
     
   comenzar
+  
+    floresMax:= -1
+    ok:= V
+    ganador:= 0
     
-    mandarIds 
-      
-    primero:= V
-    
-    repetir 2
-      RecibirMensaje (id, *)
-      si (id = 1)
-        RecibirMensaje (totalF, r2)
-    
+    mandarIds {le mando un identificado de equipo}
+    mientras (terminaron < 2)
+      RecibirMensaje (team,*)
+      si (team = 1)
+        RecibirMensaje (flores, r2EquipoAzul)
       sino
-        RecibirMensaje (totalF, r5)
+        RecibirMensaje (flores, r2EquipoVerde)
+      
+      si (ok)
+        primero:= team
+        ok:= F
         
-      si (primero)
-        ganador:= id
-        primero:= F
+      si (flores > floresMax)
+        floresMax:= flores
+        ganador:= team
+        
+      terminaron:= terminaron + 1
+    
+    si (primero = 1)
+      Informar ("El equipo que llego primero fue el equipo azul",primero)
+    sino
+      Informar ("El equipo que llego primero fue el equipo verde",primero)
       
     si (ganador = 1)
-      Informar ('El primero en llegar fue el equipo izquierdo', ganador)
-    sino
-      Informar ('El primero en llegar fue el equipo derecho', ganador)
-       
-    si (totalFIzq > totalFDer)
-      Informar ('El ganador fue el equipo izquierdo', totslFIzq)
-    sino
-      Informar ('El ganador fue el equipo derecho', totalFDer)
-   
+      Informar ("El equipo que recolecto mas flores fue el equipo Azul",ganador)
+    sino 
+      Informar ("El equipo que recolecto mas flores fue el equipo verde",ganador)
+      
   fin
   
 variables
   
-  r1: lateralAlto
-  r2: central
-  r3: lateralBajo
-  r4: lateralBajo
-  r5: central
-  r6: lateralAlto
+  r1EquipoAzul: lateralBajo
+  r2EquipoAzul: central
+  r3EquipoAzul: lateralAlto
+  
+  r1EquipoVerde: lateralBajo
+  r2EquipoVerde: central
+  r3EquipoVerde: lateralAlto
+  
   rf: fiscalizador
   
 comenzar
 
-  AsignarArea (r1, areaE1bajo)
-  AsignarArea (r1, areaE1medio)
-  AsignarArea (r1, areaR1Ini)
+  AsignarArea (r1EquipoAzul, IzquierdaBajo)
+  AsignarArea (r1EquipoAzul, IzquierdaMedio)
+  AsignarArea (r1EquipoAzul, InicioR1Azul)
   
-  AsignarArea (r2, areaE1medio)
-  AsignarArea (r2, areaR2Ini)
+  AsignarArea (r2EquipoAzul, IzquierdaMedio)
+  AsignarArea (r2EquipoAzul, EsquinaCentral)
+  AsignarArea (r2EquipoAzul, InicioR2Azul)
   
-  AsignarArea (r3, areaE1medio)
-  AsignarArea (r3, areaE1alto)
-  AsignarArea (r3, areaR3Ini)
+  AsignarArea (r3EquipoAzul, IzquierdaAlto)
+  AsignarArea (r3EquipoAzul, IzquierdaMedio)
+  AsignarArea (r3EquipoAzul, InicioR3Azul)
   
-  AsignarArea (r4, areaE2bajo)
-  AsignarArea (r4, areaR4Ini)
-  AsignarArea (r4, areaE2medio)
+  AsignarArea (r1EquipoVerde, DerechoBajo)
+  AsignarArea (r1EquipoVerde, DerechoMedio)
+  AsignarArea (r1EquipoVerde, InicioR1Verde)
   
-  AsignarArea (r5, areaE2medio)
-  AsignarArea (r5, areaR5Ini)
+  AsignarArea (r2EquipoVerde, DerechoMedio)
+  AsignarArea (r2EquipoVerde, EsquinaCentral)
+  AsignarArea (r2EquipoVerde, InicioR2Verde)
   
-  AsignarArea (r6, areaE2medio)
-  AsignarArea (r6, areaE2alto)
-  AsignarArea (r6, areaR6Ini)
+  AsignarArea (r3EquipoVerde, DerechoAlto)
+  AsignarArea (r3EquipoVerde, DerechoMedio)
+  AsignarArea (r3EquipoVerde, InicioR3Verde)
   
-  AsignarArea (rf, areaFiscalizador)
+  AsignarArea (rf, AreaFiscalizador)
+  
+  Iniciar (r1EquipoAzul, 9,19 )
+  Iniciar (r2EquipoAzul, 9,20 )
+  Iniciar (r3EquipoAzul, 9,21 )
+  
+  Iniciar (r1EquipoVerde, 31,19 )
+  Iniciar (r2EquipoVerde, 31,20 )
+  Iniciar (r3EquipoVerde, 31,21 )
   
   Iniciar (rf, 20,18)
-  Iniciar (r1, 9,19)
-  Iniciar (r2, 9,20)
-  Iniciar (r3, 9,21)
-  
-  Iniciar (r4, 31,19)
-  Iniciar (r5, 31,20)
-  Iniciar (r6, 31,21)
   
 fin
