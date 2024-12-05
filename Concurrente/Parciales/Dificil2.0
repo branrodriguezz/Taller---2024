@@ -1,0 +1,50 @@
+programa parcial230522
+procesos
+  proceso recorrerAvenida(E numAv: numero)
+  comenzar
+    Pos(numAv, 1)
+    repetir 99
+      mover
+  fin
+areas
+
+  IzquierdaAlto: AreaP (10,21,19,21)
+  IzquierdaMedio: AreaPC (10,20,19,20)
+  IzquierdaBajo: AreaP (10,19,19,19)
+ 
+  DerechoAlto: AreaP (21,21,30,21)
+  DerechoMedio: AreaPC (21,20,30,20)
+  DerechoBajo: AreaP (21,19,30,19)
+  
+robots
+  robot lateral
+  comenzar
+    recorrerAvenida(1)
+  fin
+  
+  robot central
+  comenzar
+  fin
+  
+  robot fiscalizador
+  comenzar
+  fin
+  
+variables
+  
+  r1EquipoAzul: lateral
+  r2EquipoAzul: central
+  r3EquipoAzul: lateral
+  
+  r4EquipoVerde: lateral
+  r5EquipoVerde: central
+  r6EquipoVerde: lateral
+  
+  rf: fiscalizador
+  
+comenzar
+
+  AsignarArea()
+  Iniciar(R_info, 1,1)
+  
+fin
