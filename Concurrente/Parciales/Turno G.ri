@@ -44,14 +44,17 @@ procesos
     f:= 0
     p:= 0
     
-    repetir 6
+    Pos (40,40)
+    repetir 5
       repetir 5
         limpiarEsquina (f,p)
         mover
       limpiarEsquina (f,p)
-      Pos ((PosAv+1), 1)
- 
-    Pos (1,1)
+      Pos ((PosAv+1), 40)
+    repetir 5
+      limpiarEsquina (f,p)
+      mover
+    limpiarEsquina (f,p)
     
   fin
   
@@ -90,7 +93,8 @@ robots
       RecibirMensaje (ca, rc)
       
       depositarRecolectado (flores,papeles,av,ca) {agregar un si flores<>0 y papeles<>0 para ir al modulo?}
-      si (PosAv < 11)
+      
+      si (PosAv < 10)
         Pos (PosAv+2,1)
       
   fin
@@ -149,7 +153,7 @@ robots
         finalizaron:= finalizaron + 1
         ok2:= F
   
-    limpiarCuadrante
+    limpiarCuadrante 
     Informar (" El amiguito que finalizo primero fue" , primero)
     
   fin
