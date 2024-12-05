@@ -1,0 +1,213 @@
+{Recuperatorio - TEMA 1 - Módulo Concurrente. IMPORTANTE: Utilice ApellidoNombre como nombre del programa y como nombre del archivo. Se organizó una competencia entre dos equipos: Papeleros Derechos y Floreros Izquierdos. Cada equipo consta de dos robots. Los Papeleros Derechos deben avanzar por su avenida una cantidad de pasos que calculan de manera aleatoria entre 4 y 8. Luego, deben girar a la derecha y realizar el doble de pasos realizados previamente. Durante todo su recorrido deben vaciar de papeles todas las esquinas. Al finalizar todo el recorrido, los Papeleros Derechos deben depositar de a uno los objetos juntados en la esquina (50,50). Los Floreros Izquierdos deben avanzar por su avenida una cantidad de pasos que calculan de manera aleatoria entre 3 y 7. Luego, deben girar a la izquierda y realizar el doble de pasos realizados previamente. Durante todo su recorrido deben vaciar de flores todas las esquinas. Al finalizar todo el recorrido, los Floreros Izquierdos deben depositar de a uno los objetos juntados en la esquina (49,49). Una vez que los dos robots de un equipo completaron sus recorridos, un robot fiscalizador deberá recolectar los objetos depositados por ambos robots. Al finalizar, el fiscalizador deberá informar la cantidad total de objetos depositados por ambos equipos. Los robots del equipo Papeleros Derechos inician en las esquinas (50,1) y (50,20), y los robots del equipo Floreros Izquierdos inician en las equinas (49,1) y (49,20). El fiscalizador inicia en la esquina（7.7）.}
+
+programa tema1
+
+procesos
+  proceso juntarPapeles (ES papeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  
+  proceso depositarPapeles (E papeles: numero)
+  variables 
+    av, ca: numero
+  comenzar
+  
+    av:= PosAv
+    ca:= PosCa
+    
+    repetir papeles
+      BloquearEsquina (50,50)
+      Pos (50,50)
+      depositarPapel
+      Pos (av,ca)
+      LiberarEsquina (50,50)
+      
+  fin
+  
+  
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  
+  proceso depositarFlores (E flores: numero)
+  variables
+    av,ca: numero
+    
+  comenzar
+    
+    av:= PosAv
+    ca:= PosCa
+    
+    repetir flores 
+      BloquearEsquina (50,50)
+      Pos (50,50)
+      depositarFlor
+      Pos (av,ca)
+      LiberarEsquina (50,50)
+  fin
+  
+areas
+  
+  areaDerecho1: AreaP (50,1,66,9)
+  areaDerecho2: AreaP (50,20,66,29)
+  
+  areaIzquierdo1: AreaP (35,1, 49,8)
+  areaIzquierdo2: AreaP (35,20, 49,28)
+  
+  esquina: AreaC (50,50,50,50)
+  areaFiscalizador: AreaP (7,7,7,7)
+  
+robots
+  robot papeleroDerecho
+  variables
+  
+    pasos: numero
+    papeles: numero
+    doble: numero
+  comenzar
+  
+    papeles:= 0
+    Random (pasos,4,8)
+    repetir pasos
+      juntarPapeles (papeles)
+      mover
+    
+    doble:= (pasos*2)
+    
+    derecha
+    
+    repetir doble
+      juntarPapeles (papeles)
+      mover
+    juntarPapeles (papeles)
+    
+    si (papeles <> 0)
+      depositarPapeles (papeles)
+    
+    EnviarMensaje (1, rf) {señal que permite avisar que termine equipo derecho }
+    
+      
+  fin
+  
+  robot floreroIzquierdo 
+  variables
+  
+    pasos: numero
+    flores: numero
+    doble: numero
+    
+  comenzar
+  
+    flores:= 0
+    Random (pasos,3,7)
+    repetir pasos
+      juntarFlores (flores)
+      mover
+    
+    doble:= (pasos*2)
+    
+    repetir 3
+      derecha
+    
+    repetir doble
+      juntarFlores (flores)
+      mover
+    juntarFlores (flores)
+    
+    si (flores <> 0)
+      depositarFlores (flores)
+    
+    EnviarMensaje (2, rf) {señal que permite avisar que termine equipo izquierdo }
+    
+  fin
+  
+  robot fiscalizador
+  variables
+  
+    finalizaron: numero
+    equipoDerecho: numero
+    equipoIzquierdo: numero
+    valor: numero
+    okD, okI: boolean
+    contador: numero
+    
+  comenzar
+  
+    equipoDerecho := 0
+    equipoIzquierdo := 0
+    finalizaron:= 0
+    okD:= V
+    okI:= V
+    contador:= 0
+    
+    mientras (finalizaron < 4)
+      RecibirMensaje (valor, *)
+      si (valor = 1)
+        equipoDerecho:= equipoDerecho + 1
+    
+      sino 
+        equipoIzquierdo:= equipoIzquierdo + 1
+      
+      finalizaron:= finalizaron + 1
+      
+      si (equipoDerecho = 2) & (okD)
+        BloquearEsquina (50,50)
+        Pos (50,50)
+        juntarPapeles (contador)
+        okD:= F
+        Pos (7,7)
+        LiberarEsquina (50,50)
+        
+      si (equipoIzquierdo = 2) & (okI)
+        BloquearEsquina (50,50)
+        Pos (50,50)
+        juntarFlores (contador)
+        okI:= F
+        Pos (7,7)
+        LiberarEsquina (50,50)
+        
+    Informar (" La cantidad total de objetos que depositaron los equipos es ", contador )
+    
+  fin
+  
+variables
+
+  r1: papeleroDerecho
+  r2: papeleroDerecho
+  r3: floreroIzquierdo
+  r4: floreroIzquierdo
+  rf: fiscalizador
+  
+comenzar
+
+  AsignarArea (r1, areaDerecho1)
+  AsignarArea (r1, esquina)
+  
+  AsignarArea (r2, areaDerecho2)
+  AsignarArea (r2, esquina)
+  
+  AsignarArea (r3, areaIzquierdo1)
+  AsignarArea (r3, esquina)
+  
+  AsignarArea (r4, areaIzquierdo2)
+  AsignarArea (r4, esquina)
+  
+  AsignarArea (rf, areaFiscalizador)
+  AsignarArea (rf, esquina)
+  
+  
+  Iniciar (r1, 50,1)
+  Iniciar (r2, 50,20)
+  Iniciar (r3, 49,1)
+  Iniciar (r4, 49,20)
+  
+  Iniciar (rf, 7,7)
+  
+  
+fin
