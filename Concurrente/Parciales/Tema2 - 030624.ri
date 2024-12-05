@@ -1,0 +1,194 @@
+programa parcial300624
+procesos
+  proceso juntarPapeles (ES papeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  
+  proceso mandarIds 
+  comenzar
+  
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    
+  fin
+  
+areas 
+  
+  areaR1Izquierda: AreaP (1,5,5,5)
+  areaR1Derecha: AreaP (7,7,11,7)
+  
+  areaR2Izquierda: AreaP (1,7,5,7)
+  areaR2Derecha: AreaP (7,5,11,5)
+  
+  esquinaCo: AreaPC (6,6,6,6)
+  areaFiscalizador: AreaP (1,6,1,6)
+  
+robots
+
+  robot corredor
+  variables
+  
+    id: numero
+    flores: numero
+    papeles: numero
+    av,ca: numero
+    
+  comenzar
+  
+    RecibirMensaje (id, rf) {recibo quien soy}
+    
+    derecha
+    
+    repetir 4
+      juntarFlores (flores)
+      mover
+    juntarFlores (flores)
+    
+    si (PosCa = 7)
+      ca:= PosCa - 2
+      
+    sino  {es porque estoy en la calle 5}
+      ca:= PosCa + 2
+    
+    av:= PosAv + 2
+    
+    BloquearEsquina (6,6)
+    Pos (6,6)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+    Pos (av,ca)
+    LiberarEsquina (6,6)
+    
+    repetir 4
+      juntarFlores (flores)
+      mover
+    
+    juntarFlores (flores)
+    
+    EnviarMensaje (id,rf) {le mando que termine la ida}
+    EnviarMensaje (flores,rf)  {le mando mis flores}
+    {No espero que me den confirmacion de pegar la vuelta}
+    
+    repetir 2
+      derecha
+    
+    papeles:= 0
+    
+    repetir 4
+      juntarPapeles (papeles)
+      mover
+      
+    juntarPapeles(papeles)
+    
+    si (PosCa = 7)
+      ca:= PosCa - 2
+    sino
+      ca:= PosCa + 2
+    
+    av:= PosAv - 2
+      
+    BloquearEsquina (6,6)
+    Pos (6,6)
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+   
+    Pos (av,ca)
+    LiberarEsquina (6,6)
+    
+    repetir 4
+      juntarPapeles (papeles)
+      mover
+    juntarPapeles (papeles)
+    EnviarMensaje (id, rf) {le mando quien soy y le aviso que termine}
+    EnviarMensaje (papeles, rf) {le mando mis papeles}
+
+  fin
+ 
+  robot fiscalizador
+  variables
+    
+    ida: numero
+    vuelta: numero
+    
+    id: numero
+    flores, floresMax, ganadorFlores: numero
+    papeles, papelesMax, ganadorPapeles: numero
+    
+  comenzar
+  
+    mandarIds 
+    
+    floresMax:= -1
+    
+    mientras (ida < 2)
+      RecibirMensaje (id, *)
+      
+      si (id = 1)
+        RecibirMensaje (flores, r1)
+        ida:= ida + 1
+        
+      sino
+        RecibirMensaje (flores, r2)
+        ida:= ida + 1
+      
+      si (flores > floresMax)
+        floresMax:= flores
+        ganadorFlores:= id
+     
+    Informar ("El ganador de la ida juntando flores fue el amiguito ", ganadorFlores)
+
+    papelesMax:= -1
+    
+    mientras (vuelta < 2)
+      RecibirMensaje (id, *)
+      
+      si (id = 1)
+        RecibirMensaje (papeles, r1)
+        vuelta:= vuelta + 1
+        
+      sino
+        RecibirMensaje (papeles, r2)
+        vuelta:= vuelta + 1
+      
+      si (papeles > papelesMax)
+        papelesMax:= papeles
+        ganadorPapeles:= id
+    
+    Informar ("El ganador de la vuelta juntando papeles fue el amiguito " , ganadorPapeles)
+      
+  fin
+  
+variables
+
+  rf: fiscalizador
+  r1: corredor
+  r2: corredor
+  
+comenzar
+  AsignarArea (rf, areaFiscalizador)
+  AsignarArea (r1, areaR1Izquierda)
+  AsignarArea (r1, areaR1Derecha)
+  AsignarArea (r1, esquinaCo)
+ 
+  AsignarArea (r2, areaR2Izquierda)
+  AsignarArea (r2, areaR2Derecha)
+  AsignarArea (r2, esquinaCo)
+ 
+  Iniciar (rf, 1,6)
+  Iniciar (r1, 1,5)
+  Iniciar (r2, 1,7)
+  
+fin
+
