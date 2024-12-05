@@ -45,11 +45,25 @@ procesos
     ca:= PosCa
     
     repetir flores 
-      BloquearEsquina (50,50)
-      Pos (50,50)
+      BloquearEsquina (49,49)
+      Pos (49,49)
       depositarFlor
       Pos (av,ca)
-      LiberarEsquina (50,50)
+      LiberarEsquina (49,49)
+  fin
+  
+  proceso tareaJuntarFiscalizador (E av: numero; E ca: numero; ES ok: boolean; ES contador: numero; E queHago: boolean)
+  comenzar
+  
+    BloquearEsquina (av,ca)
+    Pos (av,ca)
+    si(queHago)
+      juntarPapeles (contador)
+    sino  
+      juntarFlores (contador)
+    ok:= F
+    Pos (7,7)
+    LiberarEsquina (av,ca)
   fin
   
 areas
@@ -60,7 +74,9 @@ areas
   areaIzquierdo1: AreaP (35,1, 49,8)
   areaIzquierdo2: AreaP (35,20, 49,28)
   
-  esquina: AreaC (50,50,50,50)
+  esquinaDerechos: AreaPC (50,50,50,50)
+  esquinaIzquierdos: AreaPC (49,49,49,49)
+  
   areaFiscalizador: AreaP (7,7,7,7)
   
 robots
@@ -157,20 +173,11 @@ robots
       finalizaron:= finalizaron + 1
       
       si (equipoDerecho = 2) & (okD)
-        BloquearEsquina (50,50)
-        Pos (50,50)
-        juntarPapeles (contador)
-        okD:= F
-        Pos (7,7)
-        LiberarEsquina (50,50)
+        tareaJuntarFiscalizador (50,50,okD, contador, V)
         
-      si (equipoIzquierdo = 2) & (okI)
-        BloquearEsquina (50,50)
-        Pos (50,50)
-        juntarFlores (contador)
-        okI:= F
-        Pos (7,7)
-        LiberarEsquina (50,50)
+      sino
+        si (equipoIzquierdo = 2) & (okI)
+          tareaJuntarFiscalizador (49,49,okI, contador, F)
         
     Informar (" La cantidad total de objetos que depositaron los equipos es ", contador )
     
@@ -187,19 +194,20 @@ variables
 comenzar
 
   AsignarArea (r1, areaDerecho1)
-  AsignarArea (r1, esquina)
+  AsignarArea (r1, esquinaDerechos)
   
   AsignarArea (r2, areaDerecho2)
-  AsignarArea (r2, esquina)
+  AsignarArea (r2, esquinaDerechos)
   
   AsignarArea (r3, areaIzquierdo1)
-  AsignarArea (r3, esquina)
+  AsignarArea (r3, esquinaIzquierdos)
   
   AsignarArea (r4, areaIzquierdo2)
-  AsignarArea (r4, esquina)
+  AsignarArea (r4, esquinaIzquierdos)
   
   AsignarArea (rf, areaFiscalizador)
-  AsignarArea (rf, esquina)
+  AsignarArea (rf, esquinaDerechos)
+  AsignarArea (rf, esquinaIzquierdos)
   
   
   Iniciar (r1, 50,1)
