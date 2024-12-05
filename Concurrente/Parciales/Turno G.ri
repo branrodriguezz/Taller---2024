@@ -1,0 +1,173 @@
+programa parcialTG2024
+procesos
+  proceso limpiarEsquina (ES flores: numero; ES papeles: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+    
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  
+  proceso depositarRecolectado (E flores: numero; E papeles: numero; E av: numero; E ca: numero)
+  variables
+  
+    avRetorno, caRetorno: numero
+    
+  comenzar
+  
+    avRetorno:= PosAv
+    caRetorno:= PosCa
+    
+    repetir flores
+      BloquearEsquina (av,ca)
+      Pos (av,ca)
+      depositarFlor
+      Pos (avRetorno,caRetorno)
+      LiberarEsquina (av,ca)
+     
+    repetir papeles
+      BloquearEsquina (av,ca)
+      Pos (av,ca)
+      depositarPapel
+      Pos (avRetorno,caRetorno)
+      LiberarEsquina (av,ca)
+    
+  fin
+  
+  proceso limpiarCuadrante 
+  variables
+    f,p: numero
+  comenzar
+    f:= 0
+    p:= 0
+    
+    repetir 6
+      repetir 5
+        limpiarEsquina (f,p)
+        mover
+      limpiarEsquina (f,p)
+      Pos ((PosAv+1), 1)
+ 
+    Pos (1,1)
+    
+  fin
+  
+areas
+
+  areaRecorrido: AreaPC (4,1,11,100)
+  areaCuadrante: AreaC (40,40,45,45)
+  areaCoordinador: AreaP (1,1,1,1)
+  
+robots
+
+  robot recolector
+  variables
+  
+    flores,papeles: numero
+    id: numero
+    av,ca: numero
+    
+  comenzar
+  
+    RecibirMensaje (id, rc)
+    repetir 4
+      
+      flores:= 0
+      papeles:= 0
+      
+      repetir 99
+        limpiarEsquina (flores,papeles)
+        mover
+        
+      limpiarEsquina (flores,papeles) {ultima esquina}
+      
+      EnviarMensaje (id, rc)
+      RecibirMensaje (av, rc)
+      RecibirMensaje (ca, rc)
+      
+      depositarRecolectado (flores,papeles,av,ca) {agregar un si flores<>0 y papeles<>0 para ir al modulo?]
+      si (PosAv < 11)
+        Pos (PosAv+2,1)
+      
+  fin
+  
+  robot coordinador
+  variables
+    finalizaron: numero
+    av,ca: numero
+    id: numero
+    finalizo1, finalizo2: numero
+    ok1, ok2: boolean
+    noLlegoGanador: boolean
+    primero: numero
+    
+  comenzar
+  
+    finalizaron:= 0
+    ok1:= V
+    ok2:= V
+    noLlegoGanador:= V
+    finalizo1:= 0
+    finalizo2:= 0
+    
+    EnviarMensaje (1, r1) {ids}
+    EnviarMensaje (2, r2)
+    
+    mientras (finalizaron < 2)
+    
+      Random (av, 40,45)
+      Random (ca, 40,45)
+      
+      RecibirMensaje (id, *)
+      
+      si (id = 1)
+        EnviarMensaje (av, r1)
+        EnviarMensaje (ca, r1)
+        finalizo1:= finalizo1 + 1
+      sino
+        EnviarMensaje (av, r2)
+        EnviarMensaje (ca, r2)
+        finalizo2:= finalizo2 + 1
+      
+      si (finalizo1 = 4) & (ok1)
+        si (noLlegoGanador)
+          primero:= id
+          noLlegoGanador:= F 
+        finalizaron:= finalizaron + 1
+        ok1:= F
+      
+      si (finalizo2 = 4) & (ok2)
+        si (noLlegoGanador)
+          primero:= id
+          noLlegoGanador:= F
+        finalizaron:= finalizaron + 1
+        ok2:= F
+  
+    limpiarCuadrante
+    Informar (" El amiguito que finalizo primero fue" , primero)
+    
+  fin
+  
+variables
+
+  r1: recolector
+  r2: recolector
+  rc: coordinador
+  
+comenzar
+
+  AsignarArea (r1, areaRecorrido)
+  AsignarArea (r1, areaCuadrante)
+  AsignarArea (r2, areaRecorrido)
+  AsignarArea (r2, areaCuadrante)
+  AsignarArea (rc, areaCoordinador)
+  AsignarArea (rc, areaCuadrante)
+  
+  Iniciar (r1, 4,1)
+  Iniciar (r2, 5,1)
+  Iniciar (rc, 1,1)
+  
+fin
